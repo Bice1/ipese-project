@@ -14,34 +14,32 @@ def list_sheets(filepath: str):
 
 def parse_iets_model(filepath: str) -> dict:
     """
-    Parse IETS_ModelName_v6.xlsx and extract metadata and connectors sheets.
+    Parse IETS_ModelName_v6.xlsx and extract all sheets.
     
     Args:
         filepath: Path to the Excel file
         
     Returns:
-        Dictionary with 'METADATA' and 'CONNECTORS' DataFrames
+        Dictionary with all sheet DataFrames
     """
     excel_file = Path(filepath)
     
     if not excel_file.exists():
         raise FileNotFoundError(f"File not found: {filepath}")
     
+    # Get all sheet names
+    workbook = openpyxl.load_workbook(excel_file)
+    sheet_names = workbook.sheetnames
+    
     result = {}
     
-    # Read METADATA sheet (uppercase)
-    try:
-        result['METADATA'] = pd.read_excel(excel_file, sheet_name='METADATA')
-        print(f"✓ Loaded 'METADATA' sheet: {result['METADATA'].shape}")
-    except ValueError as e:
-        print(f"⚠ Could not load 'METADATA' sheet: {e}")
-    
-    # Read CONNECTORS sheet (uppercase)
-    try:
-        result['CONNECTORS'] = pd.read_excel(excel_file, sheet_name='CONNECTORS')
-        print(f"✓ Loaded 'CONNECTORS' sheet: {result['CONNECTORS'].shape}")
-    except ValueError as e:
-        print(f"⚠ Could not load 'CONNECTORS' sheet: {e}")
+    # Read all sheets
+    for sheet_name in sheet_names:
+        try:
+            result[sheet_name] = pd.read_excel(excel_file, sheet_name=sheet_name)
+            print(f"✓ Loaded '{sheet_name}' sheet: {result[sheet_name].shape}")
+        except Exception as e:
+            print(f"⚠ Could not load '{sheet_name}' sheet: {e}")
     
     return result
 
@@ -54,17 +52,11 @@ def main():
     data = parse_iets_model(str(filepath))
     
     # Display summary
-    print("\n=== METADATA ===")
-    if 'METADATA' in data:
-        print(data['METADATA'].head())
-        print(f"\nShape: {data['METADATA'].shape}")
-        print(f"\nColumns: {list(data['METADATA'].columns)}")
-    
-    print("\n=== CONNECTORS ===")
-    if 'CONNECTORS' in data:
-        print(data['CONNECTORS'].head())
-        print(f"\nShape: {data['CONNECTORS'].shape}")
-        print(f"\nColumns: {list(data['CONNECTORS'].columns)}")
+    for sheet_name, df in data.items():
+        print(f"\n=== {sheet_name} ===")
+        print(f"Shape: {df.shape}")
+        print(f"Columns: {list(df.columns)}")
+        print(df.head())
     
     return data
 

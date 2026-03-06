@@ -19,12 +19,19 @@ st.set_page_config(
 st.title("📊 IPESE Model Browser")
 st.markdown("---")
 
+# Load data once
+filepath = Path(__file__).parent / "Base" / "IETS_ModelName_v6.xlsx"
+data = parse_iets_model(str(filepath))
+
+# Get available sheets for navigation
+sheet_names = list(data.keys())
+
 # Sidebar
 with st.sidebar:
     st.header("Navigation")
     page = st.radio(
         "Select a view:",
-        ["Overview", "Metadata", "Connectors", "Variables", "Calculations"]
+        ["Overview"] + sheet_names
     )
 
 # Main content based on selected page
@@ -33,43 +40,45 @@ if page == "Overview":
     st.write("""
     Welcome to the IPESE Model Browser! This application allows you to explore the IETS Model.
     
-    Use the sidebar to navigate between different views of the model data.
+    Use the sidebar to navigate between different sheets of the model data.
     """)
     
-    # Load and display available sheets
-    filepath = Path(__file__).parent / "Base" / "IETS_ModelName_v6.xlsx"
-    data = parse_iets_model(str(filepath))
+    # Display metrics for all sheets
+    st.subheader("Data Summary")
+    cols = st.columns(len(data))
     
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("Metadata Rows", len(data.get('METADATA', [])))
-    with col2:
-        st.metric("Connectors Rows", len(data.get('CONNECTORS', [])))
+    for i, (sheet_name, df) in enumerate(data.items()):
+        with cols[i]:
+            st.metric(sheet_name, f"{len(df)} rows")
 
-elif page == "Metadata":
-    st.header("Metadata")
-    filepath = Path(__file__).parent / "Base" / "IETS_ModelName_v6.xlsx"
-    data = parse_iets_model(str(filepath))
+else:
+    # Display selected sheet
+    st.header(page)
     
-    if 'METADATA' in data:
-        st.dataframe(data['METADATA'], use_container_width=True)
+    if page in data:
+        df = data[page]
+        
+        # Display dataframe info
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Rows", len(df))
+        with col2:
+            st.metric("Columns", len(df.columns))
+        
+        # Display columns
+        with st.expander("Column Names"):
+            st.write(", ".join(df.columns.tolist()))
+        
+        # Display dataframe
+        st.dataframe(df, use_container_width=True)
+        
+        # Download button
+        csv = df.to_csv(index=False)
+        st.download_button(
+            label=f"Download {page} as CSV",
+            data=csv,
+            file_name=f"{page}.csv",
+            mime="text/csv"
+        )
     else:
-        st.warning("METADATA sheet not found")
-
-elif page == "Connectors":
-    st.header("Connectors")
-    filepath = Path(__file__).parent / "Base" / "IETS_ModelName_v6.xlsx"
-    data = parse_iets_model(str(filepath))
-    
-    if 'CONNECTORS' in data:
-        st.dataframe(data['CONNECTORS'], use_container_width=True)
-    else:
-        st.warning("CONNECTORS sheet not found")
-
-elif page == "Variables":
-    st.header("Variables")
-    st.info("Variables view coming soon...")
-
-elif page == "Calculations":
-    st.header("Calculations")
-    st.info("Calculations view coming soon...")
+        st.warning(f"Sheet '{page}' not found")
