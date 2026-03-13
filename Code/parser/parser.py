@@ -615,7 +615,7 @@ if __name__ == "__main__":
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)
+    project_root = os.path.dirname(os.path.dirname(script_dir))
     default_file = os.path.join(project_root, "Base", "IETS_ModelName_v6.xlsx")
 
     filepath = sys.argv[1] if len(sys.argv) > 1 else default_file
