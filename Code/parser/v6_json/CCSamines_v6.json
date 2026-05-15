@@ -1,0 +1,511 @@
+{
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "",
+        "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+        "Contact Info": "",
+        "Creation Date": "01.06.2025",
+        "Last Updated": "18.06.2025",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "",
+        "TRL": "9",
+        "Keywords": "Carbon Capture",
+        "Description": "",
+        "DOI": "",
+        "Main Related Publication": "",
+        "References": "",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
+    },
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "SpecPowerCons",
+            "TYPE": "DECISION",
+            "FULL NAME": "Specific pump power consumption in CCS per kg of CO2",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.015294117647058824,
+                "formula": "=780/51000"
+            },
+            "PHYSICAL UNIT": "kWh/kg",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{evapin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Cold-side inlet temperature"
+        },
+        {
+            "VARIABLE NAME": "SpecSteamCons",
+            "TYPE": "DECISION",
+            "FULL NAME": "",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 3.6,
+            "PHYSICAL UNIT": "MJ/kg",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{evapout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Cold-side outlet temperature"
+        },
+        {
+            "VARIABLE NAME": "CO2intake_ref_LOAD",
+            "TYPE": "DECISION",
+            "FULL NAME": "Reference CO2 intake mass flow",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 1000,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{condin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Hot-side inlet temperature"
+        },
+        {
+            "VARIABLE NAME": "dtmin_2ph",
+            "TYPE": "DECISION",
+            "FULL NAME": "",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 2,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{condout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Hot-side outlet temperature"
+        },
+        {
+            "VARIABLE NAME": "steamTemp",
+            "TYPE": "DECISION",
+            "FULL NAME": "Saturation temperature at 3 bar",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 133.5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$Q_{evapmax}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Reference refrigeration load"
+        },
+        {
+            "VARIABLE NAME": "captureEfficiency",
+            "TYPE": "DECISION",
+            "FULL NAME": "Capture efficiency",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.9,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 1,
+            "LATEX SYNTAX": "$\\eta_{ex}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Efficiency based on Carnot"
+        },
+        {
+            "VARIABLE NAME": "Spec_CCSCost",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Phase-change Tmin constraint",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 100000,
+            "PHYSICAL UNIT": "EUR/tpd",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\Delta T_{min2ph}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Phase-change Tmin constraint"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "DECISION",
+            "FULL NAME": "Lifetime",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "years",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$COP_{Carnot}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Idealized performance"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "DECISION",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$COP$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Based on second-law efficiency"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2020",
+            "TYPE": "DECISION",
+            "FULL NAME": "Actual CEPCI",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 596.2,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$W_{refrig}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Required electrical power"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2008",
+            "TYPE": "DECISION",
+            "FULL NAME": "Old CEPCI",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 575.4,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$Q_{cond}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat released at condenser"
+        },
+        {
+            "VARIABLE NAME": "CO2Released_ref_LOAD",
+            "TYPE": "DECISION",
+            "FULL NAME": "Mass flow of CO2 in flue gas escaping",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 99.99999999999997,
+                "formula": "=CO2intake_ref_LOAD*(1-captureEfficiency)"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": {
+                "value": 900,
+                "formula": "=CO2Captured_ref_LOAD"
+            },
+            "LATEX SYNTAX": "$F^{refrig}_{min}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "The minimum capacity multiplier for the refrigeration unit"
+        },
+        {
+            "VARIABLE NAME": "CO2Captured_ref_LOAD",
+            "TYPE": "DECISION",
+            "FULL NAME": "Mass flow of CO2 captured",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 900,
+                "formula": "=CO2intake_ref_LOAD*captureEfficiency"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": {
+                "value": 99.99999999999997,
+                "formula": "=CO2Released_ref_LOAD"
+            },
+            "MAX BOUND": 15,
+            "LATEX SYNTAX": "$F^{refrig}_{max}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "The maximum capacity multiplier for the refrigeration unit"
+        },
+        {
+            "VARIABLE NAME": "SteamCons",
+            "TYPE": "DECISION",
+            "FULL NAME": "Steam consumed by the CCS unit",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 900,
+                "formula": "=SpecSteamCons*1000*CO2Captured_ref_LOAD/3600"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 5,
+            "MAX BOUND": 40,
+            "LATEX SYNTAX": "$L_{equipment}}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lifetime of an equipment for the calculating of annualized investment cost"
+        },
+        {
+            "VARIABLE NAME": "PowerCons",
+            "TYPE": "DECISION",
+            "FULL NAME": "Power consumed by the CCS unit",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 13.764705882352942,
+                "formula": "=SpecPowerCons*CO2Captured_ref_LOAD"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$Y_{current}}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "The year of the equipment purchase"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 0.0664615359206755,
+                "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Annualization factor"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_CCS",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Investment cost",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 148746.3230211306,
+                "formula": "=Spec_CCSCost*CO2Captured_ref_LOAD*24/1000*(CEPCI_2020/CEPCI_2008)*Annuity"
+            },
+            "PHYSICAL UNIT": "EUR/y",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Investment cost"
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Electricity",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Electricity"
+            },
+            {
+                "UID": "CO2inFlueGas",
+                "NAME (ALIAS)": "CO2inFlueGas",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Carbon dioxide in flue"
+            },
+            {
+                "UID": "CO2",
+                "NAME (ALIAS)": "CO2",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Carbon dioxide"
+            },
+            {
+                "UID": "EnvCO2Em",
+                "NAME (ALIAS)": "EnvCO2Em",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Env Carbon dioxide"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
+    },
+    "UNITS": {
+        "CSSPostAmines": {
+            "Unit Description": "Post-combustion carbon capture with amines is a widely used method to reduce `CO_{2}` emissions from power plants and industrial processes. The operating principle involves passing the flue gas through an absorber where the `CO_{2}` is captured by contacting it with a chemical solvent, typically an amine at below 60°C. The `CO_{2}`-rich solvent, also known as rich amine, is then pumped to a desorber or stripper. In the desorber, heat is supplied to the rich amine solution, typically through low pressure steam (above 120°C) in the reboiler, which helps releasing the `CO_{2}` out from the solvent. The released `CO_{2}` is separated, while the regenerated or lean amine solution, which is now depleted of `CO_{2}`, is recycled back to the absorber to capture more `CO_{2}` from the flue gas. The lean amine solution, which is recycled back to the absorber, usually has a concentration of amine not higher than 45% wt and a `CO_{2}` concentration (i.e. amine loading) not higher than 0.3 kmol `CO_{2}` per kmol of amine to avoid corrosion problems.",
+            "Unit Info": {
+                "Unit name": "CSSPostAmines",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 1000000.0
+            },
+            "Connectors Description": "the electricity consumed by the refrigerator unit (in kW) is imported through the Electricity layer from a electricity supply grid located in the market model.",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ENERGY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 13.764705882352942,
+                        "formula": "=PowerCons"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "CO2inFlueGas",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 1000,
+                        "formula": "=CO2intake_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Carbon dioxide in flue"
+                },
+                {
+                    "NAME (ALIAS)": "EnvCO2Em",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 99.99999999999997,
+                        "formula": "=CO2Released_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Carbon dioxide"
+                },
+                {
+                    "NAME (ALIAS)": "CO2 ",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 900,
+                        "formula": "=CO2Captured_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Env Carbon dioxide"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "qt_ccs",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": 133.5,
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": 133.5,
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 900.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 2.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {
+                "CCSPostAmines": {
+                    "Type": "Asset",
+                    "Subtype": "Asset",
+                    "Reference": "Asset",
+                    "Parameters": [
+                        {
+                            "Parameter": "Area",
+                            "Value": 400.0,
+                            "Unit": "m2"
+                        },
+                        {
+                            "Parameter": "Pressure",
+                            "Value": 20.0,
+                            "Unit": "bar"
+                        },
+                        {
+                            "Parameter": "Lifetime",
+                            "Value": {
+                                "value": 900,
+                                "formula": "=SteamCons"
+                            },
+                            "Unit": "years"
+                        },
+                        {
+                            "Parameter": "Date",
+                            "Value": {
+                                "value": 13.764705882352942,
+                                "formula": "=PowerCons"
+                            },
+                            "Unit": "year"
+                        }
+                    ]
+                }
+            },
+            "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

@@ -1,0 +1,1398 @@
+{
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "SOEC model",
+        "Authors and Contributors": "Meire Domingos, Daniel Florez-Orrego, EPFL IPESE research group",
+        "Contact Info": "",
+        "Creation Date": "01.06.2025",
+        "Last Updated": "18.06.2025",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "1kgH2/h",
+        "TRL": "9",
+        "Keywords": "Hydrogen",
+        "Description": "SOEC model operating at thermoneutral mode (800 °C, 81% steam utilization), with activation, concentration and ohmic overpotentials included in Aspen PLUS",
+        "DOI": "https://doi.org/10.0/9887.663A",
+        "Main Related Publication": "Ni, M., Leung, M.K. and Leung, D.Y., 2006. Chemical Engineering & Technology: Industrial Chemistry Plant Equipment Process Engineering Biotechnology, 29(5), pp.636-642",
+        "References": "",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "local\\path\\to\\SOEC_Electrolyser\\SOEC_Electrolyser.drawio",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
+    },
+    "VARIABLES": [
+        {
+            "NAME": "Cool_Tin",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "T supply",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": 12,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$Cool_{Tin}$",
+            "REFERENCE": "ECOS2105, Florez-Orrego, etal.initially25",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "dtmin_gas",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Minimum temperature difference for gas-side heat exchange",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 8,
+                "formula": "=8"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$dtmin_{gas}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "dtmin_liq",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Minimum temperature difference for liquid-side heat exchange",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 5,
+                "formula": "=5"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$dtmin_{liq}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "dtmin_2ph",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Minimum temperature difference for two-phase (condensing/boiling) heat exchange",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 2,
+                "formula": "=2"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$dtmin_{2ph}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "massflow_H2O_in",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Inlet mass flow rate of water (H₂O)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 10.78,
+                "formula": "=10.78"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{m}_{H_2O,in}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "massflow_Air",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Mass flow rate of air",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 55.66,
+                "formula": "=55.66"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{m}_{Air}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "massflow_H2_out",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Outlet mass flow rate of hydrogen (H₂)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 1,
+                "formula": "=1"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{m}_{H_2,out}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "composition: 100% H2"
+        },
+        {
+            "NAME": "massflow_H2O_out",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Outlet mass flow rate of water (H₂O)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 1.84,
+                "formula": "=1.84"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{m}_{H_2O,out}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "sum of condensed water plus water recovered in sieves (1.55+0.29 kg/h)"
+        },
+        {
+            "NAME": "massflow_O2_N2",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Mass flow rate of oxygen and nitrogen mixture (air exhaust)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 63.59,
+                "formula": "=63.59"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{m}_{O_2+N_2}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "composition: 70% N2"
+        },
+        {
+            "NAME": "Elec_input",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Electrical power input",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": 34.217,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$P_{el,input}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "34.217 per stack with overpotential."
+        },
+        {
+            "NAME": "hx_B3_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B3 – temperature at inlet (hot/cold side depending on convention)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 25,
+                "formula": "=25"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B3,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B3 – temperature at inlet (hot/cold side depending on convention)"
+        },
+        {
+            "NAME": "hx_B3_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B3 – temperature at outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 700,
+                "formula": "=700"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B3,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B3 – temperature at outlet"
+        },
+        {
+            "NAME": "hx_B3_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B3 – overall heat transfer coefficient or heat output (depending on context)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 11.16,
+                "formula": "=11.16"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B3,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B3 – overall heat transfer coefficient or heat output (depending on context)"
+        },
+        {
+            "NAME": "hx_B13_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B13 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 25,
+                "formula": "=25"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B13,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B13 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B13_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B13 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 99,
+                "formula": "=99"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B13,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B13 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B13_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B13 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 0.954,
+                "formula": "=0.954"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B13,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B13 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "hx_B12_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B12 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 99,
+                "formula": "=99"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B12,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B12 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B12_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B12 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 99.64,
+                "formula": "=99.64"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B12,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B12 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B12_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B12 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 6.77,
+                "formula": "=6.77"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B12,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B12 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "hx_B11_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B11 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 99.64,
+                "formula": "=99.64"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B11,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B11 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B11_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B11 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 800,
+                "formula": "=800"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B11,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B11 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B11_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B11 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 4.41,
+                "formula": "=4.41"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B11,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B11 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "hx_B5_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B5 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 712,
+                "formula": "=712"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B5,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B5 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B5_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B5 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 25,
+                "formula": "=25"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B5,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B5 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B5_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B5 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": -12.905,
+                "formula": "=-12.905"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B5,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B5 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "hx_B6_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B6 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 800,
+                "formula": "=800"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B6,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B6 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B6_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B6 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 200,
+                "formula": "=200"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B6,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B6 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B6_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B6 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": -3.11,
+                "formula": "=-3.11"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B6,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B6 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "hx_B17_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B17 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 200,
+                "formula": "=200"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B17,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B17 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B17_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B17 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 100,
+                "formula": "=100"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B17,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B17 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B17_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B17 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": -0.5,
+                "formula": "=-0.5"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B17,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B17 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "hx_B18_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B18 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 100,
+                "formula": "=100"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B18,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B18 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B18_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B18 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 60,
+                "formula": "=60"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B18,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B18 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B18_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B18 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": -0.198,
+                "formula": "=-0.198"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B18,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B18 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "hx_B19_ti",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B19 – inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 60,
+                "formula": "=60"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B19,ti}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B19 – inlet temperature"
+        },
+        {
+            "NAME": "hx_B19_to",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B19 – outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 25,
+                "formula": "=25"
+            },
+            "PHYSICAL UNIT": "C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$T_{B19,to}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B19 – outlet temperature"
+        },
+        {
+            "NAME": "hx_B19_ho",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat exchanger B19 – heat output or heat transfer rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": -1.225,
+                "formula": "=-1.225"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{Q}_{B19,ho}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "Heat exchanger B19 – heat output or heat transfer rate"
+        },
+        {
+            "NAME": "costop",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Operating cost",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 0.05,
+                "formula": "=0.05"
+            },
+            "PHYSICAL UNIT": "Euro/kWh",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$C_{op}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "costinv",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Investment cost",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 1200,
+                "formula": "=1200"
+            },
+            "PHYSICAL UNIT": "Euro/kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$C_{inv}$",
+            "REFERENCE": "IEA (2019), The Future of Hydrogen, IEA, Paris, https://www.iea.org/reports/the-future-of-hydrogen",
+            "DESCRIPTION": "~1200 EUR/kWee (900 Large, 1800 Small)"
+        },
+        {
+            "NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 0.06,
+                "formula": "=0.06"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 1,
+            "LATEX SYNTAX": "$i$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 25,
+                "formula": "=25"
+            },
+            "PHYSICAL UNIT": "years",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\eta$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "E_SOECElec",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Electrical energy consumption of the SOEC (Solid Oxide Electrolyzer Cell)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 34.217,
+                "formula": "=Elec_input"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$E_{SOEC,el}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "EE"
+        },
+        {
+            "NAME": "massflow_H2O_balance",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Water mass flow rate in overall system balance",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 0.00894,
+                "formula": "=(massflow_H2O_in-massflow_H2O_out)/1000"
+            },
+            "PHYSICAL UNIT": "m3/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\dot{m}_{H_2O,bal}$",
+            "REFERENCE": "",
+            "DESCRIPTION": "water balance"
+        },
+        {
+            "NAME": "Cinv2_SOECElec",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Specific investment cost for the SOEC",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 3212.020340483253,
+                "formula": "=costinv*E_SOECElec*(i*((i+1)^n)/((1+i)^n-1))"
+            },
+            "PHYSICAL UNIT": "EUR/yr",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$C_{inv2,SOEC,el}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        },
+        {
+            "NAME": "Cop_Electr",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Electricity operational cost",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE OR FORMULA": {
+                "value": 1.71085,
+                "formula": "=costop*E_SOECElec"
+            },
+            "PHYSICAL UNIT": "EUR/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$C_{op,el}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "Unique Identifier Number, UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Electricity",
+                "TYPE": "ELECTRICITY",
+                "PHYSICAL UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Electricity consumption"
+            },
+            {
+                "Unique Identifier Number, UID": "WATER",
+                "NAME (ALIAS)": "Water",
+                "TYPE": "MASS",
+                "PHYSICAL UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(L)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                "DESCRIPTION": "water consumption"
+            },
+            {
+                "Unique Identifier Number, UID": "ENRICHED_AIR",
+                "NAME (ALIAS)": "Enriched air",
+                "TYPE": "MASS",
+                "PHYSICAL UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(G)",
+                "COMPOSITION [MOLE/MASS]": {
+                    "value": "MASSFRAC:N2[0.7]&O2[0.3]",
+                    "formula": "=AIR"
+                },
+                "DESCRIPTION": "enriched air production"
+            },
+            {
+                "Unique Identifier Number, UID": "HYDROGEN",
+                "NAME (ALIAS)": "Hydrogen",
+                "TYPE": "MASS",
+                "PHYSICAL UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(G)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+                "DESCRIPTION": "hydrogen production"
+            },
+            {
+                "Unique Identifier Number, UID": "AIR",
+                "NAME (ALIAS)": "Air",
+                "TYPE": "MASS",
+                "PHYSICAL UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(G)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.7]&O2[0.3]",
+                "DESCRIPTION": "sweep air"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
+    },
+    "UNITS": {
+        "SOECmodel": {
+            "Unit Description": "",
+            "Unit Info": {
+                "Unit name": "SOECmodel",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Water_SOEC_in",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "VALUE": {
+                        "value": 10.78,
+                        "formula": "=massflow_H2O_in"
+                    },
+                    "PHYSICAL UNIT": {
+                        "value": "kg/h",
+                        "formula": "=massflow_H2O_in"
+                    },
+                    "TEMPERATURE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(L)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "water in"
+                },
+                {
+                    "NAME (ALIAS)": "Air_in",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "VALUE": {
+                        "value": 55.66,
+                        "formula": "=massflow_Air"
+                    },
+                    "PHYSICAL UNIT": {
+                        "value": "kg/h",
+                        "formula": "=massflow_Air"
+                    },
+                    "TEMPERATURE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(G)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.7]&O2[0.3]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "sweep air"
+                },
+                {
+                    "NAME (ALIAS)": "Elec_SOEC_in",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "VALUE": {
+                        "value": 34.217,
+                        "formula": "=E_SOECElec"
+                    },
+                    "PHYSICAL UNIT": {
+                        "value": "kW",
+                        "formula": "=E_SOECElec"
+                    },
+                    "TEMPERATURE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "H2_SOEC_out",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "VALUE": {
+                        "value": 1,
+                        "formula": "=massflow_H2_out"
+                    },
+                    "PHYSICAL UNIT": {
+                        "value": "kg/h",
+                        "formula": "=massflow_H2_out"
+                    },
+                    "TEMPERATURE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(G)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "dihyrdrogen produced"
+                },
+                {
+                    "NAME (ALIAS)": "Water_SOEC_out",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "VALUE": {
+                        "value": 1.84,
+                        "formula": "=massflow_H2O_out"
+                    },
+                    "PHYSICAL UNIT": {
+                        "value": "kg/h",
+                        "formula": "=massflow_H2O_out"
+                    },
+                    "TEMPERATURE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(L)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "water out"
+                },
+                {
+                    "NAME (ALIAS)": "Water_balance",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "VALUE": {
+                        "value": 0.00894,
+                        "formula": "=massflow_H2O_balance"
+                    },
+                    "PHYSICAL UNIT": {
+                        "value": "m3/h",
+                        "formula": "=massflow_H2O_balance"
+                    },
+                    "TEMPERATURE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(L)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "water balance"
+                },
+                {
+                    "NAME (ALIAS)": "Enrair_SOECELec_out",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "VALUE": {
+                        "value": 63.59,
+                        "formula": "=massflow_O2_N2"
+                    },
+                    "PHYSICAL UNIT": {
+                        "value": "kg/h",
+                        "formula": "=massflow_O2_N2"
+                    },
+                    "TEMPERATURE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(G)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.7]&O2[0.3]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "enriched air"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "q_101",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 25,
+                        "formula": "=hx_B3_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 700,
+                        "formula": "=hx_B3_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 11.16,
+                        "formula": "=hx_B3_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_102",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 25,
+                        "formula": "=hx_B13_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 99,
+                        "formula": "=hx_B13_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 0.954,
+                        "formula": "=hx_B13_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 5,
+                        "formula": "=dtmin_liq"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_103",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 99,
+                        "formula": "=hx_B12_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 99.64,
+                        "formula": "=hx_B12_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 6.77,
+                        "formula": "=hx_B12_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_104",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 99.64,
+                        "formula": "=hx_B11_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 800,
+                        "formula": "=hx_B11_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 4.41,
+                        "formula": "=hx_B11_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_105",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 712,
+                        "formula": "=hx_B5_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 25,
+                        "formula": "=hx_B5_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": -12.905,
+                        "formula": "=hx_B5_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_106",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 800,
+                        "formula": "=hx_B6_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 200,
+                        "formula": "=hx_B6_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": -3.11,
+                        "formula": "=hx_B6_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_107",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 200,
+                        "formula": "=hx_B17_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 100,
+                        "formula": "=hx_B17_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": -0.5,
+                        "formula": "=hx_B17_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_108",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 100,
+                        "formula": "=hx_B18_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 60,
+                        "formula": "=hx_B18_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": -0.198,
+                        "formula": "=hx_B18_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_109",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 60,
+                        "formula": "=hx_B19_ti"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 25,
+                        "formula": "=hx_B19_to"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": -1.225,
+                        "formula": "=hx_B19_ho"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": 1.0,
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": "",
+                    "HEAT TRANSFER COEF UNIT": "",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {
+                "Electrolyzer": {
+                    "Type": "Electrolyzer",
+                    "Subtype": "",
+                    "Reference": "",
+                    "Parameters": [
+                        {
+                            "Parameter": "costinv",
+                            "Value": {
+                                "value": 1200,
+                                "formula": "=costinv"
+                            },
+                            "Unit": "Euro/kW"
+                        },
+                        {
+                            "Parameter": "i",
+                            "Value": {
+                                "value": 0.06,
+                                "formula": "=i"
+                            },
+                            "Unit": "-"
+                        },
+                        {
+                            "Parameter": "n",
+                            "Value": {
+                                "value": 25,
+                                "formula": "=n"
+                            },
+                            "Unit": "years"
+                        },
+                        {
+                            "Parameter": "E_SOECElec",
+                            "Value": {
+                                "value": 34.217,
+                                "formula": "=E_SOECElec"
+                            },
+                            "Unit": "kW"
+                        }
+                    ]
+                }
+            },
+            "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

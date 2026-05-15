@@ -1,0 +1,853 @@
+{
+    "METADATA": {},
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "CO2_input",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Carbon dioxide input mass flow rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 44,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2\\_input}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Carbon dioxide consumption flow rate"
+        },
+        {
+            "VARIABLE NAME": "H2_input",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Hydrogen input mass flow rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 8,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{H2\\_input}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Hydrogen consumption flow rate"
+        },
+        {
+            "VARIABLE NAME": "CH4_ouput",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Methane output mass flow rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 16,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CH4\\_ouput}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Methane production flow rate"
+        },
+        {
+            "VARIABLE NAME": "Water_output",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Water output volumetric flow rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.036,
+            "PHYSICAL UNIT": "m3/h",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Water\\_output}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Water production volumetric flow rate"
+        },
+        {
+            "VARIABLE NAME": "LHV_CH4",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Lower heating value of methane",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 50000,
+            "PHYSICAL UNIT": "kJ/kg",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{LHV\\_CH4}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lower heating value of methane"
+        },
+        {
+            "VARIABLE NAME": "Tin_hot1",
+            "TYPE": "DECISION",
+            "FULL NAME": "Inlet temperature of hot stream from methanation bed 1",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 542,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Tin\\_hot1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Hot outlet stream from first bed"
+        },
+        {
+            "VARIABLE NAME": "Q_hot1_spec",
+            "TYPE": "DECISION",
+            "FULL NAME": "Specific waste heat from methanation bed 1",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1.961,
+            "PHYSICAL UNIT": "kWh/kgCH4",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_hot1\\_spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Waste heat from first methanation bed"
+        },
+        {
+            "VARIABLE NAME": "Tout_hot1",
+            "TYPE": "DECISION",
+            "FULL NAME": "Outlet temperature after cooling of bed 1",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 300,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Tout\\_hot1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Cooled stream from first bed"
+        },
+        {
+            "VARIABLE NAME": "Tin_hot2",
+            "TYPE": "DECISION",
+            "FULL NAME": "Inlet temperature of hot stream from methanation bed 2",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 411,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Tin\\_hot2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Hot outlet stream from second bed"
+        },
+        {
+            "VARIABLE NAME": "Q_hot2_spec",
+            "TYPE": "DECISION",
+            "FULL NAME": "Specific waste heat from methanation bed 2",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 0.799,
+            "PHYSICAL UNIT": "kWh/kgCH4",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_hot2\\_spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Waste heat from second methanation bed"
+        },
+        {
+            "VARIABLE NAME": "Tout_hot2",
+            "TYPE": "DECISION",
+            "FULL NAME": "Outlet temperature after cooling of bed 2",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 200,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Tout\\_hot2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Cooled stream from second bed"
+        },
+        {
+            "VARIABLE NAME": "Tin_hot3",
+            "TYPE": "DECISION",
+            "FULL NAME": "Inlet temperature of hot stream from methanation bed 3",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 202,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Tin\\_hot3}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Hot outlet stream from third bed"
+        },
+        {
+            "VARIABLE NAME": "Q_hot3_spec",
+            "TYPE": "DECISION",
+            "FULL NAME": "Specific waste heat from methanation bed 3",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1.095,
+            "PHYSICAL UNIT": "kWh/kgCH4",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_hot3\\_spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Waste heat from third methanation bed"
+        },
+        {
+            "VARIABLE NAME": "Tout_hot3",
+            "TYPE": "DECISION",
+            "FULL NAME": "Outlet temperature after cooling of bed 3",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Tout\\_hot3}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Cooled stream from third bed"
+        },
+        {
+            "VARIABLE NAME": "dtmin_intercool",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Minimum temperature difference for intercooling",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{dtmin\\_intercool}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Minimum temperature difference contribution for intercooling streams"
+        },
+        {
+            "VARIABLE NAME": "MW_CO2",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Molecular weight of carbon dioxide",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 44,
+            "PHYSICAL UNIT": "kg/kmolCO2",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{MW\\_CO2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Molecular weight of carbon dioxide"
+        },
+        {
+            "VARIABLE NAME": "eff_comp",
+            "TYPE": "DECISION",
+            "FULL NAME": "CO2 compressor efficiency",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.8,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{eff\\_comp}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "CO2 compressor efficiency"
+        },
+        {
+            "VARIABLE NAME": "Ru",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Universal gas constant",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 8.314,
+            "PHYSICAL UNIT": "kJ/kmolK",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Ru}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Universal gas constant"
+        },
+        {
+            "VARIABLE NAME": "T_comp",
+            "TYPE": "DECISION",
+            "FULL NAME": "Intercooling temperature of CO2 compressor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 311,
+            "PHYSICAL UNIT": "K",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{T\\_comp}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature of CO2 compressor intercooling"
+        },
+        {
+            "VARIABLE NAME": "P_in",
+            "TYPE": "DECISION",
+            "FULL NAME": "CO2 compressor inlet pressure",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 1,
+            "PHYSICAL UNIT": "bar",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{P\\_in}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Pressure in before the compressor"
+        },
+        {
+            "VARIABLE NAME": "P_out",
+            "TYPE": "DECISION",
+            "FULL NAME": "CO2 compressor outlet pressure",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "bar",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{P\\_out}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Compressor outlet pressure"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{i}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Interest rate"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime of the methanator",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "yr",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{n}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lifetime of the methanator"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_meth_spec",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific investment cost of methanator",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 300,
+            "PHYSICAL UNIT": "Eur/kWCH4",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_meth\\_spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Methanator specific investment cost"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_compr_spec",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific investment cost of compressor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 500,
+            "PHYSICAL UNIT": "Eur/kWcomp",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_compr\\_spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Compressor specific investment cost"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2020",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "CEPCI index 2020",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 596.2,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2020}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Actual CEPCI"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2008",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "CEPCI index 2008",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 575.4,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2008}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "CEPCI 2008"
+        },
+        {
+            "VARIABLE NAME": "Q_hot1",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Waste heat from methanation bed 1",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 31.376,
+                "formula": "=Q_hot1_spec*Measured: These variables are directly measured directly in the industrial or technological system._ouput"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_hot1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Waste heat from first methanation bed"
+        },
+        {
+            "VARIABLE NAME": "Q_hot2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Waste heat from methanation bed 2",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 12.784,
+                "formula": "=Q_hot2_spec*Measured: These variables are directly measured directly in the industrial or technological system._ouput"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_hot2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Waste heat from second methanation bed"
+        },
+        {
+            "VARIABLE NAME": "Q_hot3",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Waste heat from methanation bed 3",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 17.52,
+                "formula": "=Q_hot3_spec*Measured: These variables are directly measured directly in the industrial or technological system._ouput"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_hot3}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Waste heat from third methanation bed"
+        },
+        {
+            "VARIABLE NAME": "CH4_outputkW",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Methane energy output",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 22222.222222222223,
+                "formula": "=Measured: These variables are directly measured directly in the industrial or technological system._ouput*LHV_Measured: These variables are directly measured directly in the industrial or technological system./3600%"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CH4\\_outputkW}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Total methane energy production"
+        },
+        {
+            "VARIABLE NAME": "CO2compduty",
+            "TYPE": "DECISION",
+            "FULL NAME": "CO2 compressor power demand",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 3.053495770625,
+                "formula": "=Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._input*(1/eff_comp)*Ru/MW_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*T_comp*3.4011/3600"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2compduty}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "CO2 compressor duty, with 3.4011 = ln(P_out/P_in)"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.0664615359206755,
+                "formula": "=(i*(i+1)^n)/((i+1)^n-1)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "-"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_meth",
+            "TYPE": "DECISION",
+            "FULL NAME": "Annualized investment cost of methanator",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 459093.58957139077,
+                "formula": "=Cinv2_meth_spec*Measured: These variables are directly measured directly in the industrial or technological system._outputkW*(CEPCI_2020/CEPCI_2008)*Annuity"
+            },
+            "PHYSICAL UNIT": "Eur/yr",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_meth}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Investment cost of the methanator"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_comp",
+            "TYPE": "DECISION",
+            "FULL NAME": "Annualized investment cost of compressor",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 105.13802505579686,
+                "formula": "=Cinv2_compr_spec*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.compduty*(CEPCI_2020/CEPCI_2008)*Annuity"
+            },
+            "PHYSICAL UNIT": "Eur/y",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_comp}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Investment cost of compressor"
+        },
+        {
+            "VARIABLE NAME": "Cinv_Total",
+            "TYPE": "",
+            "FULL NAME": "",
+            "USER GRADE": "",
+            "DEFAULT VALUE": {
+                "value": 459198.7275964466,
+                "formula": "=Cinv2_meth+Cinv2_comp"
+            },
+            "PHYSICAL UNIT": "",
+            "FORMULA OR PATH": "",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$\\mathrm{Cinv\\_Total}$",
+            "REFERENCE": "",
+            "DESCRIPTION": ""
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "CO2",
+                "NAME (ALIAS)": "CO2",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "-"
+            },
+            {
+                "UID": "HYDROGEN",
+                "NAME (ALIAS)": "hydrogen",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+                "DESCRIPTION": "-"
+            },
+            {
+                "UID": "NATGAS",
+                "NAME (ALIAS)": "CH4",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1]",
+                "DESCRIPTION": "-"
+            },
+            {
+                "UID": "Electricity",
+                "NAME (ALIAS)": "Electricity",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "-",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "-"
+            },
+            {
+                "UID": "WATER",
+                "NAME (ALIAS)": "water",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "(L)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                "DESCRIPTION": "-"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
+    },
+    "UNITS": {
+        "Header": {
+            "Unit Description": "",
+            "Unit Info": {
+                "Unit name": "Header",
+                "Minimum capacity multiplier": 1.0,
+                "Maximum capacity multiplier": 1.0
+            },
+            "Connectors Description": "",
+            "Connectors": [],
+            "Heat Streams Description": "",
+            "Heat Streams": [],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "Methanat": {
+            "Unit Description": "MethanatorUtil is a Utility-type unit (Fmin=0, Fmax=10000, Cinv2='Cinv2_meth') that consumes compressed H2 (8 kg/h, hydrogen layer) and compressed CO2 (44 kg/h, Comp_CO2 layer), producing CH4 (kW LHV basis) and water (0.036 m³/h). It includes 3 exothermic hot heat streams for inter-stage cooling (q_meth1–3), with duties computed as specific heat [kWh/kgCH4] × CH4 mass flow.",
+            "Unit Info": {
+                "Unit name": "Methanat",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "hydrogen",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 8,
+                        "formula": "=MethanatorUtil is a Utility-type unit (Fmin=0, Fmax=10000, Cinv2='Cinv2_meth') that consumes compressed H2 (8 kg/h, hydrogen layer) and compressed CO2 (44 kg/h, Comp_CO2 layer), producing CH4 (kW LHV basis) and water (0.036 m³/h). It includes 3 exothermic hot heat streams for inter-stage cooling (q_meth1–3), with duties computed as specific heat [kWh/kgCH4] × CH4 mass flow._input"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 1.0,
+                    "TEMPERATURE UNIT": "30",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "1",
+                    "VAPOR FRACTION [MASS]": 1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "dihydrogen"
+                },
+                {
+                    "NAME (ALIAS)": "CO2",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 44,
+                        "formula": "=MethanatorUtil is a Utility-type unit (Fmin=0, Fmax=10000, Cinv2='Cinv2_meth') that consumes compressed H2 (8 kg/h, hydrogen layer) and compressed CO2 (44 kg/h, Comp_CO2 layer), producing CH4 (kW LHV basis) and water (0.036 m³/h). It includes 3 exothermic hot heat streams for inter-stage cooling (q_meth1–3), with duties computed as specific heat [kWh/kgCH4] × CH4 mass flow._input"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 1.0,
+                    "TEMPERATURE UNIT": "30",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "1",
+                    "VAPOR FRACTION [MASS]": 1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "carbon dioxide"
+                },
+                {
+                    "NAME (ALIAS)": "water",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 0.036,
+                        "formula": "=Water_output"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 1.0,
+                    "TEMPERATURE UNIT": "30",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "1",
+                    "VAPOR FRACTION [MASS]": 1.0,
+                    "PHASE": "(L)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "water"
+                },
+                {
+                    "NAME (ALIAS)": "CH4",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 22222.222222222223,
+                        "formula": "=UNIT NAME_outputkW"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 1.0,
+                    "TEMPERATURE UNIT": "30",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "1",
+                    "VAPOR FRACTION [MASS]": 1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Natgas"
+                },
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 3.053495770625,
+                        "formula": "=MethanatorUtil is a Utility-type unit (Fmin=0, Fmax=10000, Cinv2='Cinv2_meth') that consumes compressed H2 (8 kg/h, hydrogen layer) and compressed CO2 (44 kg/h, Comp_CO2 layer), producing CH4 (kW LHV basis) and water (0.036 m³/h). It includes 3 exothermic hot heat streams for inter-stage cooling (q_meth1–3), with duties computed as specific heat [kWh/kgCH4] × CH4 mass flow.compduty"
+                    },
+                    "FLOW UNIT": "kWh",
+                    "TEMPERATURE VALUE": "",
+                    "TEMPERATURE UNIT": "",
+                    "PRESSURE VALUE": "",
+                    "PRESSURE UNIT": "",
+                    "VAPOR FRACTION [MASS]": "",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "q_meth1",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 542,
+                        "formula": "=Tin_hot1"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 300,
+                        "formula": "=Tout_hot1"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 31.376,
+                        "formula": "=Q_hot1"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 5,
+                        "formula": "=dtmin_intercool"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_meth2",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 411,
+                        "formula": "=Tin_hot2"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 200,
+                        "formula": "=Tout_hot2"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 12.784,
+                        "formula": "=Q_hot2"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 5,
+                        "formula": "=dtmin_intercool"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "q_meth3",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 202,
+                        "formula": "=Tin_hot3"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 40,
+                        "formula": "=Tout_hot3"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 17.52,
+                        "formula": "=Q_hot3"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 5,
+                        "formula": "=dtmin_intercool"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

@@ -1,1 +1,1 @@
-to run the app : 'python -m streamlit run webappv2.py'
+to run the app : 'python -m streamlit run webapp.py'

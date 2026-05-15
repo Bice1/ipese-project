@@ -1,0 +1,396 @@
+{
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "PVpanel",
+        "Authors and Contributors": "Daniel Florez-Orrego",
+        "Contact Info": "daniel.florezorrego@epfl.ch",
+        "Creation Date": "23.09.2025",
+        "Last Updated": "26.09.2025",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "10000 m²",
+        "TRL": "9",
+        "Keywords": "PVpanel",
+        "Description": "This model represents a Photovoltaic panel that converts sunlight into electricity",
+        "DOI": "https://doi.org/10.0/9887.663A",
+        "Main Related Publication": "https://linktomypublication.com",
+        "References": "[1] Ashouri, A., 2014. Simultaneous design and control of energy systems (Doctoral dissertation, ETH Zurich).\n\n[2] Suciu, R.A., 2019. Fifth generation district energy systems for low carbon cities. (Doctoral dissertation, EPFL).\n\n[3] Wallerand, A.S., 2018. Integration of solar energy with industrial processes (No. 8635). EPFL.",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "model/PVpanel/PVpanel.svg",
+        "URL": "",
+        "Supplementary Material": ""
+    },
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "T_ext",
+            "TYPE": "DECISION",
+            "FULL NAME": "Current ambient temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 10,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$T_{ext}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Outdoor air dry-bulb temperature"
+        },
+        {
+            "VARIABLE NAME": "T_ref",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Reference ambient temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 298,
+            "PHYSICAL UNIT": "K",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$T_{ref}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Reference temperature used for efficiency correction"
+        },
+        {
+            "VARIABLE NAME": "GI",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Global horizental irradiance",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 100,
+            "PHYSICAL UNIT": "W/m2",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$G_{I}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Solar irradiance incident on a horizontal plane at the site"
+        },
+        {
+            "VARIABLE NAME": "size_ref",
+            "TYPE": "DECISION",
+            "FULL NAME": "Size of installation",
+            "USER GRADE": "OPTIONAL",
+            "DEFAULT VALUE": 11689.7,
+            "PHYSICAL UNIT": "m2",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$size_{ref}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Total geometric PV module area installed"
+        },
+        {
+            "VARIABLE NAME": "area_factor",
+            "TYPE": "DECISION",
+            "FULL NAME": "Effective area multiplication factor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.25,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$area_{factor}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": ""
+        },
+        {
+            "VARIABLE NAME": "U_glass",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Thermal transmission coefficient",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 29.1,
+            "PHYSICAL UNIT": "W/m2K",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$U_{glass}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Overall heat transfer coefficient between PV module and ambient"
+        },
+        {
+            "VARIABLE NAME": "f_glass",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Fraction of the solar irradiance passing through PV glass",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.9,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 1,
+            "LATEX SYNTAX": "$f_{glass}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Front-glass transmittance"
+        },
+        {
+            "VARIABLE NAME": "efficiency_ref",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Reference efficiency",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.14,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$\\eta_{ref}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Module efficiency at reference conditions (STC)"
+        },
+        {
+            "VARIABLE NAME": "efficiency_var",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature coeffficient of efficiency",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.001,
+            "PHYSICAL UNIT": "1/K",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$\\eta_{var}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Linear slope of efficiency vs. cell temperature"
+        },
+        {
+            "VARIABLE NAME": "speccostinv",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Specific investment cost",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 300,
+            "PHYSICAL UNIT": "CHF/m2",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$c^{inv}_{spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Capital cost per unit size"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime of the photovoltaic panel",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 25,
+            "PHYSICAL UNIT": "years",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$n$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lifetime of an equipment for the calculating of annualized investment cost"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$i$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Discount/finance rate used in the capital recovery factor"
+        },
+        {
+            "VARIABLE NAME": "T_panel",
+            "TYPE": "DECISION",
+            "FULL NAME": "PV panel temperature calculation",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 285.7194827586207,
+                "formula": "=U_glass*(T_ext+273.15)/(U_glass-efficiency_var*GI)+GI*(f_glass-efficiency_ref-efficiency_var*T_ref)/(U_glass-efficiency_var*GI)"
+            },
+            "PHYSICAL UNIT": "K",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$T_{panel}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "PV panel temperature calculation"
+        },
+        {
+            "VARIABLE NAME": "size_real",
+            "TYPE": "DECISION",
+            "FULL NAME": "Estimated real effective size of the PV panel",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 2922.425,
+                "formula": "=area_factor*size_ref"
+            },
+            "PHYSICAL UNIT": "m2",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$size_{real}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Estimated real effective size of the PV panel"
+        },
+        {
+            "VARIABLE NAME": "efficiency",
+            "TYPE": "DECISION",
+            "FULL NAME": "PV panel efficiency variation with temperature",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 0.1522805172413793,
+                "formula": "=efficiency_ref-efficiency_var*(T_panel-T_ref)"
+            },
+            "PHYSICAL UNIT": "%",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$\\eta$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "PV panel efficiency variation with temperature"
+        },
+        {
+            "VARIABLE NAME": "E_default",
+            "TYPE": "DECISION",
+            "FULL NAME": "Electric power output",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 44.502839059913796,
+                "formula": "=(size_real*efficiency*GI)/1000"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$E_{default}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Electric power output"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "DECISION",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 0.07822671821227395,
+                "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$Annuity$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Annualization factor"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_PV",
+            "TYPE": "DECISION",
+            "FULL NAME": "Yearly investment cost estimation",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 68583.51509145141,
+                "formula": "=speccostinv*Annuity*size_real"
+            },
+            "PHYSICAL UNIT": "CHF/year",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "",
+            "MAX BOUND": "",
+            "LATEX SYNTAX": "$C^{PV}_{inv2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Yearly investment cost estimation"
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Electricity",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Electricity produced"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
+    },
+    "UNITS": {
+        "PVpanel": {
+            "Unit Description": "Photovoltaic (PV) panels are recognized as essential components of renewable energy infrastructure by converting sunlight into electricity. Their performance is subject to various design and external factors. For instance, ambient temperature directly affects the panel efficiency, as the elevated temperatures lead to decreased power output due to semiconductor material sensitivity. In addition, the output of a photovoltaic panel partly depends on the angle of the sun relative to the panel. The global horizontal irradiance (GHI) is the amount of terrestrial irradiance falling on a surface horizontal to the surface of the earth [in W/m2] and dictates the potential energy yield of PV systems. Irradiation values can be obtained from an insolation map or from insolation tables that reflect data over the prior 30–50 years. Moreover, part of the solar radiation reaching an object is absorbed and the remainder is reflected. The fraction of solar irradiation that passes through a PV glass determines the absorbed energy. Usually, the absorbed radiation is converted to thermal energy, increasing the object temperature. In this regard, the thermal transmission coefficient of a PV panel impacts the heat dissipation capacity, affecting the overall performance. Finallt, the temperature coefficient of efficiency quantifies performance changes with temperature, influencing the energy output.",
+            "Unit Info": {
+                "Unit name": "PVpanel",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100.0
+            },
+            "Connectors Description": "the net electricity generated by the PV panel (in kW) is exported through the `Electricity` layer to an electricity supply grid located in the market model.",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 44.502839059913796,
+                        "formula": "=E_default"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Electricity produced"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [],
+            "Equipments Description": "the equipment required is the PVpanel",
+            "Equipments": {
+                "Pvpanel": {
+                    "Type": "ASSETS",
+                    "Subtype": "",
+                    "Reference": "",
+                    "Parameters": [
+                        {
+                            "Parameter": "Area",
+                            "Value": {
+                                "value": 2922.425,
+                                "formula": "=size_real"
+                            },
+                            "Unit": "m2"
+                        },
+                        {
+                            "Parameter": "Capital",
+                            "Value": {
+                                "value": 876727.5,
+                                "formula": "=F30*speccostinv"
+                            },
+                            "Unit": "CHF"
+                        },
+                        {
+                            "Parameter": "Lifetime",
+                            "Value": {
+                                "value": 25,
+                                "formula": "=n"
+                            },
+                            "Unit": "years"
+                        },
+                        {
+                            "Parameter": "Date",
+                            "Value": 2025.0,
+                            "Unit": "year"
+                        }
+                    ]
+                }
+            },
+            "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

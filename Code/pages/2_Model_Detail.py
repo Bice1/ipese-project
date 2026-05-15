@@ -1,5 +1,5 @@
 """
-Model Detail page — full metadata panel, connectors, equipment.
+Model Detail page — full metadata panel, heat analysis (GCC/CC), connectors, equipment.
 """
 
 from __future__ import annotations
@@ -12,16 +12,23 @@ if str(_CODE_DIR) not in sys.path:
     sys.path.insert(0, str(_CODE_DIR))
 
 import pandas as pd
+import plotly.graph_objects as go
 import streamlit as st
 
+from engine.pinch import compute_pinch, PinchResult
 from utils.loader import load_all_models
 from utils.constants import (
+    COLOR_COLD,
+    COLOR_GCC,
+    COLOR_HOT,
+    COLOR_PINCH,
     CONFIDENTIALITY_COLORS,
     DATA_DIR,
     GRADE_COLORS,
     METADATA_DISPLAY_KEYS,
     METADATA_TABLE_EXCLUDE,
     METADATA_TILE_KEYS,
+    PLOTLY_LAYOUT_BASE,
 )
 
 # ---------------------------------------------------------------------------
@@ -91,6 +98,39 @@ def _badge_html(text: str, color: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Collect all heat streams across all units
+# ---------------------------------------------------------------------------
+
+def _collect_all_streams() -> pd.DataFrame:
+    """Merge heat_streams from every unit into a single DataFrame."""
+    frames = []
+    for unit_name, unit in model.units.items():
+        if unit.heat_streams.empty:
+            continue
+        df = unit.heat_streams.copy()
+        df["_unit"] = unit_name
+        frames.append(df)
+    if not frames:
+        return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True)
+
+
+def _get_cascade_labels(streams_df: pd.DataFrame) -> list[str]:
+    """Return sorted list of distinct, non-empty cascade labels."""
+    if streams_df.empty or "heat_cascade" not in streams_df.columns:
+        return []
+    labels = set()
+    for val in streams_df["heat_cascade"].dropna():
+        s = str(val).strip()
+        if s and s.upper() != "DEFAULT":
+            labels.add(s)
+    return sorted(labels)
+
+
+all_streams = _collect_all_streams()
+cascade_labels = _get_cascade_labels(all_streams)
+
+# ---------------------------------------------------------------------------
 # Page header
 # ---------------------------------------------------------------------------
 
@@ -137,7 +177,6 @@ tab_overview, tab_heat, tab_connectors, tab_equipment = st.tabs(
     ["Overview", "Heat Analysis", "Connectors", "Equipment"]
 )
 
-
 # ===========================================================================
 # Tab 1 — Overview
 # ===========================================================================
@@ -178,7 +217,7 @@ with tab_overview:
 
     with col_side:
         # BFD image
-        bfd_key = "BLOCK FLOW DIAGRAM ( .png or .svg)"
+        bfd_key = "BLOCK FLOW DIAGRAM"
         bfd_path_str = _meta(bfd_key, "")
         bfd_resolved = None
 
@@ -255,7 +294,262 @@ with tab_overview:
 # ===========================================================================
 
 with tab_heat:
-    st.info("🚧 Work In Progress")
+    if all_streams.empty:
+        st.info("No heat streams found in this model.")
+    else:
+        # Controls bar
+        ctrl_col1, ctrl_col2, ctrl_col3 = st.columns([2, 3, 1])
+
+        with ctrl_col1:
+            cascade_options = ["ALL (combined)"] + cascade_labels
+            selected_cascade_display = st.selectbox(
+                "Cascade view",
+                options=cascade_options,
+                index=0,
+            )
+            cascade_filter = (
+                None
+                if selected_cascade_display == "ALL (combined)"
+                else selected_cascade_display
+            )
+
+        with ctrl_col2:
+            chart_type = st.radio(
+                "Chart type",
+                options=["Composite Curves", "Grand Composite Curve", "Both"],
+                index=2,
+                horizontal=True,
+            )
+
+        # Compute pinch
+        result: PinchResult = compute_pinch(all_streams, cascade_filter=cascade_filter)
+
+        # Warnings from engine
+        if result.warnings:
+            for w in result.warnings:
+                st.warning(w)
+
+        # Utility metrics
+        if result.hot_cc or result.gcc:
+            m1, m2, m3 = st.columns(3)
+            with m1:
+                st.metric(
+                    "Min hot utility Qh,min",
+                    f"{result.q_hot_min:.2f} kW",
+                )
+            with m2:
+                st.metric(
+                    "Min cold utility Qc,min",
+                    f"{result.q_cold_min:.2f} kW",
+                )
+            with m3:
+                pinch_str = (
+                    ", ".join(f"{t:.1f} C" for t in result.pinch_temperatures)
+                    if result.pinch_temperatures
+                    else "N/A"
+                )
+                st.metric("Pinch temperature(s)", pinch_str)
+
+        st.divider()
+
+        # Heat streams table
+        with st.expander("Heat streams data", expanded=False):
+            display_cols = [
+                c for c in [
+                    "_unit", "name", "type", "T_in", "T_in_unit",
+                    "T_out", "T_out_unit", "H_in", "H_out", "H_in_unit",
+                    "dtmin_contr", "heat_cascade", "is_phase_change",
+                ]
+                if c in all_streams.columns
+            ]
+            streams_display = all_streams[display_cols].copy()
+
+            # Highlight Hot / Cold rows
+            def _row_style(row):
+                t = str(row.get("type", "")).strip().lower()
+                if t == "hot":
+                    return [f"background-color: #FFF0EE"] * len(row)
+                if t == "cold":
+                    return [f"background-color: #EEF4FF"] * len(row)
+                return [""] * len(row)
+
+            st.dataframe(
+                streams_display.style.apply(_row_style, axis=1),
+                use_container_width=True,
+                hide_index=True,
+            )
+
+        # --------------- Charts ---------------
+
+        cascade_label_display = (
+            selected_cascade_display.replace("ALL (combined)", "All cascades")
+        )
+
+        # --- Composite Curves ---
+        if chart_type in ("Composite Curves", "Both") and (result.hot_cc or result.cold_cc):
+            fig_cc = go.Figure()
+
+            if result.hot_cc:
+                H_hot = [h for (_, h) in result.hot_cc]
+                T_hot = [t for (t, _) in result.hot_cc]
+                fig_cc.add_trace(go.Scatter(
+                    x=H_hot,
+                    y=T_hot,
+                    mode="lines+markers",
+                    name="Hot Composite Curve",
+                    line=dict(color=COLOR_HOT, width=2.5),
+                    marker=dict(size=5, color=COLOR_HOT),
+                ))
+
+            if result.cold_cc:
+                # Offset cold CC by q_hot_min so curves touch at pinch
+                H_cold = [h + result.q_hot_min for (_, h) in result.cold_cc]
+                T_cold = [t for (t, _) in result.cold_cc]
+                fig_cc.add_trace(go.Scatter(
+                    x=H_cold,
+                    y=T_cold,
+                    mode="lines+markers",
+                    name="Cold Composite Curve",
+                    line=dict(color=COLOR_COLD, width=2.5),
+                    marker=dict(size=5, color=COLOR_COLD),
+                ))
+
+            # Pinch horizontal lines
+            for t_pinch in result.pinch_temperatures:
+                fig_cc.add_hline(
+                    y=t_pinch,
+                    line_dash="dash",
+                    line_color=COLOR_PINCH,
+                    line_width=1.5,
+                    annotation_text=f"Pinch: {t_pinch:.1f} C",
+                    annotation_font_size=11,
+                    annotation_font_color=COLOR_PINCH,
+                )
+
+            layout_cc = {
+                **PLOTLY_LAYOUT_BASE,
+                "title": {
+                    "text": f"Composite Curves  —  {cascade_label_display}",
+                    "x": 0.04,
+                    "font": {"size": 15},
+                },
+                "xaxis": {
+                    **PLOTLY_LAYOUT_BASE["xaxis"],
+                    "title": "Enthalpy [kW]",
+                },
+                "yaxis": {
+                    **PLOTLY_LAYOUT_BASE["yaxis"],
+                    "title": "Temperature [C]  (shifted)",
+                },
+                "legend": {
+                    **PLOTLY_LAYOUT_BASE["legend"],
+                    "orientation": "h",
+                    "yanchor": "bottom",
+                    "y": 1.02,
+                    "xanchor": "right",
+                    "x": 1,
+                },
+                "height": 480,
+            }
+            fig_cc.update_layout(**layout_cc)
+            st.plotly_chart(fig_cc, use_container_width=True)
+
+        # --- Grand Composite Curve ---
+        if chart_type in ("Grand Composite Curve", "Both") and result.gcc:
+            T_gcc = [t for (t, _) in result.gcc]
+            H_gcc = [h for (_, h) in result.gcc]
+
+            fig_gcc = go.Figure()
+
+            fig_gcc.add_trace(go.Scatter(
+                x=H_gcc,
+                y=T_gcc,
+                mode="lines+markers",
+                name="Grand Composite Curve",
+                line=dict(color=COLOR_GCC, width=2.5),
+                marker=dict(size=5, color=COLOR_GCC),
+                fill="tozerox",
+                fillcolor="rgba(90, 138, 94, 0.08)",
+            ))
+
+            # Vertical axis at x=0 (pinch reference)
+            fig_gcc.add_vline(
+                x=0,
+                line_color="#CCCCCC",
+                line_width=1.5,
+            )
+
+            # Annotations for utilities
+            if T_gcc:
+                t_top = T_gcc[0]
+                t_bot = T_gcc[-1]
+                fig_gcc.add_annotation(
+                    x=result.q_hot_min,
+                    y=t_top,
+                    text=f"Qh,min = {result.q_hot_min:.1f} kW",
+                    showarrow=True,
+                    arrowhead=2,
+                    ax=40,
+                    ay=-20,
+                    font=dict(size=11, color=COLOR_HOT),
+                    arrowcolor=COLOR_HOT,
+                )
+                if result.q_cold_min > 1e-3:
+                    fig_gcc.add_annotation(
+                        x=result.q_cold_min,
+                        y=t_bot,
+                        text=f"Qc,min = {result.q_cold_min:.1f} kW",
+                        showarrow=True,
+                        arrowhead=2,
+                        ax=40,
+                        ay=20,
+                        font=dict(size=11, color=COLOR_COLD),
+                        arrowcolor=COLOR_COLD,
+                    )
+
+            # Pinch horizontal lines
+            for t_pinch in result.pinch_temperatures:
+                fig_gcc.add_hline(
+                    y=t_pinch,
+                    line_dash="dash",
+                    line_color=COLOR_PINCH,
+                    line_width=1.5,
+                    annotation_text=f"Pinch: {t_pinch:.1f} C",
+                    annotation_font_size=11,
+                    annotation_font_color=COLOR_PINCH,
+                )
+
+            layout_gcc = {
+                **PLOTLY_LAYOUT_BASE,
+                "title": {
+                    "text": f"Grand Composite Curve  —  {cascade_label_display}",
+                    "x": 0.04,
+                    "font": {"size": 15},
+                },
+                "xaxis": {
+                    **PLOTLY_LAYOUT_BASE["xaxis"],
+                    "title": "Net Heat Flow [kW]",
+                    "zeroline": True,
+                    "zerolinewidth": 2,
+                    "zerolinecolor": "#CCCCCC",
+                },
+                "yaxis": {
+                    **PLOTLY_LAYOUT_BASE["yaxis"],
+                    "title": "Temperature [C]  (shifted)",
+                },
+                "height": 480,
+            }
+            fig_gcc.update_layout(**layout_gcc)
+            st.plotly_chart(fig_gcc, use_container_width=True)
+
+        if not result.hot_cc and not result.cold_cc and not result.gcc:
+            st.info("No composite curve data could be computed for this selection.")
+
+        # Parser warnings
+        if model.warnings:
+            with st.expander("Parser warnings", expanded=False):
+                for w in model.warnings:
+                    st.text(w)
 
 
 # ===========================================================================

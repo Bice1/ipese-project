@@ -1,0 +1,416 @@
+{
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "Heat Pump",
+        "Authors and Contributors": "1.0",
+        "Contact Info": "",
+        "Creation Date": "12.11.2025",
+        "Last Updated": "12.11.2026",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "6000 kW",
+        "TRL": "9",
+        "Keywords": "",
+        "Description": "A heat pump is a device that transfers heat from a colder area to a hotter area by using mechanical energy, as in a refrigerator. Heat pumps are designed to move thermal energy opposite to the direction of spontaneous heat flow by absorbing heat from a cold space and releasing it to a warmer one. In this model, the heat pump is represented by its Coefficient of Performance (COP), which is calculated based on the Carnot efficiency and an assumed second law efficiency. The model also includes calculations for the power consumption of the heat pump and its specific investment cost, taking into account economic factors such as interest rate and lifetime.",
+        "DOI": "",
+        "Main Related Publication": "Florez-Orrego et al. Journal of Cleaner Production 244 (2020) 118647",
+        "References": "",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "heatpump.svg",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
+    },
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "Evap_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "Evaporator temperature inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 54.5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Evap\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Evaporator temperature inlet"
+        },
+        {
+            "VARIABLE NAME": "Evap_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "Evaporator temperature outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 54.5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Evap\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Evaporator temperature outlet"
+        },
+        {
+            "VARIABLE NAME": "Cond_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "Condenser temperature inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 76.5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cond\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Condenser temperature inlet"
+        },
+        {
+            "VARIABLE NAME": "Cond_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "Condenser temperature outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 76.5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cond\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Condenser temperature outlet"
+        },
+        {
+            "VARIABLE NAME": "Cond_Qmax",
+            "TYPE": "DECISION",
+            "FULL NAME": "Condenser reference heat flow rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 6000,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cond\\_Qmax}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Condenser reference heat flow rate"
+        },
+        {
+            "VARIABLE NAME": "exeff",
+            "TYPE": "DECISION",
+            "FULL NAME": "Second law efficiency",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.5,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{exeff}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Efficiency based on Carnot"
+        },
+        {
+            "VARIABLE NAME": "dtmin_2ph",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Minimum phase change delta T",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 2,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{dtmin\\_2ph}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Minimum temperature difference of phase change"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime of heat pump",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 25,
+            "PHYSICAL UNIT": "yr",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{n}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lifetime of heat pump"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{i}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Interest rate"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2020",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Actual CEPCI",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 596.2,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2020}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Actual CEPCI"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2008",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "CEPCI 2008",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 575.4,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2008}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "CEPCI 2008"
+        },
+        {
+            "VARIABLE NAME": "COPcarnot",
+            "TYPE": "DECISION",
+            "FULL NAME": "Carnot COP",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 15.886363636363637,
+                "formula": "=(Cond_Tin + 273) / (Cond_Tin - Evap_Tin)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "10",
+            "LATEX SYNTAX": "$\\mathrm{COP_{carnot}}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Carnot COP"
+        },
+        {
+            "VARIABLE NAME": "COP",
+            "TYPE": "DECISION",
+            "FULL NAME": "Actual COP",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 7.943181818181818,
+                "formula": "=exeff * COPcarnot"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "10",
+            "LATEX SYNTAX": "$\\mathrm{COP}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Actual COP"
+        },
+        {
+            "VARIABLE NAME": "W_heatpump",
+            "TYPE": "DECISION",
+            "FULL NAME": "Heat pump power consumption",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 755.3648068669528,
+                "formula": "=Cond_Qmax / COP"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_heatpump}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat pump power consumption"
+        },
+        {
+            "VARIABLE NAME": "Evap_Qmax",
+            "TYPE": "DECISION",
+            "FULL NAME": "",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 5244.635193133047,
+                "formula": "=Cond_Qmax * (COP - 1) / COP"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Evap\\_Qmax}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Evaporator heat flow rate"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.07822671821227395,
+                "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Annualization factor"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_HP",
+            "TYPE": "DECISION",
+            "FULL NAME": "Specific investment cost (annualized)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 145898.1315896488,
+                "formula": "=300*Cond_Qmax*(CEPCI_2020/CEPCI_2008)*Annuity"
+            },
+            "PHYSICAL UNIT": "Euro/y",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_HP}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "300 Euro/kWth at the condenser"
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Electricity",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Electricity"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
+    },
+    "UNITS": {
+        "HeatPump": {
+            "Unit Description": "heat pumps also use working fluids called refrigerants that can absorb heat by evaporating in a heat exchanger at low temperature in order to supply that heat at a higher temperature (i.e. pump heat up). When the evaporated fluids are recompressed, the temperature significantly increase, thus facilitating the heat exchange with other process streams in a condensation heat exchanger. The capacity of these fluids to achieve lower temperatures is due to the Joule-Thomson effect, by which certain fluids exhibit a rapid cooling accompanied by partial vaporization when throttled or expanded through a valve, a capillar tube or an expander. In this regard, a typical heat pump cycle requires different components, namely an evaporator, a compressor, a condenser and an expansion device. The main electricity input is the compressor power consumption, which in turn depends on the isoentropic efficiency and other compressor design details.",
+            "Unit Info": {
+                "Unit name": "HeatPump",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 10.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 755.3648068669528,
+                        "formula": "=W_heatpump"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "Electricity"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "evaporation",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 54.5,
+                        "formula": "=Evap_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 54.5,
+                        "formula": "=Evap_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 5244.635193133047,
+                        "formula": "=Evap_Qmax"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": "evaporator"
+                },
+                {
+                    "NAME": "condensation",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 76.5,
+                        "formula": "=Cond_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 76.5,
+                        "formula": "=Cond_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 6000,
+                        "formula": "=Cond_Qmax"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": "condensor"
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}
