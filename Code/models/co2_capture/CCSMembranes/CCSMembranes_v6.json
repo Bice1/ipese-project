@@ -1,0 +1,399 @@
+{
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "Carbone Capture Membranes",
+        "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+        "Contact Info": "",
+        "Creation Date": "11.12.2025",
+        "Last Updated": "11.12.2025",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "1000 kg/h",
+        "TRL": "9",
+        "Keywords": "CCS, Membranes, Post-combustion, CO2 capture",
+        "Description": "",
+        "DOI": "",
+        "Main Related Publication": "Post-combustion carbon capture unit based on Aqualung hollow-fiber membrane technology, which uses amine-embedded membranes to selectively permeate CO2 under vacuum (0.4 bar) from flue gas. The process achieves 90% CO2 recovery with electricity consumption for vacuum generation and permeate recompression as the only energy inputs.",
+        "References": "[1] https://aqualung-cc.com/ \n [2] Janakiram et. al https://doi.org/10.1016/j.cej.2020.127405  \n [3] M-B Hägg et al. Energy Procedia 114 ( 2017 ) 6150 – 6165",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
+    },
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "SpecPowerCons",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific electricity consumption for vacuum generation",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.35,
+            "PHYSICAL UNIT": "kWh/kg",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{SpecPowerCons}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Specific electricity consumption for vacuum generation at 0.4 bar"
+        },
+        {
+            "VARIABLE NAME": "SpecComprPower",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific electricity consumption for recompression",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.024,
+            "PHYSICAL UNIT": "kWh/kg",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{SpecComprPower}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "specific electricity consumption for recompression of permeate from 0.4 bar to 1 bar"
+        },
+        {
+            "VARIABLE NAME": "CO2intake_ref_LOAD",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Reference CO2 intake mass flow",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 1000,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2intake\\_ref\\_LOAD}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Reference CO2 intake mass flow"
+        },
+        {
+            "VARIABLE NAME": "captureEfficiency",
+            "TYPE": "DECISION",
+            "FULL NAME": "Membrane CO2 capture efficiency",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.9,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{captureEfficiency}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Reported membrane recovery"
+        },
+        {
+            "VARIABLE NAME": "Spec_CCSCost",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific CCS cost",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 45000,
+            "PHYSICAL UNIT": "Eur/tpd",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Spec\\_CCSCost}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Cost per ton of CO2 captured per day"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime of membrane system",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "year",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{n}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lifetime"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{i}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Interest rate"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2020",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Actual CEPCI index",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 596.2,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2020}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Actual CEPCI"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2007",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "CEPCI 2007 index",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 525.4,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2007}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Old CEPCI"
+        },
+        {
+            "VARIABLE NAME": "CO2Released_ref_LOAD",
+            "TYPE": "MEASURED",
+            "FULL NAME": "CO2 not captured in flue gas",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 99.99999999999997,
+                "formula": "=Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.intake_ref_LOAD*(1-captureEfficiency)"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2Released\\_ref\\_LOAD}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Mass flow of CO2 in flue gas not captured"
+        },
+        {
+            "VARIABLE NAME": "CO2Captured_ref_LOAD",
+            "TYPE": "MEASURED",
+            "FULL NAME": "CO2 captured by membrane",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 900,
+                "formula": "=Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.intake_ref_LOAD*captureEfficiency"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2Captured\\_ref\\_LOAD}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Mass flow of CO2 in flue gas captured"
+        },
+        {
+            "VARIABLE NAME": "PowerCons",
+            "TYPE": "DECISION",
+            "FULL NAME": "Total power consumption",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 336.6,
+                "formula": "=(SpecPowerCons+SpecComprPower)*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Captured_ref_LOAD"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{PowerCons}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Total power consumed by the process"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.0664615359206755,
+                "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Annualization factor"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_CCS",
+            "TYPE": "DECISION",
+            "FULL NAME": "Annualized investment cost of CCS system",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 73305.83444967901,
+                "formula": "=Spec_CCSCost*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Captured_ref_LOAD*24/1000*(CEPCI_2020/CEPCI_2007)*Annuity"
+            },
+            "PHYSICAL UNIT": "Eur/y",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_CCS}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Investment cost of the membrane system"
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "CO2",
+                "NAME (ALIAS)": "CO2",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Carbon dioxide"
+            },
+            {
+                "UID": "ENVCO2EM",
+                "NAME (ALIAS)": "EnvCO2Em",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Env Carbon dioxide"
+            },
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Elec",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "-"
+            },
+            {
+                "UID": "CO2INFLUEGAS",
+                "NAME (ALIAS)": "CO2inFlueGas",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 0.4,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Carbon dioxide in flue"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
+    },
+    "UNITS": {
+        "CCSPostMemb": {
+            "Unit Description": "The model of the CCSUnitMembrane consists of one unit, namely the `CCSPostMemb` unit, which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.",
+            "Unit Info": {
+                "Unit name": "CCSPostMemb",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 1000000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 336.6,
+                        "formula": "=PowerCons"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "CO2inFlueGas",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 1000,
+                        "formula": "=The model of the CCSUnitMembrane consists of one unit, namely the `CCSPostMemb` unit, which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.intake_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 0.4,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "Carbon dioxide in flue"
+                },
+                {
+                    "NAME (ALIAS)": "EnvCO2Em",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 99.99999999999997,
+                        "formula": "=The model of the CCSUnitMembrane consists of one unit, namely the `CCSPostMemb` unit, which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.Released_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Env Carbon dioxide"
+                },
+                {
+                    "NAME (ALIAS)": "CO2",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 900,
+                        "formula": "=The model of the CCSUnitMembrane consists of one unit, namely the `CCSPostMemb` unit, which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.Captured_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Carbon dioxide"
+                }
+            ],
+            "Heat Streams Description": "There are no heat streams in this unit.",
+            "Heat Streams": [],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

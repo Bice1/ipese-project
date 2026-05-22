@@ -1,0 +1,477 @@
+{
+    "METADATA": {
+        "Model UID": "111-222-111",
+        "Model Name": "Carbone Capture Adsorption",
+        "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+        "Contact Info": "",
+        "Creation Date": "12.11.2025",
+        "Last Updated": "12.11.2025",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "180 kW",
+        "TRL": "9",
+        "Keywords": "carbon capture",
+        "Description": "A post-combustion carbon capture unit using structured solid sorbents (MOFs) in a rotary adsorption machine (SVANTE VeloxoTherm RC-TSA process) that captures 90% of the CO2 from industrial flue gases via temperature swing adsorption, consuming 0.2 kWh/kgCO2 of electricity for the rotary machine. Captured CO2 is desorbed using low-pressure superheated steam (140°C, 1 bar, 0.8 MJ/kgCO2) yielding a CO2 product at 95 mol% purity, with the remaining 10% of CO2 released to the environment.",
+        "DOI": "",
+        "Main Related Publication": "Lin et al. (2021), https://doi.org/10.1126/science.abi7281",
+        "References": "",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
+    },
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "SpecPowerCons",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific RAM electricity consumption",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.2,
+            "PHYSICAL UNIT": "kWh/kg",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{SpecPowerCons}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Specific rotary adsoprtion machine (RAM) power consumption at 1 rpm"
+        },
+        {
+            "VARIABLE NAME": "SpecSteamCons",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific steam consumption",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.8,
+            "PHYSICAL UNIT": "MJ/kg",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{SpecSteamCons}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Specific steam consumption in SVANTE VeloxoTherm process per kg of CO2"
+        },
+        {
+            "VARIABLE NAME": "CO2intake_ref_LOAD",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Reference CO2 intake mass flow",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 1000,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2intake\\_ref\\_LOAD}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Reference mass flow of CO2 intake"
+        },
+        {
+            "VARIABLE NAME": "dtmin_2ph",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Minimum two-phase temperature difference",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 2,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{dtmin\\_2ph}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Minimum temperature difference of two phase stream"
+        },
+        {
+            "VARIABLE NAME": "steamTempsh",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Superheated steam temperature at 1 bar",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 140,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{steamTempsh}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Superheated steam at 1 bar"
+        },
+        {
+            "VARIABLE NAME": "steamTempsat",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Saturation temperature at 1 bar",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 100,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{steamTempsat}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Saturation temperature at 1 bar"
+        },
+        {
+            "VARIABLE NAME": "captureEfficiency",
+            "TYPE": "DECISION",
+            "FULL NAME": "CO2 capture efficiency",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.9,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{captureEfficiency}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Reported CO2 recovery"
+        },
+        {
+            "VARIABLE NAME": "Spec_CCSCost",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific CCS cost",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 70000,
+            "PHYSICAL UNIT": "Eur/tpd",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Spec\\_CCSCost}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Cost per ton per day of CO2 captured"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime of TSA unit",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "year",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{n}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lifetime"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{i}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Interest rate"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2020",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Actual CEPCI index",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 596.2,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2020}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Actual CEPCI"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2008",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "CEPCI 2008 index",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 570,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2008}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Old CEPCI"
+        },
+        {
+            "VARIABLE NAME": "CO2Released_ref_LOAD",
+            "TYPE": "MEASURED",
+            "FULL NAME": "CO2 not captured (retentate)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 99.99999999999997,
+                "formula": "=Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.intake_ref_LOAD*(1-captureEfficiency)"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2Released\\_ref\\_LOAD}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Mass flow of CO2 in flue gas escaping"
+        },
+        {
+            "VARIABLE NAME": "CO2Captured_ref_LOAD",
+            "TYPE": "MEASURED",
+            "FULL NAME": "CO2 captured",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 900,
+                "formula": "=Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.intake_ref_LOAD*captureEfficiency"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CO2Captured\\_ref\\_LOAD}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Mass flow of CO2 captured"
+        },
+        {
+            "VARIABLE NAME": "SteamCons",
+            "TYPE": "DECISION",
+            "FULL NAME": "Steam consumption for regeneration",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 200,
+                "formula": "=SpecSteamCons*1000*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Captured_ref_LOAD/3600"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{SteamCons}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Steam consumption for the bed regeneration"
+        },
+        {
+            "VARIABLE NAME": "PowerCons",
+            "TYPE": "DECISION",
+            "FULL NAME": "Power consumption for TSA",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 180,
+                "formula": "=SpecPowerCons*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Captured_ref_LOAD"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{PowerCons}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Power consumption for the TSA process"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.0664615359206755,
+                "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0",
+            "MAX BOUND": "1",
+            "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Annualization factor"
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "CO2",
+                "NAME (ALIAS)": "CO2",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Carbon dioxide"
+            },
+            {
+                "UID": "ENVCO2EM",
+                "NAME (ALIAS)": "EnvCO2Em",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                "DESCRIPTION": "Env Carbon dioxide"
+            },
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Elec",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Electricity"
+            },
+            {
+                "UID": "CO2INFLUEGAS",
+                "NAME (ALIAS)": "CO2inFlueGas",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 25.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[0.1]&N2[0.9]",
+                "DESCRIPTION": "Carbon dioxide in flue"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
+    },
+    "UNITS": {
+        "CCSPostTSA": {
+            "Unit Description": "The model of the CCSUnitAdsorption consists of one unit, namely the `CCSPostTSA` unit which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.",
+            "Unit Info": {
+                "Unit name": "CCSPostTSA",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 1000000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 180,
+                        "formula": "=PowerCons"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "CO2inFlueGas",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 1000,
+                        "formula": "=The model of the CCSUnitAdsorption consists of one unit, namely the `CCSPostTSA` unit which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.intake_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[0.1]&N2[0.9]",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "Carbon dioxide in flue"
+                },
+                {
+                    "NAME (ALIAS)": "EnvCO2Em",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 99.99999999999997,
+                        "formula": "=The model of the CCSUnitAdsorption consists of one unit, namely the `CCSPostTSA` unit which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.Released_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Env Carbon dioxide"
+                },
+                {
+                    "NAME (ALIAS)": "CO2",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 900,
+                        "formula": "=The model of the CCSUnitAdsorption consists of one unit, namely the `CCSPostTSA` unit which is defined as a utility unit. It means that its size (continuous) and existence (binary) can be regarded as optimization variables used to minimize the electricity consumption or any other targets. To this end, other parameters of this unit, such as the lower `fmin` and upper `fmax` sizing bounds, must be specified in the Parameters tables shown next. Other operating costs (`cost1`:fixed, in Eur/y, `cost2`:variable in Eur/kWh/y or Eur/kg/y) and investment costs (`cinv1`:fixed in Eur/y; `cinv2`:variable in Eur/kW/y or Eur/kg/y) can be also specified.Captured_ref_LOAD"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 25.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Carbon dioxide"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "qt_ccs",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 140,
+                        "formula": "=steamTempsh"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 100,
+                        "formula": "=steamTempsat"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 200,
+                        "formula": "=SteamCons"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "CCS"
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

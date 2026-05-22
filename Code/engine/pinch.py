@@ -338,7 +338,7 @@ def _build_gcc(
     # Cumulate residuals from top (R[0] = 0 at the highest T)
     residuals = [0.0]
     for surplus in net_surplus:
-        residuals.append(residuals[-1] - surplus)
+        residuals.append(residuals[-1] + surplus)
 
     # Shift so minimum residual = 0 (pinch adjustment)
     min_r = min(residuals)

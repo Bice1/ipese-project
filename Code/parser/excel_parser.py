@@ -11,8 +11,8 @@ from fastapi import HTTPException, status
 # =====================
 # USER CONFIG: Set filenames here
 # =====================
-INPUT_EXCEL_NAME = "Methanator_v6.xlsx"
-OUTPUT_JSON_NAME = "Methanator_v6.json"
+INPUT_EXCEL_NAME = "CCSAdsorption_v6.xlsx"
+OUTPUT_JSON_NAME = "CCSAdsorption_v6.json"
 V6_EXCEL_DIR = "v6_excel"   # folder containing all v6 Excel files
 V6_JSON_DIR = "v6_json"     # output folder for generated JSON files
 # =====================

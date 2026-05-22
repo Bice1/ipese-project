@@ -1,0 +1,886 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Gas Turbine",
+    "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2025-11-12",
+    "Last Updated": "2025-11-12",
+    "Model Status": "Maintained",
+    "Version": "1.0.1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "929 kWel",
+    "TRL": "9",
+    "Keywords": "Gas Turbine, Natural Gas, Electricity",
+    "Description": "Gas turbine unit model including a recuperator for waste heat recovery",
+    "DOI": "",
+    "Main Related Publication": "",
+    "References": "[1] Cengel, Y. and Boles, M., 2010. Thermodynamics: An Engineering Approach with Student Resources DVD;\n[2] Rahman, M.M., Ibrahim, T.K. and Abdalla, A.N., 2011. Thermodynamic performance analysis of gas-turbine power-plant. International journal of the physical sciences, 6(14), pp.3539-3550.",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/GasTurbine.svg",
+    "URL": "",
+    "Supplementary Material": "[\"C:\\\\Users\\\\Quentin\\\\Desktop\\\\IPESE-PROJECT\\\\Code\\\\models\\\\power_and_utilities\\\\Gas_Turbine\\\\D18380724163.pdf\", \"C:\\\\Users\\\\Quentin\\\\Desktop\\\\IPESE-PROJECT\\\\Code\\\\models\\\\power_and_utilities\\\\Gas_Turbine\\\\Gas turbine ET.md\"]"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "eta_comp",
+      "TYPE": "DECISION",
+      "FULL NAME": "Compressor isentropic efficiency",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.8,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.6,
+      "MAX BOUND": 0.95,
+      "LATEX SYNTAX": "$\\mathrm{eta\\_comp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Compressor isentropic efficiency"
+    },
+    {
+      "VARIABLE NAME": "eta_turb",
+      "TYPE": "DECISION",
+      "FULL NAME": "Turbine isentropic efficiency",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.8,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.6,
+      "MAX BOUND": 0.95,
+      "LATEX SYNTAX": "$\\mathrm{eta\\_turb}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Turbine isentropic efficiency"
+    },
+    {
+      "VARIABLE NAME": "gamma_air",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Specific heat ratio of air",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1.4,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1.38,
+      "MAX BOUND": 1.42,
+      "LATEX SYNTAX": "$\\mathrm{gamma\\_air}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Ratio between constant pressure and constant volume heat capacities for air"
+    },
+    {
+      "VARIABLE NAME": "gamma_gas",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Specific heat ratio of flue gas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1.33,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1.28,
+      "MAX BOUND": 1.35,
+      "LATEX SYNTAX": "$\\mathrm{gamma\\_gas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Ratio between constant pressure and constant volume heat capacities for flue gases"
+    },
+    {
+      "VARIABLE NAME": "T_1",
+      "TYPE": "DECISION",
+      "FULL NAME": "Air inlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 298,
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 233.15,
+      "MAX BOUND": 323.15,
+      "LATEX SYNTAX": "$\\mathrm{T1}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Air inlet temperature"
+    },
+    {
+      "VARIABLE NAME": "T_2a",
+      "TYPE": "DECISION",
+      "FULL NAME": "Air discharge preheating temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 873,
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 300,
+      "MAX BOUND": 1100,
+      "LATEX SYNTAX": "$\\mathrm{T2a}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Discharge air preheating temperature before combustion chamber"
+    },
+    {
+      "VARIABLE NAME": "PR",
+      "TYPE": "DECISION",
+      "FULL NAME": "Compressor pressure ratio",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 15,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1.1,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$\\mathrm{PR}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Compressor pressure ratio: 3-23"
+    },
+    {
+      "VARIABLE NAME": "LHV",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Lower heating value of fuel",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 50000,
+      "PHYSICAL UNIT": "kJ/kg",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30000,
+      "MAX BOUND": 60000,
+      "LATEX SYNTAX": "$\\mathrm{LHV}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lower heating value of the fuel"
+    },
+    {
+      "VARIABLE NAME": "f",
+      "TYPE": "DECISION",
+      "FULL NAME": "Air-to-fuel ratio",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 60,
+      "PHYSICAL UNIT": "kg/kg",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 150,
+      "LATEX SYNTAX": "$\\mathrm{f}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Air to fuel ratio kg/kg"
+    },
+    {
+      "VARIABLE NAME": "m_air",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Air mass flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 4,
+      "PHYSICAL UNIT": "kg/s",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.1,
+      "MAX BOUND": 1500,
+      "LATEX SYNTAX": "$\\mathrm{m\\_air}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Air mas flow"
+    },
+    {
+      "VARIABLE NAME": "T_stack",
+      "TYPE": "DECISION",
+      "FULL NAME": "Stack outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 423,
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 353.15,
+      "MAX BOUND": 800,
+      "LATEX SYNTAX": "$\\mathrm{T\\_stack}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Outlet temperature of the heat exchanger at turbine exit"
+    },
+    {
+      "VARIABLE NAME": "cp_air",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Heat capacity of air",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1.006,
+      "PHYSICAL UNIT": "kJ/kgK",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 1.15,
+      "LATEX SYNTAX": "$\\mathrm{cp\\_air}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat capacity for air"
+    },
+    {
+      "VARIABLE NAME": "cp_gas",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Heat capacity of flue gas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1.151,
+      "PHYSICAL UNIT": "kJ/kgK",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1.05,
+      "MAX BOUND": 1.3,
+      "LATEX SYNTAX": "$\\mathrm{cp\\_gas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat capacity for gas"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime of gas turbine",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "year",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$\\mathrm{n}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime of gas turbine"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 0.25,
+      "LATEX SYNTAX": "$\\mathrm{i}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "dt_min",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Minimum temperature difference",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$\\mathrm{dt\\_min}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution for air"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2020",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "CEPCI index 2020",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 596.2,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 400,
+      "MAX BOUND": 900,
+      "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2020}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "actual CEPCI"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2008",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "CEPCI index 2008",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 575.4,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 400,
+      "MAX BOUND": 900,
+      "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2008}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CEPCI 2008"
+    },
+    {
+      "VARIABLE NAME": "gamma_a",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Thermodynamic ratio for air",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.28571428571428564,
+        "formula": "=(gamma_air - 1)/gamma_air"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(gamma_air - 1)/gamma_air",
+      "MIN BOUND": 0.27,
+      "MAX BOUND": 0.3,
+      "LATEX SYNTAX": "$\\mathrm{gamma\\_a}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Themodynamic ratio for air"
+    },
+    {
+      "VARIABLE NAME": "gamma_g",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Thermodynamic ratio for gas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.24812030075187974,
+        "formula": "=(gamma_gas - 1)/gamma_gas"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(gamma_gas - 1)/gamma_gas",
+      "MIN BOUND": 0.21,
+      "MAX BOUND": 0.26,
+      "LATEX SYNTAX": "$\\mathrm{gamma\\_g}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Themodynamic ratio for gas"
+    },
+    {
+      "VARIABLE NAME": "Rpa",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Pressure ratio factor (Air)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1.4597928157074496,
+        "formula": "=(PR^gamma_a-1)/eta_comp"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(PR^gamma_a-1)/eta_comp",
+      "MIN BOUND": 1.4597928157074496,
+      "MAX BOUND": 1.4597928157074496,
+      "LATEX SYNTAX": "$\\mathrm{Rpa}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Themodynamic parameter for air"
+    },
+    {
+      "VARIABLE NAME": "Rpg",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Pressure ratio factor (Flue gas)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.4892740992030068,
+        "formula": "=1-1/(PR^gamma_g)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "1-1/(PR^gamma_g)",
+      "MIN BOUND": 0.4892740992030068,
+      "MAX BOUND": 0.4892740992030068,
+      "LATEX SYNTAX": "$\\mathrm{Rpg}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Themodynamic parameter for flue gas"
+    },
+    {
+      "VARIABLE NAME": "T_2",
+      "TYPE": "DECISION",
+      "FULL NAME": "Compressor discharge temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 733.0182590808199,
+        "formula": "=T_1 * (1+Rpa)"
+      },
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "T_1 * (1+Rpa)",
+      "MIN BOUND": 280,
+      "MAX BOUND": 1100,
+      "LATEX SYNTAX": "$\\mathrm{T2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Discharge temperature of the compressor"
+    },
+    {
+      "VARIABLE NAME": "Q_2a",
+      "TYPE": "DECISION",
+      "FULL NAME": "Preheating duty after compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 563.2865254587806,
+        "formula": "=m_air*cp_air*(T_2a-T_2)"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "m_air*cp_air*(T_2a-T_2)",
+      "MIN BOUND": -50000,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$\\mathrm{Q2a}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Preheating duty after compressor discharge"
+    },
+    {
+      "VARIABLE NAME": "T_3",
+      "TYPE": "DECISION",
+      "FULL NAME": "Turbine inlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1462.6522909515602,
+        "formula": "=(m_air * cp_air * T_2a + m_air/f * LHV) / (((1+1/f)*m_air) * cp_gas)"
+      },
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "(m_air * cp_air * T_2a + m_air/f * LHV) / (((1+1/f)*m_air) * cp_gas)",
+      "MIN BOUND": 800,
+      "MAX BOUND": 2000,
+      "LATEX SYNTAX": "$\\mathrm{T3}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Turbine inlet temperature"
+    },
+    {
+      "VARIABLE NAME": "T_4",
+      "TYPE": "DECISION",
+      "FULL NAME": "Turbine outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 890.1419852695292,
+        "formula": "=T_3*(1-eta_turb*Rpg)"
+      },
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "T_3*(1-eta_turb*Rpg)",
+      "MIN BOUND": 400,
+      "MAX BOUND": 1200,
+      "LATEX SYNTAX": "$\\mathrm{T4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Turbine outlet temperature"
+    },
+    {
+      "VARIABLE NAME": "T_4_C",
+      "TYPE": "DECISION",
+      "FULL NAME": "Turbine outlet temperature in Celsius",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 616.9919852695292,
+        "formula": "=T_4 - 273.15"
+      },
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "T_4 - 273.15",
+      "MIN BOUND": 120,
+      "MAX BOUND": 930,
+      "LATEX SYNTAX": "$\\mathrm{T4\\_C}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Conversion to Celsius"
+    },
+    {
+      "VARIABLE NAME": "Tstack_C",
+      "TYPE": "DECISION",
+      "FULL NAME": "Stack temperature in Celsius",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 149.85000000000002,
+        "formula": "=T_stack - 273.15"
+      },
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "T_stack - 273.15",
+      "MIN BOUND": 80,
+      "MAX BOUND": 530,
+      "LATEX SYNTAX": "$\\mathrm{Tstack\\_C}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Conversion to Celsius"
+    },
+    {
+      "VARIABLE NAME": "T_2_C",
+      "TYPE": "DECISION",
+      "FULL NAME": "Compressor outlet temperature in Celsius",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 459.86825908081994,
+        "formula": "=T_2 - 273.15"
+      },
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "T_2 - 273.15",
+      "MIN BOUND": 10,
+      "MAX BOUND": 830,
+      "LATEX SYNTAX": "$\\mathrm{T2\\_C}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Conversion to Celsius"
+    },
+    {
+      "VARIABLE NAME": "T_2a_C",
+      "TYPE": "DECISION",
+      "FULL NAME": "Preheated air temperature in Celsius",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 599.85,
+        "formula": "=T_2a - 273.15"
+      },
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "T_2a - 273.15",
+      "MIN BOUND": 20,
+      "MAX BOUND": 830,
+      "LATEX SYNTAX": "$\\mathrm{T2a\\_C}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Conversion to Celsius"
+    },
+    {
+      "VARIABLE NAME": "work_1_2",
+      "TYPE": "DECISION",
+      "FULL NAME": "Compressor work consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1750.5134745412197,
+        "formula": "=m_air*cp_air*T_1*Rpa"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "m_air*cp_air*T_1*Rpa",
+      "MIN BOUND": 0,
+      "MAX BOUND": 600000,
+      "LATEX SYNTAX": "$\\mathrm{work\\_1\\_2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Compressor power consumption"
+    },
+    {
+      "VARIABLE NAME": "work_3_4",
+      "TYPE": "DECISION",
+      "FULL NAME": "Turbine work generation",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 2679.7680714827393,
+        "formula": "=m_air*(1+1/f)*cp_gas*T_3*Rpg*eta_turb"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "m_air*(1+1/f)*cp_gas*T_3*Rpg*eta_turb",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1200000,
+      "LATEX SYNTAX": "$\\mathrm{work\\_3\\_4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Expander power generation"
+    },
+    {
+      "VARIABLE NAME": "Q_4",
+      "TYPE": "DECISION",
+      "FULL NAME": "Waste heat at turbine outlet",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 2186.567061850594,
+        "formula": "=m_air*(1+1/f)*cp_gas*(T_4-T_stack)"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "m_air*(1+1/f)*cp_gas*(T_4-T_stack)",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1500000,
+      "LATEX SYNTAX": "$\\mathrm{Q4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Waste heat available at turbine outlet"
+    },
+    {
+      "VARIABLE NAME": "ng",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Natural gas consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 3333.3333333333335,
+        "formula": "=m_air/f*LHV"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "m_air/f*LHV",
+      "MIN BOUND": 0,
+      "MAX BOUND": 2500000,
+      "LATEX SYNTAX": "$\\mathrm{ng}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Natural gas consumption"
+    },
+    {
+      "VARIABLE NAME": "co2fromNG",
+      "TYPE": "MEASURED",
+      "FULL NAME": "CO2 emissions from natural gas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 660,
+        "formula": "=ng/LHV*3600*44/16"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "ng/LHV*3600*44/16",
+      "MIN BOUND": 0,
+      "MAX BOUND": 600000,
+      "LATEX SYNTAX": "$\\mathrm{co2fromNG}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Associated CO2 emissions in syngas"
+    },
+    {
+      "VARIABLE NAME": "elec_net_out",
+      "TYPE": "DECISION",
+      "FULL NAME": "Net electric output",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 929.2545969415196,
+        "formula": "=work_3_4-work_1_2"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "work_3_4-work_1_2",
+      "MIN BOUND": -100000,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$\\mathrm{elec\\_net\\_out}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Net electricity throughput"
+    },
+    {
+      "VARIABLE NAME": "an_factor",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualization factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(i+1)^n)/(((i+1)^n)-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(i+1)^n)/(((i+1)^n)-1)",
+      "MIN BOUND": 0.02,
+      "MAX BOUND": 0.5,
+      "LATEX SYNTAX": "$\\mathrm{an\\_factor}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualization factor"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_gt",
+      "TYPE": "DECISION",
+      "FULL NAME": "Specific investment cost (annualized)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 30879.84388704082,
+        "formula": "=500*elec_net_out*an_factor"
+      },
+      "PHYSICAL UNIT": "eur/y",
+      "FORMULA OR PATH": "500*elec_net_out*an_factor",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100000000,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_gt}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "NATGAS",
+        "NAME (ALIAS)": "NatGas",
+        "TYPE": "ENERGY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1.0]",
+        "DESCRIPTION": "Consumed natural gas"
+      },
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Electricity",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Electricity produced"
+      },
+      {
+        "UID": "CO2INFLUEG",
+        "NAME (ALIAS)": "CO2inFluegas",
+        "TYPE": "EMISSIONS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+        "DESCRIPTION": "CO2 in flue gas"
+      }
+    ],
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "Gasturbine": {
+      "Unit Description": "A gas turbine system consists of  a compressor, a combustion chamber, and an expander. An electrical generator coupled to the shaft of the gas turbine also allows generating electricity. A recuperator can recover heat from the turbine outlet temperature gases and use it for preheating the air at the compressor discharge up to a certain temperature level.",
+      "Unit Info": {
+        "Unit name": "Gasturbine",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 10.0
+      },
+      "Connectors Description": "Resource balance interfaces managing fuel input (CH4), net electricity generation, and flue gas emissions (CO2) for system-wide integration.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "NatGas",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 3333.3333333333335,
+            "formula": "=ng"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed natural gaz"
+        },
+        {
+          "NAME (ALIAS)": "Electricity",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 929.2545969415196,
+            "formula": "=elec_net_out"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Electricity produced"
+        },
+        {
+          "NAME (ALIAS)": "CO2inFluegas",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 660,
+            "formula": "=co2fromNG"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "CO2 in flue gaz"
+        }
+      ],
+      "Heat Streams Description": "Thermal enthalpy profiles, cooling high-grade turbine exhaust (Hot) while preheating compressed air (Cold) to maximize cycle efficiency.",
+      "Heat Streams": [
+        {
+          "NAME": "qwasteheat",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 616.9919852695292,
+            "formula": "=T_4_C"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 423,
+            "formula": "=T_stack"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 2186.567061850594,
+            "formula": "=Q_4"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1.151,
+            "formula": "=cp_gas"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 35253.82069183927,
+            "formula": "=qwasteheat/qwasteheat/(qwasteheat-qwasteheat)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dt_min"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 0.06,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Waste heat"
+        },
+        {
+          "NAME": "qrecovery",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 459.86825908081994,
+            "formula": "=T_2_C"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 599.85,
+            "formula": "=T_2a_C"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 563.2865254587806,
+            "formula": "=Q_2a"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1.006,
+            "formula": "=cp_air"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 14400,
+            "formula": "=qrecovery/qrecovery/(-qrecovery+qrecovery)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dt_min"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 0.06,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Heat recovery"
+        }
+      ],
+      "Equipments Description": "Mechanical assembly comprising an axial compressor, combustion chamber, and power turbine, including an annualized CAPEX estimation based on net power output and CEPCI cost-index scaling.",
+      "Equipments": {
+        "Gasturbine": {
+          "Type": "Asset",
+          "Subtype": "Gas turbine with recuperator",
+          "Reference": "@Florez-Orrego et al",
+          "Parameters": [
+            {
+              "Parameter": "Lifetime",
+              "Value": {
+                "value": 40,
+                "formula": "=n"
+              },
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Interest rate",
+              "Value": {
+                "value": 0.06,
+                "formula": "=i"
+              },
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Specific investment",
+              "Value": 500.0,
+              "Unit": "Eur/kW"
+            },
+            {
+              "Parameter": "CEPCI 2008",
+              "Value": {
+                "value": 575.4,
+                "formula": "=CEPCI_2008"
+              },
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

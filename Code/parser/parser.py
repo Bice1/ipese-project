@@ -89,6 +89,7 @@ class UnitData:
     connectors: pd.DataFrame
     heat_streams: pd.DataFrame
     equipments: list[dict]
+    description: str = ""
 
 
 @dataclass
@@ -103,6 +104,7 @@ class ParsedModel:
     variables: pd.DataFrame
     calculations: pd.DataFrame | None
     warnings: list[str] = field(default_factory=list)
+    category: str = ""
 
 
 # ---------------------------------------------------------------------------

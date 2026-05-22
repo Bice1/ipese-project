@@ -1,7 +1,11 @@
 """
-Model loader — scans DATA_DIR for *.json files produced by excel_parser.py
+Model loader — recursively scans DATA_DIR for *.json files under
+  models/<category>/<model_name>/<model_name>.json
 and converts them to ParsedModel dataclasses.
-Cached with st.cache_resource so loading runs only once per Streamlit session.
+
+Category is inferred from the grandparent folder name.
+BFD images are auto-generated on first load if absent.
+Cached with st.cache_resource so loading runs only once per session.
 """
 
 from __future__ import annotations
@@ -24,6 +28,7 @@ from parser.parser import (
     ParsedModel,
     UnitData,
 )
+from utils.categories import MODEL_CATEGORY_MAP, CATEGORY_SLUGS
 
 
 # ---------------------------------------------------------------------------
@@ -80,7 +85,7 @@ def _equipments_list(raw: dict) -> list[dict]:
     return result
 
 
-def _json_to_parsed_model(data: dict, filepath: str) -> ParsedModel:
+def _json_to_parsed_model(data: dict, filepath: str, category: str = "") -> ParsedModel:
     metadata = {str(k).upper(): v for k, v in data.get("METADATA", {}).items()}
 
     connectors_section = data.get("CONNECTORS", {})
@@ -113,6 +118,7 @@ def _json_to_parsed_model(data: dict, filepath: str) -> ParsedModel:
             connectors=_connectors_df(unit_data.get("Connectors", [])),
             heat_streams=_heat_streams_df(unit_data.get("Heat Streams", [])),
             equipments=_equipments_list(unit_data.get("Equipments", {})),
+            description=str(unit_data.get("Unit Description", "") or "").strip(),
         )
 
     return ParsedModel(
@@ -126,7 +132,50 @@ def _json_to_parsed_model(data: dict, filepath: str) -> ParsedModel:
         variables=vars_df,
         calculations=None,
         warnings=[],
+        category=category,
     )
+
+
+# ---------------------------------------------------------------------------
+# BFD generation helper
+# ---------------------------------------------------------------------------
+
+def _ensure_bfd(json_path: Path, data: dict) -> Path | None:
+    """
+    Generate a BFD SVG alongside the JSON if one does not already exist.
+    Returns the path to the BFD file, or None if generation failed.
+    """
+    model_stem = json_path.stem.replace("_v6", "")
+    bfd_path = json_path.parent / f"{model_stem}_BFD.svg"
+
+    if bfd_path.exists():
+        return bfd_path
+
+    try:
+        from utils.diagram import generate_block_flow_svg
+        from utils.constants import DEFAULT_CORE_SVG
+
+        svg_content = generate_block_flow_svg(data, str(DEFAULT_CORE_SVG))
+        bfd_path.write_text(svg_content, encoding="utf-8")
+        return bfd_path
+    except Exception:
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Category extraction
+# ---------------------------------------------------------------------------
+
+def _infer_category(filepath: Path) -> str:
+    """
+    Infer category slug from the folder hierarchy:
+      models/<category>/<model_name>/<file>.json → filepath.parent.parent.name
+    Falls back to MODEL_CATEGORY_MAP keyed by JSON stem.
+    """
+    grandparent = filepath.parent.parent.name
+    if grandparent in CATEGORY_SLUGS:
+        return grandparent
+    return MODEL_CATEGORY_MAP.get(filepath.stem, "")
 
 
 # ---------------------------------------------------------------------------
@@ -136,11 +185,12 @@ def _json_to_parsed_model(data: dict, filepath: str) -> ParsedModel:
 @st.cache_resource(show_spinner=False)
 def load_all_models(data_dir: Path | str) -> dict[str, ParsedModel]:
     """
-    Load every *.json file in data_dir and return a dict keyed by model name.
+    Load every *.json file found recursively under data_dir.
 
-    Uses "Model Name" from METADATA as the key; falls back to the filename stem
-    if the field is missing or blank.  Files that fail to load are skipped with
-    a st.warning notification.
+    Expected structure: data_dir/<category>/<model_name>/<model_name>.json
+    Category is inferred from the grandparent folder name.
+    BFD images are auto-generated on first load if absent.
+    Returns a dict keyed by model name (from METADATA, else filename stem).
     """
     data_dir = Path(data_dir)
     models: dict[str, ParsedModel] = {}
@@ -149,21 +199,36 @@ def load_all_models(data_dir: Path | str) -> dict[str, ParsedModel]:
         st.warning(f"Data directory not found: {data_dir}")
         return models
 
-    json_files = sorted(data_dir.glob("*.json"))
+    _SKIP_NAMES = {"comments.json", "posts.json"}
+    json_files = sorted(f for f in data_dir.rglob("*.json") if f.name not in _SKIP_NAMES)
 
     if not json_files:
-        st.warning(f"No .json files found in {data_dir}")
+        st.warning(f"No .json files found under {data_dir}")
         return models
 
     for filepath in json_files:
         try:
             with open(filepath, encoding="utf-8") as fh:
                 data = json.load(fh)
-            model = _json_to_parsed_model(data, str(filepath))
+
+            category = _infer_category(filepath)
+
+            # Ensure BFD exists; patch its absolute path into metadata
+            bfd_path = _ensure_bfd(filepath, data)
+            if bfd_path and bfd_path.exists():
+                metadata = data.setdefault("METADATA", {})
+                existing = str(metadata.get("Block Flow Diagram", "")).strip()
+                if not existing or existing in ("-", "N/A"):
+                    metadata["Block Flow Diagram"] = str(bfd_path)
+
+            model = _json_to_parsed_model(data, str(filepath), category=category)
+
             key = str(data.get("METADATA", {}).get("Model Name") or "").strip()
             if not key:
                 key = filepath.stem
+
             models[key] = model
+
         except Exception as exc:
             st.warning(f"Could not load {filepath.name}: {exc}")
 

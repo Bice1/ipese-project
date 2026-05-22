@@ -1,0 +1,1274 @@
+{
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "Electrolyzer Alkaline",
+        "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+        "Contact Info": "daniel.florezorrego@epfl.ch",
+        "Creation Date": "13.11.2025",
+        "Last Updated": "13.11.2026",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "",
+        "TRL": "9",
+        "Keywords": "Electrolyzer, Alkaline, Hydrogen production, Oxygen production, Water electrolysis",
+        "Description": "This model represent a dairy process for cheese production from fresh milk, using a wood and natural gas powered boiler house for utility supply. The boiler house unit also includes an amine-based post-combustion carbon capture system.",
+        "DOI": "",
+        "Main Related Publication": "",
+        "References": "[1] https://www.clean-hydrogen.europa.eu/system/files/2022-02/Clean%20Hydrogen%20JU%20SRIA%20-%20approved%20by%20GB%20-%20clean%20for%20publication%20%28ID%2013246486%29.pdf [2] https://www.frontiersin.org/articles/10.3389/fenrg.2018.00005/full [3] 1200 EUR/kWee (900 Large, 1800 Small) -- IEA (2019), The Future of Hydrogen, IEA, Paris https://www.iea.org/reports/the-future-of-hydrogen",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
+    },
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "HHV_H2",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Higher heating value of hydrogen",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 141746,
+            "PHYSICAL UNIT": "kJ/kg",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HHV\\_H2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Higher heating value of hydrogen"
+        },
+        {
+            "VARIABLE NAME": "massflowH2O",
+            "TYPE": "DECISION",
+            "FULL NAME": "Reference mass flow of water consumed",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 1000,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{massflowH2O}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Reference mass flow of water consumed"
+        },
+        {
+            "VARIABLE NAME": "H2toH2O_massratio",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Stoichiometric hydrogen to water ratio",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.1111111111111111,
+                "formula": "=1/9"
+            },
+            "PHYSICAL UNIT": "kgH2/kgH2O",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "0.111",
+            "MAX BOUND": "0.125",
+            "LATEX SYNTAX": "$\\mathrm{H2toH2O\\_massratio}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Stocihiometric hydrogen to water ratio"
+        },
+        {
+            "VARIABLE NAME": "dTminw",
+            "TYPE": "DECISION",
+            "FULL NAME": "Minimum temperature difference for hydrogen streams",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{dTminw}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Minimum temperature difference contribution for hydrogen"
+        },
+        {
+            "VARIABLE NAME": "dtmin_gas",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Minimum temperature difference for gas streams",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 8,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{dtmin\\_gas}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Minimum temperature difference contribution for gases"
+        },
+        {
+            "VARIABLE NAME": "E_AlkaElec_spec",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Specific electricity consumption of electrolyzer",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 55,
+            "PHYSICAL UNIT": "kWh/kgH2",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{E\\_AlkaElec\\_spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Specific electricity consumption"
+        },
+        {
+            "VARIABLE NAME": "Q_AlkaElec_spec",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Specific cooling duty of electrolyzer",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.30420304203042026,
+                "formula": "=(21.9+11.9)/111.11"
+            },
+            "PHYSICAL UNIT": "kWh/kgH2",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_AlkaElec\\_spec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Specific cooling duty during production of 888 kgO2/h and 111 kgH2/h"
+        },
+        {
+            "VARIABLE NAME": "Thot_AlkaEle",
+            "TYPE": "DECISION",
+            "FULL NAME": "Electrolyzer outlet temperature (hot side)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 80,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Thot\\_AlkaEle}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of the low temperature electrolyzer"
+        },
+        {
+            "VARIABLE NAME": "Tcold_AlkaEle",
+            "TYPE": "DECISION",
+            "FULL NAME": "Electrolyzer inlet temperature (cold side)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Tcold\\_AlkaEle}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature inlet of the low temperature electrolyzer"
+        },
+        {
+            "VARIABLE NAME": "costinv",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Specific investment cost of electrolyzer",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 1200,
+            "PHYSICAL UNIT": "Euro/kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{costinv}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Specific investment cost of electrolyzer"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{i}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Interest rate"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Equipment lifetime",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "yr",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{n}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Lifetime"
+        },
+        {
+            "VARIABLE NAME": "waterCons",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Volumetric water consumption",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 1,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.O/1000"
+            },
+            "PHYSICAL UNIT": "m3/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{waterCons}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Volumetric flow of water consumption"
+        },
+        {
+            "VARIABLE NAME": "massflowH2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Mass flow rate of hydrogen produced",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 111.1111111111111,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.O*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.toContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.O_massratio"
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{massflowH2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Mass flow rate of hydrogen produced"
+        },
+        {
+            "VARIABLE NAME": "massflowO2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Mass flow rate of oxygen produced",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 888.8888888888889,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.O-massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters."
+            },
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{massflowO2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Mass flow rate of oxygen produced"
+        },
+        {
+            "VARIABLE NAME": "E_AlkaElec",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Electricity consumption of electrolyzer",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 61.11111111111111,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*E_AlkaElec_spec%"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{E\\_AlkaElec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Electricity consumption"
+        },
+        {
+            "VARIABLE NAME": "Q_AlkaElec",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Waste heat from compression",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.33800338003380026,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*Q_AlkaElec_spec%"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Q\\_AlkaElec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Waste heat from hydrogen compression to 30 bar"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_AlkaElec",
+            "TYPE": "DECISION",
+            "FULL NAME": "Specific investment cost (annualized)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 4873.845967516203,
+                "formula": "=costinv*E_AlkaElec*(i*((1+i)^n)/((1+i)^n-1))"
+            },
+            "PHYSICAL UNIT": "Eur/yr",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_AlkaElec}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Specific investment cost of electrolyzer"
+        },
+        {
+            "VARIABLE NAME": "To2cp1procwsu_in",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 1 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 172,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp1procwsu\\_in}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature inlet of intercooling oxygen compressor from 1 to 3 bar"
+        },
+        {
+            "VARIABLE NAME": "Qo2cp1procwsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Heat duty O2 compressor 1",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 32.97777777777778,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*0.0371"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Qo2cp1procwsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat duty intercooling oxygen compressor from 1 to 3 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp1procwsu_out",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 1 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp1procwsu\\_out}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of intercooling oxygen compressor from 1 to 3 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp2procwsu_in",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 2 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 179.5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp2procwsu\\_in}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature inlet of intercooling oxygen compressor from 3 to 10 bar"
+        },
+        {
+            "VARIABLE NAME": "Qo2cp2procwsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Heat duty O2 compressor 2",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 34.94222222222222,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*0.03931"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Qo2cp2procwsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat duty intercooling oxygen compressor from 3 to 10 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp2procwsu_out",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 2 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp2procwsu\\_out}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of intercooling oxygen compressor from 3 to 10 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp3procwsu_in",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 3 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 179.6,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp3procwsu\\_in}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature inlet of intercooling oxygen compressor from 10 to 30 bar"
+        },
+        {
+            "VARIABLE NAME": "Qo2cp3procwsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Heat duty O2 compressor 3",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 35.77777777777778,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*0.04025"
+            },
+            "PHYSICAL UNIT": "kW%",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Qo2cp3procwsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat duty intercooling oxygen compressor from 10 to 30 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp3procwsu_out",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 3 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp3procwsu\\_out}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of intercooling oxygen compressor from 10 to 30 bar"
+        },
+        {
+            "VARIABLE NAME": "W_net_procO2wsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Power consumption oxygen compression",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 103.07555555555555,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*(0.03823+0.03886+0.03887)"
+            },
+            "PHYSICAL UNIT": "kW%",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_net\\_procO2wsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Power consumption compressor oxygen to process (1-30 bar)"
+        },
+        {
+            "VARIABLE NAME": "To2cp1expwsu_in",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 1 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 108.6,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp1expwsu\\_in}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature inlet of intercooling oxygen compressor from 30 to 60 bar"
+        },
+        {
+            "VARIABLE NAME": "Qo2cp1expwsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Heat duty O2 compressor 1",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 19.386666666666667,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*0.02181"
+            },
+            "PHYSICAL UNIT": "kW%",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Qo2cp1expwsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat duty intercooling oxygen compressor from 30 to 60 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp1expwsu_out",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 1 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp1expwsu\\_out}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of intercooling oxygen compressor from 30 to 60 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp2expwsu_in",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 2 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 108.3,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp2expwsu\\_in}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature inlet of intercooling oxygen compressor from 60 to 100 bar"
+        },
+        {
+            "VARIABLE NAME": "Qo2cp2expwsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Heat duty O2 compressor 2",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 20.462222222222223,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*0.02302"
+            },
+            "PHYSICAL UNIT": "kW%",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Qo2cp2expwsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat duty intercooling oxygen compressor from 60 to 100 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp2expwsu_out",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 2 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp2expwsu\\_out}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of intercooling oxygen compressor from 60 to 100 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp3expwsu_in",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 3 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 107,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp3expwsu\\_in}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of intercooling oxygen compressor from 100 to 200 bar"
+        },
+        {
+            "VARIABLE NAME": "Qo2cp3expwsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Heat duty O2 compressor 3",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 21.84888888888889,
+                "formula": "=massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*0.02458"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Qo2cp3expwsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Heat duty intercooling oxygen compressor from 100 to 200 bar"
+        },
+        {
+            "VARIABLE NAME": "To2cp3expwsu_out",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 compressor 3 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{To2cp3expwsu\\_out}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Temperature outlet of intercooling oxygen compressor from 100 to 200 bar"
+        },
+        {
+            "VARIABLE NAME": "W_net_exportO2wsu",
+            "TYPE": "DECISION",
+            "FULL NAME": "Power consumption oxygen compression",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 155.47555555555556,
+                "formula": "=W_net_procContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.wsu+massflowContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.*(0.01984+0.01963+0.01948)"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_net\\_exportO2wsu}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Power consumption compressor oxygen to process (30-200 bar)"
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "OXYGEN",
+                "NAME (ALIAS)": "oxygen",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                "DESCRIPTION": "O2"
+            },
+            {
+                "UID": "OXYPROCESS",
+                "NAME (ALIAS)": "oxyprocess",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                "DESCRIPTION": "O2 after process"
+            },
+            {
+                "UID": "HYDROGEN",
+                "NAME (ALIAS)": "hydrogen",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+                "DESCRIPTION": "Hydrogen"
+            },
+            {
+                "UID": "WATER",
+                "NAME (ALIAS)": "water",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(L)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                "DESCRIPTION": "water"
+            },
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Elec",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Electricity"
+            }
+        ],
+        "INTERNAL CONNECTORS": [
+            {
+                "UID": "OXYVENT",
+                "NAME (ALIAS)": "oxyvent",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": -1.0,
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                "DESCRIPTION": "-"
+            }
+        ]
+    },
+    "UNITS": {
+        "AElectrolyzer": {
+            "Unit Description": "The main alkaline electrolysis unit that consumes water (1,000 kg/h reference) and electricity (55 kWh/kgH2) to produce hydrogen delivered to the hydrogen layer at 30 bar and oxygen routed to the internal oxyvent layer at 1 bar. It also exports a waste heat stream at 80°C (~0.30 kWh/kgH2) available for heat integration, with investment cost proportional to its electricity consumption.",
+            "Unit Info": {
+                "Unit name": "AElectrolyzer",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 1000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "water",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 1,
+                        "formula": "=waterCons"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(L)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "water"
+                },
+                {
+                    "NAME (ALIAS)": "hydrogen",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 111.1111111111111,
+                        "formula": "=massflowThe main alkaline electrolysis unit that consumes water (1,000 kg/h reference) and electricity (55 kWh/kgH2) to produce hydrogen delivered to the hydrogen layer at 30 bar and oxygen routed to the internal oxyvent layer at 1 bar. It also exports a waste heat stream at 80°C (~0.30 kWh/kgH2) available for heat integration, with investment cost proportional to its electricity consumption."
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "Hydrogen"
+                },
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 61.11111111111111,
+                        "formula": "=E_AlkaElec"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "oxyvent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 888.8888888888889,
+                        "formula": "=massflowThe main alkaline electrolysis unit that consumes water (1,000 kg/h reference) and electricity (55 kWh/kgH2) to produce hydrogen delivered to the hydrogen layer at 30 bar and oxygen routed to the internal oxyvent layer at 1 bar. It also exports a waste heat stream at 80°C (~0.30 kWh/kgH2) available for heat integration, with investment cost proportional to its electricity consumption."
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "Heat_AlkaElec",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 80,
+                        "formula": "=Thot_AlkaEle"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=Tcold_AlkaEle"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 0.33800338003380026,
+                        "formula": "=Q_AlkaElec"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "O2ToProcWSU": {
+            "Unit Description": "Auxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 30 bar in three intercooled stages (1→3→10→30 bar) for supply to industrial processes such as ATR reformers or gasifiers. It consumes electricity proportional to the oxygen mass flow (~0.1157 kWh/kgO2 total) and rejects compression heat via three hot intercooler streams.",
+            "Unit Info": {
+                "Unit name": "O2ToProcWSU",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 1000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 103.07555555555555,
+                        "formula": "=W_net_procAuxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 30 bar in three intercooled stages (1→3→10→30 bar) for supply to industrial processes such as ATR reformers or gasifiers. It consumes electricity proportional to the oxygen mass flow (~0.1157 kWh/kgO2 total) and rejects compression heat via three hot intercooler streams.wsu"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "oxyvent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 888.8888888888889,
+                        "formula": "=massflowAuxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 30 bar in three intercooled stages (1→3→10→30 bar) for supply to industrial processes such as ATR reformers or gasifiers. It consumes electricity proportional to the oxygen mass flow (~0.1157 kWh/kgO2 total) and rejects compression heat via three hot intercooler streams."
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "oxyprocess",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 888.8888888888889,
+                        "formula": "=massflowAuxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 30 bar in three intercooled stages (1→3→10→30 bar) for supply to industrial processes such as ATR reformers or gasifiers. It consumes electricity proportional to the oxygen mass flow (~0.1157 kWh/kgO2 total) and rejects compression heat via three hot intercooler streams."
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "O2 after process"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "Qo2cw1procWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 172,
+                        "formula": "=To2cp1procwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp1procwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 32.97777777777778,
+                        "formula": "=Qo2cp1procwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "Qo2cw2procWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 179.5,
+                        "formula": "=To2cp2procwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp2procwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 34.94222222222222,
+                        "formula": "=Qo2cp2procwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "Qo2cw3procWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 179.6,
+                        "formula": "=To2cp3procwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp3procwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 35.77777777777778,
+                        "formula": "=Qo2cp3procwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "O2ToExportWSU": {
+            "Unit Description": "Auxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 200 bar in six intercooled stages (three to 30 bar then three more to 200 bar) for cylinder export to market. It consumes total electricity W_net_exportO2wsu covering all six stages and rejects compression heat via six hot intercooler streams.*",
+            "Unit Info": {
+                "Unit name": "O2ToExportWSU",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 1000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "VALUE": {
+                        "value": 155.47555555555556,
+                        "formula": "=W_net_exportAuxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 200 bar in six intercooled stages (three to 30 bar then three more to 200 bar) for cylinder export to market. It consumes total electricity W_net_exportO2wsu covering all six stages and rejects compression heat via six hot intercooler streams.*wsu"
+                    },
+                    "PHYSICAL UNIT": "kW",
+                    "TEMPERATURE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "oxyvent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "VALUE": {
+                        "value": 888.8888888888889,
+                        "formula": "=massflowAuxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 200 bar in six intercooled stages (three to 30 bar then three more to 200 bar) for cylinder export to market. It consumes total electricity W_net_exportO2wsu covering all six stages and rejects compression heat via six hot intercooler streams.*"
+                    },
+                    "PHYSICAL UNIT": "kg/h",
+                    "TEMPERATURE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "oxygen",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "VALUE": {
+                        "value": 888.8888888888889,
+                        "formula": "=massflowAuxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 200 bar in six intercooled stages (three to 30 bar then three more to 200 bar) for cylinder export to market. It consumes total electricity W_net_exportO2wsu covering all six stages and rejects compression heat via six hot intercooler streams.*"
+                    },
+                    "PHYSICAL UNIT": "kg/h",
+                    "TEMPERATURE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": -1.0,
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "O2"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "Qo2cw1procWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 172,
+                        "formula": "=To2cp1procwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp1procwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 32.97777777777778,
+                        "formula": "=Qo2cp1procwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "Qo2cw2procWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 179.5,
+                        "formula": "=To2cp2procwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp2procwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 34.94222222222222,
+                        "formula": "=Qo2cp2procwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "Qo2cw3procWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 179.6,
+                        "formula": "=To2cp3procwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp3procwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 35.77777777777778,
+                        "formula": "=Qo2cp3procwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "Qo2cw1expWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 108.6,
+                        "formula": "=To2cp1expwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp1expwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 19.386666666666667,
+                        "formula": "=Qo2cp1expwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "Qo2cw2expWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 108.3,
+                        "formula": "=To2cp2expwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp2expwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 20.462222222222223,
+                        "formula": "=Qo2cp2expwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "Qo2cw3expWSU",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 107,
+                        "formula": "=To2cp3expwsu_in"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=To2cp3expwsu_out"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 21.84888888888889,
+                        "formula": "=Qo2cp3expwsu"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": 5.0,
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

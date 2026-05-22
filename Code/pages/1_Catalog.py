@@ -13,6 +13,7 @@ if str(_CODE_DIR) not in sys.path:
 
 import streamlit as st
 
+from utils.categories import CATEGORIES, CATEGORY_COLORS, CATEGORY_DISPLAY_NAMES
 from utils.constants import (
     DATA_DIR,
     GRADE_OPTIONS,
@@ -22,16 +23,6 @@ from utils.constants import (
     CONFIDENTIALITY_COLORS,
 )
 from utils.loader import load_all_models
-
-# ---------------------------------------------------------------------------
-# Page config
-# ---------------------------------------------------------------------------
-
-st.set_page_config(
-    page_title="Catalog — IETS Task XXIV",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
 # ---------------------------------------------------------------------------
 # Session state — initialise models if not already loaded
@@ -74,6 +65,14 @@ all_software: list[str] = sorted(set(
     if _meta(m, "SOFTWARE")
 ))
 
+# Collect categories actually present in the loaded models
+present_category_slugs: list[str] = sorted(set(
+    m.category for m in models.values() if m.category
+))
+present_categories = [
+    c for c in CATEGORIES if c["slug"] in present_category_slugs
+]
+
 # ---------------------------------------------------------------------------
 # Sidebar filters
 # ---------------------------------------------------------------------------
@@ -82,6 +81,7 @@ with st.sidebar:
     st.header("Filters")
 
     search_query = st.text_input("Search by name or keyword", placeholder="e.g. cheese, cement ...")
+    search_author = st.text_input("Search by author", placeholder="e.g. Smith, Florez ...")
 
     selected_grades = st.multiselect(
         "Grade",
@@ -114,6 +114,13 @@ with st.sidebar:
         default=[],
     )
 
+    selected_categories = st.multiselect(
+        "Category",
+        options=[c["slug"] for c in present_categories],
+        format_func=lambda s: CATEGORY_DISPLAY_NAMES.get(s, s),
+        default=[],
+    )
+
     st.divider()
     if st.button("Clear all filters", use_container_width=True):
         st.rerun()
@@ -124,7 +131,7 @@ with st.sidebar:
 
 def _passes_filters(name: str, model) -> bool:
     """Return True if the model passes all active filters."""
-    # Text search
+    # Text search (name / keyword / description)
     if search_query.strip():
         q = search_query.strip().lower()
         haystack = (
@@ -135,6 +142,11 @@ def _passes_filters(name: str, model) -> bool:
             + _meta(model, "DESCRIPTION").lower()
         )
         if q not in haystack:
+            return False
+
+    # Author search
+    if search_author.strip():
+        if search_author.strip().lower() not in _meta(model, "AUTHORS AND CONTRIBUTORS").lower():
             return False
 
     # Grade
@@ -165,6 +177,11 @@ def _passes_filters(name: str, model) -> bool:
     if selected_layers:
         layer = _meta_int(model, "SHARING LAYER")
         if layer not in selected_layers:
+            return False
+
+    # Category
+    if selected_categories:
+        if model.category not in selected_categories:
             return False
 
     return True
@@ -198,11 +215,14 @@ if not filtered:
 # ---------------------------------------------------------------------------
 
 with st.expander("Table view", expanded=False):
+    import pandas as pd
     table_rows = []
     for name, model in filtered.items():
         trl_val = _meta_int(model, "TRL")
         table_rows.append({
             "Model Name":       _meta(model, "MODEL NAME") or name,
+            "Category":         CATEGORY_DISPLAY_NAMES.get(model.category, model.category),
+            "Version":          _meta(model, "VERSION"),
             "Grade":            _meta(model, "GRADE"),
             "TRL":              trl_val if trl_val is not None else "",
             "Confidentiality":  _meta(model, "CONFIDENTIALITY"),
@@ -211,7 +231,6 @@ with st.expander("Table view", expanded=False):
             "Keywords":         _meta(model, "KEYWORDS"),
         })
 
-    import pandas as pd
     st.dataframe(
         pd.DataFrame(table_rows),
         use_container_width=True,
@@ -235,7 +254,7 @@ def _badge(text: str, color: str) -> str:
 
 for name, model in filtered.items():
     with st.container(border=True):
-        col_left, col_mid, col_right = st.columns([3, 4, 1])
+        col_left, col_mid, col_img, col_right = st.columns([3, 4, 2, 1])
 
         with col_left:
             model_display_name = _meta(model, "MODEL NAME") or name
@@ -243,6 +262,19 @@ for name, model in filtered.items():
             uid = _meta(model, "MODEL UID")
             if uid:
                 st.caption(f"UID: {uid}")
+
+            # Category chip
+            cat_slug = model.category
+            if cat_slug:
+                cat_color = CATEGORY_COLORS.get(cat_slug, "#888888")
+                cat_label = CATEGORY_DISPLAY_NAMES.get(cat_slug, cat_slug)
+                st.markdown(
+                    f'<span style="background:{cat_color};color:white;padding:2px 8px;'
+                    f'border-radius:10px;font-size:10px;font-weight:600;">'
+                    f'{cat_label}</span>',
+                    unsafe_allow_html=True,
+                )
+                st.markdown("")
 
             # Badges row
             grade = _meta(model, "GRADE").upper()
@@ -254,17 +286,16 @@ for name, model in filtered.items():
             trl_val = _meta_int(model, "TRL")
             trl_str = f"TRL {trl_val}" if trl_val is not None else "TRL ?"
 
+            version = _meta(model, "VERSION")
+
             badges = []
             if grade:
                 badges.append(_badge(grade, grade_color))
             if conf:
                 badges.append(_badge(conf, conf_color))
-            badges.append(
-                _badge(
-                    trl_str,
-                    "#607D8B",
-                )
-            )
+            badges.append(_badge(trl_str, "#607D8B"))
+            if version:
+                badges.append(_badge(f"v{version}", "#607D8B"))
 
             software = _meta(model, "SOFTWARE")
             if software:
@@ -294,8 +325,24 @@ for name, model in filtered.items():
                     unsafe_allow_html=True,
                 )
 
+        with col_img:
+            # BFD thumbnail
+            bfd_raw = _meta(model, "BLOCK FLOW DIAGRAM")
+            bfd_path = Path(bfd_raw) if bfd_raw and bfd_raw not in ("N/A", "-", "") else None
+            if bfd_path and bfd_path.exists():
+                try:
+                    st.image(str(bfd_path), use_container_width=True)
+                except Exception:
+                    pass
+            else:
+                st.markdown(
+                    '<div style="border:1px dashed #CCCCCC;border-radius:6px;'
+                    'padding:24px 8px;text-align:center;color:#CCCCCC;font-size:11px;">'
+                    'No BFD</div>',
+                    unsafe_allow_html=True,
+                )
+
         with col_right:
-            # Sharing layer info
             layer = _meta(model, "SHARING LAYER")
             if layer:
                 st.markdown(

@@ -1,0 +1,2528 @@
+{
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "Cryogenic air separation unit",
+        "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+        "Contact Info": "",
+        "Creation Date": "13.11.2025",
+        "Last Updated": "13.11.2025",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "4",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "",
+        "TRL": "9",
+        "Keywords": "Air Separation Unit, Cryogenic ASU, Oxygen production, Nitrogen production, Air liquefaction",
+        "Description": "",
+        "DOI": "",
+        "Main Related Publication": "",
+        "References": "1. Van der Ham L, Gross J, Kjelstrup S. Two performance indicators for the characterization of the entropy production in a process unit. Energy. 2011;36(6):3727–32.  2. Agrawal R, Herron D. Air liquefaction: distillation. 2000;  3. Fu W. Process Design and Evaluation for Chemicals Based on Renewable Resources [PhD Thesis]. Technical University of Denmark, Department of Chemical Engineering; 2012. 4. Woods M, Matuszewski M. Quality Guideline for Energy System Studies: CO2 Impurity Design Parameters. National Energy Technology Laboratory (NETL), Pittsburgh, PA, Morgantown, WV …; 2012. 5. Technical & Cost Comparison of Laterite Treatment Processes Part 3 - Dry https://www.researchgate.net/publication/290390987_Technical_Cost_Comparison_of_Laterite_Treatment_Processes_Part_3  6. https://www.linde-gas.ae/en/products_and_supply/oxygen-gas/oxygen.html 7. https://survitecgroup.com/media/344949/s_n2-cylinder_datasheet.pdf",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
+    },
+    "VARIABLES": [
+        {
+            "VARIABLE NAME": "dtmin_gas",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Assumed dTmin contribution of intercooling of air compressors",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 8,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{dtmin\\_gas}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Assumed dTmin contribution of intercooling of air compressors"
+        },
+        {
+            "VARIABLE NAME": "HX1_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 1 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 77.95,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX1\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX1_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 1 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX1\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX1_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Heat duty air compressor intercooler 1",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1223.34,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX1\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX2_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 2 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 96.72,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX2\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX2_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 2 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX2\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX2_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Heat duty air compressor intercooler 2",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1834.63,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX2\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX3_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 3 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 96.33,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX3\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX3_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 3 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX3\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX3_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Heat duty air compressor intercooler 3",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1826.33,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX3\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX4_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 4 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 95.64,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX4\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 4"
+        },
+        {
+            "VARIABLE NAME": "HX4_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "Air compressor intercooler 4 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX4\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 4"
+        },
+        {
+            "VARIABLE NAME": "HX4_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Heat duty air compressor intercooler 4",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1811.04,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX4\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compressor intercooler 4"
+        },
+        {
+            "VARIABLE NAME": "CompAir1",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Air compression stage 1 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1698.68,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompAir1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air inlet at 1 bar and 30 °C"
+        },
+        {
+            "VARIABLE NAME": "CompAir2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Air compression stage 2 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1825.9,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompAir2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compression"
+        },
+        {
+            "VARIABLE NAME": "CompAir3",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Air compression stage 3 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1812.07,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompAir3}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compression"
+        },
+        {
+            "VARIABLE NAME": "CompAir4",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Air compression stage 4 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1788.02,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompAir4}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Air compression to 7.45 bar and 40 °C"
+        },
+        {
+            "VARIABLE NAME": "Turb1",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Expander 1 power recovery",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 1027.85,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Turb1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Expander 1 for power recovery"
+        },
+        {
+            "VARIABLE NAME": "Turb2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Expander 2 power recovery",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 42.65,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Turb2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Expander 2 for power recovery"
+        },
+        {
+            "VARIABLE NAME": "OXYGEN",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Oxygen product flow",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 21025.81,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{OXYGEN}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "produced oxygen at 1 bar, 30 °C, 99.5% O2, it can be consumed in ATR syngas conditioning, FT-ATR loop, Entrained Gasifier and Oxycombustion, as well as exported or vented"
+        },
+        {
+            "VARIABLE NAME": "NITROGEN",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Nitrogen product flow",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 86417.2,
+            "PHYSICAL UNIT": "kg/h",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{NITROGEN}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "produced nitrogen at 1 bar, 30 °C, 93% N2, it can be consumed in plasma torch, as well as exported or vented"
+        },
+        {
+            "VARIABLE NAME": "HX13_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 plasma compressor intercooler 1 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 109.8,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX13\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to plasma compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX13_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 plasma compressor intercooler 1 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX13\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to plasma compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX13_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty N2 compressor 1",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 2148,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX13\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "2148 kW / (86417.20 kg/h) = 0.024856 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX14_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 plasma compressor intercooler 2 inlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 135.8,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX14\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to plasma compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX14_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 plasma compressor intercooler 2 outlet temperature",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX14\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to plasma compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX14_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty N2 compressor 2",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 2867,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX14\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "2867 kW / (86417.20 kg/h) = 0.033176 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "CompN2Plas1",
+            "TYPE": "MEASURED",
+            "FULL NAME": "N2 plasma compressor stage 1 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 2912,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompN2Plas1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen inlet at 1 bar and 1 °C  2912 kW / (86417.20 kg/h) = 0.033696 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "CompN2Plas2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "N2 plasma compressor stage 2 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 2841,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompN2Plas2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen outlet at 7 bar and 30°C  2841 kW / (86417.20 kg/h) = 0.032875 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX15_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 1 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 129.3,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX15\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX15_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 1 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX15\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX15_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty N2 export 1",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 2678,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX15\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "2678 kW / (86417.20 kg/h) = 0.030989 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX16_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 2 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 171.1,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX16\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX16_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 2 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX16\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX16_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty N2 export 2",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 3841,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX16\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "3841 kW / (86417.20 kg/h) = 0.044447 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX17_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 3 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 171.2,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX17\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX17_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 3 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX17\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX17_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty N2 export 3",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 3910,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX17\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "3910 kW / (86417.20 kg/h) = 0.045245 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX18_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 4 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 171.3,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX18\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 4"
+        },
+        {
+            "VARIABLE NAME": "HX18_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 4 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX18\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 4"
+        },
+        {
+            "VARIABLE NAME": "HX18_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty N2 export 4",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 4088,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX18\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "4088 kW / (86417.20 kg/h) = 0.047305 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX19_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 5 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 170.5,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX19\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen to export compressor intercooler 5"
+        },
+        {
+            "VARIABLE NAME": "HX19_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "N2 export compressor intercooler 5 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX19\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "# Nitrogen to export compressor intercooler 5"
+        },
+        {
+            "VARIABLE NAME": "HX19_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty N2 export 5",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 4415,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX19\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "4415 kW / (86417.20 kg/h) = 0.051089 kWh/kg_N2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "CompN2Exp1",
+            "TYPE": "MEASURED",
+            "FULL NAME": "N2 export compressor stage 1 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 3440,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompN2Exp1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen inlet at 1 bar and 1 °C and compressed to 2.95 bar"
+        },
+        {
+            "VARIABLE NAME": "CompN2Exp2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "N2 export compressor stage 2 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 3804,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompN2Exp2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Intermediate pressure 8.43 bar"
+        },
+        {
+            "VARIABLE NAME": "CompN2Exp3",
+            "TYPE": "MEASURED",
+            "FULL NAME": "N2 export compressor stage 3 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 3806,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompN2Exp3}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Intermediate pressure 24.32 bar"
+        },
+        {
+            "VARIABLE NAME": "CompN2Exp4",
+            "TYPE": "MEASURED",
+            "FULL NAME": "N2 export compressor stage 4 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 3821,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompN2Exp4}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Intermediate pressure 70.18 bar"
+        },
+        {
+            "VARIABLE NAME": "CompN2Exp5",
+            "TYPE": "MEASURED",
+            "FULL NAME": "N2 export compressor stage 5 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 3905,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompN2Exp5}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Nitrogen outlet at 200 bar and 30°C"
+        },
+        {
+            "VARIABLE NAME": "HX5_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 to process compressor intercooler 1 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 155.6,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX5\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to process compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX5_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 to process compressor intercooler 1 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 56,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX5\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to process compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX5_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 process 1",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 548.6,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX5\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "548.6 kW / (21025.91 kg/h) = 0.026091 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX6_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 to process compressor intercooler 2 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 198.3,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX6\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to process compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX6_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 to process compressor intercooler 2 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 56,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX6\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "# Oxygen to process compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX6_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 process 2",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 794.1,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX6\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "794.1 kW / (21025.91 kg/h) = 0.037767 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX7_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 to process compressor intercooler 3 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 198.7,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX7\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to process compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX7_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 to process compressor intercooler 3 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX7\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "# Oxygen to process compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX7_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 process 3",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 959.1,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX7\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "959.1 kW / (21025.91 kg/h) = 0.045615 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "CompO2Proc1",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 process compressor stage 1 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 712.3,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Proc1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen inlet at 1 bar and 25°C and compressed to 3.14 bar"
+        },
+        {
+            "VARIABLE NAME": "CompO2Proc2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 process compressor stage 2 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 784.7,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Proc2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Intermediate pressure 9.73 bar"
+        },
+        {
+            "VARIABLE NAME": "CompO2Proc3",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 process compressor stage 3 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 783.8,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Proc3}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen outlet at 30 bar and 30°C"
+        },
+        {
+            "VARIABLE NAME": "HX8_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 1 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 162,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX8\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX8_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 1 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX8\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 1"
+        },
+        {
+            "VARIABLE NAME": "HX8_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 export 1",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 724.4,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX8\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "724.4 kW / (21025.91 kg/h) = 0.034453 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX9_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 2 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 169,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX9\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX9_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 2 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX9\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 2"
+        },
+        {
+            "VARIABLE NAME": "HX9_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 export 2",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 768.8,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX9\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "768.8 kW / (21025.91 kg/h) = 0.036564 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX10_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 3 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 169.1,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX10\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX10_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 3 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX10\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 3"
+        },
+        {
+            "VARIABLE NAME": "HX10_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 export 3",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 783.8,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX10\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "783.8 kW / (21025.91 kg/h) = 0.035137 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX11_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 4 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 169.3,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX11\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 4"
+        },
+        {
+            "VARIABLE NAME": "HX11_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 4 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX11\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 4"
+        },
+        {
+            "VARIABLE NAME": "HX11_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 export 4",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 824.4,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX11\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "824.4 kW / (21025.910 kg/h) = 0.039208 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "HX12_Tin",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 5 inlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 168.2,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX12\\_Tin}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen to export compressor intercooler 5"
+        },
+        {
+            "VARIABLE NAME": "HX12_Tout",
+            "TYPE": "DECISION",
+            "FULL NAME": "O2 export compressor intercooler 5 outlet",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 30,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX12\\_Tout}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "# Oxygen to export compressor intercooler 5"
+        },
+        {
+            "VARIABLE NAME": "HX12_Q",
+            "TYPE": "MEASURED",
+            "FULL NAME": "Intercooler duty O2 export 5",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 909.8,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{HX12\\_Q}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "909.8 kW / (21025.91 kg/h) = 0.043270 kWh/kg_O2 in hysys"
+        },
+        {
+            "VARIABLE NAME": "CompO2Exp1",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 export compressor stage 1 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 748,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Exp1}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen inlet at 1 bar and 1 °C and compressed to 2.95 bar"
+        },
+        {
+            "VARIABLE NAME": "CompO2Exp2",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 export compressor stage 2 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 759.6,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Exp2}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Intermediate pressure 8.43 bar"
+        },
+        {
+            "VARIABLE NAME": "CompO2Exp3",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 export compressor stage 3 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 757.7,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Exp3}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Intermediate pressure 24.32 bar"
+        },
+        {
+            "VARIABLE NAME": "CompO2Exp4",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 export compressor stage 4 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 753.2,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Exp4}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Intermediate pressure 70.18 bar"
+        },
+        {
+            "VARIABLE NAME": "CompO2Exp5",
+            "TYPE": "MEASURED",
+            "FULL NAME": "O2 export compressor stage 5 power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": 748.9,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CompO2Exp5}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Oxygen outlet at 200 bar and 30°C"
+        },
+        {
+            "VARIABLE NAME": "SpecInvASU",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Specific investment cost ASU",
+            "USER GRADE": "OPTIONAL",
+            "DEFAULT VALUE": {
+                "value": 50000,
+                "formula": "=50000000/1000"
+            },
+            "PHYSICAL UNIT": "Eur/tpdO2",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{SpecInvASU}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "See"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.06,
+                "formula": "=0.06"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{i}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": ""
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 40,
+                "formula": "=40"
+            },
+            "PHYSICAL UNIT": "years",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{n}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": ""
+        },
+        {
+            "VARIABLE NAME": "CEPCI2020",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "CEPCI 2020",
+            "USER GRADE": "OPTIONAL",
+            "DEFAULT VALUE": {
+                "value": 596.2,
+                "formula": "=596.2"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI2020}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": ""
+        },
+        {
+            "VARIABLE NAME": "CEPCI2014",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "CEPCI 2014",
+            "USER GRADE": "OPTIONAL",
+            "DEFAULT VALUE": {
+                "value": 576.1,
+                "formula": "=576.1"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{CEPCI2014}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": ""
+        },
+        {
+            "VARIABLE NAME": "W_cryoASU",
+            "TYPE": "PRIVATE",
+            "FULL NAME": "Total air compression power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 6054.17,
+                "formula": "=(CompAir1 + CompAir2 + CompAir3 + CompAir4-Turb1-Turb2)"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_cryoASU}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Total air compression in cryoASU"
+        },
+        {
+            "VARIABLE NAME": "W_O2proc",
+            "TYPE": "PRIVATE",
+            "FULL NAME": "O2 process compression power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 2280.8,
+                "formula": "=(CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Proc1 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Proc2 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Proc3)"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_O2proc}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "compression if oxygen consumption processes used"
+        },
+        {
+            "VARIABLE NAME": "W_O2exp",
+            "TYPE": "PRIVATE",
+            "FULL NAME": "O2 export compression power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 3767.4,
+                "formula": "=(CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp1 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp2 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp3 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp4 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp5)"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_O2exp}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Total oxygen export compression power"
+        },
+        {
+            "VARIABLE NAME": "W_N2plas",
+            "TYPE": "PRIVATE",
+            "FULL NAME": "N2 plasma compression power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 5753,
+                "formula": "=(CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Plas1 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Plas2)"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_N2plas}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "compression if plasma used"
+        },
+        {
+            "VARIABLE NAME": "W_N2exp",
+            "TYPE": "PRIVATE",
+            "FULL NAME": "N2 export compression power",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 18776,
+                "formula": "=(CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp1 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp2 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp3 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp4 + CompContext: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Exp5)"
+            },
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{W\\_N2exp}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "compression if exported in cylinders of 200 bar"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "PRIVATE",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 0.0664615359206755,
+                "formula": "=(i*(i+1)^n)/((i+1)^n-1)"
+            },
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Annualization factor"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_CryoASU",
+            "TYPE": "PRIVATE",
+            "FULL NAME": "Investment cost ASU",
+            "USER GRADE": "PRIVATE",
+            "DEFAULT VALUE": {
+                "value": 1735395.438912944,
+                "formula": "=SpecInvASU*OXYGEN/1000*24*(CEPCI2020/CEPCI2014)*Annuity"
+            },
+            "PHYSICAL UNIT": "Eur/y",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": "-",
+            "MAX BOUND": "-",
+            "LATEX SYNTAX": "$\\mathrm{Cinv2\\_CryoASU}$",
+            "REFERENCE": "-",
+            "DESCRIPTION": "Investment"
+        }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Electricity",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Electricity"
+            },
+            {
+                "UID": "OXYGEN",
+                "NAME (ALIAS)": "Oxygen",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 200.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                "DESCRIPTION": "O2 to export"
+            },
+            {
+                "UID": "OXYPROCESS",
+                "NAME (ALIAS)": "Oxyprocess",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 30.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                "DESCRIPTION": "02 to process"
+            },
+            {
+                "UID": "NITROGEN",
+                "NAME (ALIAS)": "Nitrogen",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 200.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[1]",
+                "DESCRIPTION": "N2 to export"
+            },
+            {
+                "UID": "NITROPLASMA",
+                "NAME (ALIAS)": "Nitroplasma",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": 30.0,
+                "TEMPERATURE UNIT": "C",
+                "PRESSURE": 7.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[1]",
+                "DESCRIPTION": "nitro plasma"
+            }
+        ],
+        "INTERNAL CONNECTORS": [
+            {
+                "UID": "OXYVENT",
+                "NAME (ALIAS)": "oxyvent",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                "DESCRIPTION": "low pressure oxygen"
+            },
+            {
+                "UID": "NITROVENT",
+                "NAME (ALIAS)": "Nitrovent",
+                "TYPE": "MASS",
+                "FLOW UNIT": "kg/h",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": 1.0,
+                "PRESSURE UNIT": "bar",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "(V)",
+                "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[1]",
+                "DESCRIPTION": "low pressure nitrogen"
+            }
+        ]
+    },
+    "UNITS": {
+        "CryoASUnit": {
+            "Unit Description": "The main cryogenic distillation unit that compresses atmospheric air through four intercooled stages and separates it into oxygen-rich (99.5% O2) and nitrogen-rich (93% N2) streams at 1 bar using differences in cryogenic boiling points, consuming net electricity of ~6,254 kW (compressors minus two expanders). It feeds the raw O2 and N2 streams into internal routing layers (oxyvent, nitrovent) for subsequent optional compression or venting.",
+            "Unit Info": {
+                "Unit name": "CryoASUnit",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 6054.17,
+                        "formula": "=W_cryoASU"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Oxyvent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 21025.81,
+                        "formula": "=OXYGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Nitrovent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 86417.2,
+                        "formula": "=NITROGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.93]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "heatexchanger1",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 77.95,
+                        "formula": "=UNIT DESCRIPTION_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 40,
+                        "formula": "=UNIT DESCRIPTION_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 1223.34,
+                        "formula": "=UNIT DESCRIPTION_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger2",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 96.72,
+                        "formula": "=The main cryogenic distillation unit that compresses atmospheric air through four intercooled stages and separates it into oxygen-rich (99.5% O2) and nitrogen-rich (93% N2) streams at 1 bar using differences in cryogenic boiling points, consuming net electricity of ~6,254 kW (compressors minus two expanders). It feeds the raw O2 and N2 streams into internal routing layers (oxyvent, nitrovent) for subsequent optional compression or venting._Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 40,
+                        "formula": "=The main cryogenic distillation unit that compresses atmospheric air through four intercooled stages and separates it into oxygen-rich (99.5% O2) and nitrogen-rich (93% N2) streams at 1 bar using differences in cryogenic boiling points, consuming net electricity of ~6,254 kW (compressors minus two expanders). It feeds the raw O2 and N2 streams into internal routing layers (oxyvent, nitrovent) for subsequent optional compression or venting._Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 1834.63,
+                        "formula": "=The main cryogenic distillation unit that compresses atmospheric air through four intercooled stages and separates it into oxygen-rich (99.5% O2) and nitrogen-rich (93% N2) streams at 1 bar using differences in cryogenic boiling points, consuming net electricity of ~6,254 kW (compressors minus two expanders). It feeds the raw O2 and N2 streams into internal routing layers (oxyvent, nitrovent) for subsequent optional compression or venting._Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger3",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 96.33,
+                        "formula": "=HX3_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 40,
+                        "formula": "=HX3_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 1826.33,
+                        "formula": "=HX3_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger4",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 95.64,
+                        "formula": "=UNIT NAME_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 40,
+                        "formula": "=UNIT NAME_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 1811.04,
+                        "formula": "=UNIT NAME_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "CryoASUN2ToPlas": {
+            "Unit Description": "Auxiliary compression unit that takes nitrogen at 1 bar from the internal nitrovent routing layer and compresses it to 7 bar in two intercooled stages for supply to a plasma torch. It consumes electricity (~5,753 kW) and rejects compression heat via two hot intercooler streams.",
+            "Unit Info": {
+                "Unit name": "CryoASUN2ToPlas",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 5753,
+                        "formula": "=W_Auxiliary compression unit that takes nitrogen at 1 bar from the internal nitrovent routing layer and compresses it to 7 bar in two intercooled stages for supply to a plasma torch. It consumes electricity (~5,753 kW) and rejects compression heat via two hot intercooler streams.plas"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Nitrovent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 86417.2,
+                        "formula": "=NITROGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.93]",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Nitroplasma",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 86417.2,
+                        "formula": "=NITROGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 7.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.93]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "nitro plasma"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "heatexchanger13",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 109.8,
+                        "formula": "=Nitrovent_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=Nitrovent_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 2148,
+                        "formula": "=Nitrovent_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger14",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 135.8,
+                        "formula": "=Nitroplasma_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=Nitroplasma_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 2867,
+                        "formula": "=Nitroplasma_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "CryoASUN2ToExp": {
+            "Unit Description": "Auxiliary compression unit that takes nitrogen at 1 bar from the internal nitrovent routing layer and compresses it to 200 bar in multiple intercooled stages for cylinder export to the market. It consumes electricity (~18,776 kW) and rejects compression heat via intercoolers",
+            "Unit Info": {
+                "Unit name": "CryoASUN2ToExp",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 18776,
+                        "formula": "=W_Auxiliary compression unit that takes nitrogen at 1 bar from the internal nitrovent routing layer and compresses it to 200 bar in multiple intercooled stages for cylinder export to the market. It consumes electricity (~18,776 kW) and rejects compression heat via intercoolersexp"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Nitrovent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 86417.2,
+                        "formula": "=NITROGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.93]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Nitrogen",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 86417.2,
+                        "formula": "=NITROGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 200.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:N2[0.93]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "N2"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "heatexchanger15",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 129.3,
+                        "formula": "=HX15_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=HX15_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 2678,
+                        "formula": "=HX15_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger16",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 171.1,
+                        "formula": "=HX16_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=HX16_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 3841,
+                        "formula": "=HX16_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger17",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 171.2,
+                        "formula": "=HEAT STREAMS DESCRIPTION_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=HEAT STREAMS DESCRIPTION_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 3910,
+                        "formula": "=HEAT STREAMS DESCRIPTION_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger18",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 171.3,
+                        "formula": "=HX18_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=HX18_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 4088,
+                        "formula": "=HX18_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger19",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 170.5,
+                        "formula": "=HX19_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=HX19_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 4415,
+                        "formula": "=HX19_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "CryoASUO2ToProc": {
+            "Unit Description": "Auxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 30 bar in three intercooled stages for supply to industrial processes (e.g., ATR reformers, entrained-flow gasifiers, oxycombustion). It consumes electricity (~2,280.8 kW) and rejects compression heat via three hot intercooler streams.",
+            "Unit Info": {
+                "Unit name": "CryoASUO2ToProc",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 2280.8,
+                        "formula": "=W_Auxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 30 bar in three intercooled stages for supply to industrial processes (e.g., ATR reformers, entrained-flow gasifiers, oxycombustion). It consumes electricity (~2,280.8 kW) and rejects compression heat via three hot intercooler streams.proc"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Oxyvent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 21025.81,
+                        "formula": "=OXYGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Oxyprocess",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 21025.81,
+                        "formula": "=OXYGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 30.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "02 after process"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "heatexchanger5",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 155.6,
+                        "formula": "=CryoASUO2ToProc_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 56,
+                        "formula": "=CryoASUO2ToProc_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 548.6,
+                        "formula": "=CryoASUO2ToProc_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger6",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 198.3,
+                        "formula": "=HX6_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 56,
+                        "formula": "=HX6_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 794.1,
+                        "formula": "=HX6_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger7",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 198.7,
+                        "formula": "=CONNECTORS DESCRIPTION_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=CONNECTORS DESCRIPTION_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 959.1,
+                        "formula": "=CONNECTORS DESCRIPTION_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "CryoASUO2ToExp": {
+            "Unit Description": "Auxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 200 bar in multiple intercooled stages for cylinder export to the market. It consumes total electricity W_net_exportO2 (~3,767 kW across 5 compressor stages) and rejects compression heat via intercoolers",
+            "Unit Info": {
+                "Unit name": "CryoASUO2ToExp",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100000.0
+            },
+            "Connectors Description": "",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 3767.4,
+                        "formula": "=W_Auxiliary compression unit that takes oxygen at 1 bar from the internal oxyvent routing layer and compresses it to 200 bar in multiple intercooled stages for cylinder export to the market. It consumes total electricity W_net_exportO2 (~3,767 kW across 5 compressor stages) and rejects compression heat via intercoolersexp"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "yes",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Oxyvent",
+                    "TYPE": "MASS",
+                    "DIRECTION": "IN",
+                    "FLOW VALUE": {
+                        "value": 21025.81,
+                        "formula": "=OXYGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": 1.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "-"
+                },
+                {
+                    "NAME (ALIAS)": "Oxygen",
+                    "TYPE": "MASS",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 21025.81,
+                        "formula": "=OXYGEN"
+                    },
+                    "FLOW UNIT": "kg/h",
+                    "TEMPERATURE VALUE": 30.0,
+                    "TEMPERATURE UNIT": "C",
+                    "PRESSURE VALUE": 200.0,
+                    "PRESSURE UNIT": "bar",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "(V)",
+                    "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+                    "REFERENCE STREAM": "-",
+                    "DESCRIPTION": "O2"
+                }
+            ],
+            "Heat Streams Description": "",
+            "Heat Streams": [
+                {
+                    "NAME": "heatexchanger8",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 162,
+                        "formula": "=HX8_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=HX8_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 724.4,
+                        "formula": "=HX8_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger9",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 169,
+                        "formula": "=HX9_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=HX9_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 768.8,
+                        "formula": "=HX9_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger10",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 169.1,
+                        "formula": "=CONNECTORS_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=CONNECTORS_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 783.8,
+                        "formula": "=CONNECTORS_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger11",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 169.3,
+                        "formula": "=NAME (ALIAS)_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=NAME (ALIAS)_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 824.4,
+                        "formula": "=NAME (ALIAS)_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                },
+                {
+                    "NAME": "heatexchanger12",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 168.2,
+                        "formula": "=Electricity_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 30,
+                        "formula": "=Electricity_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 909.8,
+                        "formula": "=Electricity_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": "",
+                    "SPEC HEAT CAP UNIT": "",
+                    "MASS FLOW VALUE": "",
+                    "MASS FLOW UNIT": "",
+                    "DTMIN CONTR VALUE": {
+                        "value": 8,
+                        "formula": "=dtmin_gas"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "",
+                    "DESCRIPTION": ""
+                }
+            ],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
+    }
+}

@@ -21,16 +21,6 @@ from utils.constants import DATA_DIR
 from utils.loader import load_all_models
 
 # ---------------------------------------------------------------------------
-# Page config
-# ---------------------------------------------------------------------------
-
-st.set_page_config(
-    page_title="Symbiosis — IETS Task XXIV",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-# ---------------------------------------------------------------------------
 # Session state — initialise models if not already loaded
 # ---------------------------------------------------------------------------
 
