@@ -1,515 +1,806 @@
 {
   "METADATA": {
-    "MODEL UID": null,
-    "MODEL NAME": "Reverse WGS reactor with recycle",
-    "AUTHORS AND CONTRIBUTORS": "Daniel Flórez-Orrego, EPFL IPESE research group",
-    "CONTACT INFO": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
-    "CREATION DATE": "2026-04-21 00:00:00",
-    "LAST UPDATED": "2026-04-21 00:00:00",
-    "MODEL STATUS": "Maintained",
-    "VERSION": "1.0.1",
-    "CONFIDENTIALITY": "Open",
-    "SHARING LAYER": 1,
-    "GRADE": "GRAY-BOX",
-    "REFERENCE CAPACITY \n(MAIN PRODUCT/FEEDSTOCK)": "46069kg/h of produced syngas",
-    "TRL": 9,
-    "KEYWORDS": "Syngas, CO2, Hydrogen",
-    "DESCRIPTION": "Reverse WGS reactor with recycle",
-    "DOI": null,
-    "MAIN RELATED PUBLICATION": null,
-    "REFERENCES": "[1] Hysys Model, and Impact of the reverse water-gas shift operating conditions on the Power-to-Liquid fuel production cost - Adelung, and Fischer–Tropsch Synthesis as the Key for Decentralized Sustainable Kerosene Production - Meurer;\n[2] Adelung, S., Maier, S., & Dietrich, R. U. (2021). Impact of the reverse water-gas shift operating conditions on the Power-to-Liquid process efficiency. Sustainable Energy Technologies and Assessments, 43, 100897;\n[3] Samimi, F., Hamedi, N., & Rahimpour, M. R. (2019). Green methanol production process from indirect CO2 conversion: RWGS reactor versus RWGS membrane reactor. Journal of environmental chemical engineering, 7(1), 102813.",
-    "SOFTWARE": "None",
-    "SOFTWARE FILE": "None",
-    "BLOCK FLOW DIAGRAM ( .png or .svg)": "Figures/ReverseWGS.svg",
-    "URL": null,
-    "SUPPLEMENTARY MATERIAL": "See SUPPL MATERIAL tab"
+    "Model UID": "",
+    "Model Name": "Reverse WGS reactor with recycle",
+    "Authors and Contributors": "Daniel Flórez-Orrego, EPFL IPESE research group",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2026-04-21 00:00:00",
+    "Last Updated": "2026-04-21 00:00:00",
+    "Model Status": "Maintained",
+    "Version": "1.0.1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "46069kg/h of produced syngas",
+    "TRL": "9",
+    "Keywords": "Syngas, CO2, Hydrogen",
+    "Description": "Reverse WGS reactor with recycle",
+    "DOI": "",
+    "Main Related Publication": "",
+    "References": "[1] Hysys Model, and Impact of the reverse water-gas shift operating conditions on the Power-to-Liquid fuel production cost - Adelung, and Fischer–Tropsch Synthesis as the Key for Decentralized Sustainable Kerosene Production - Meurer;\n[2] Adelung, S., Maier, S., & Dietrich, R. U. (2021). Impact of the reverse water-gas shift operating conditions on the Power-to-Liquid process efficiency. Sustainable Energy Technologies and Assessments, 43, 100897;\n[3] Samimi, F., Hamedi, N., & Rahimpour, M. R. (2019). Green methanol production process from indirect CO2 conversion: RWGS reactor versus RWGS membrane reactor. Journal of environmental chemical engineering, 7(1), 102813.",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/ReverseWGS.svg",
+    "URL": "",
+    "Supplementary Material": "See SUPPL MATERIAL tab"
   },
-  "VARIABLES": [],
-  "UNITS": {
-    "rWGS": {
-      "Unit Description": "",
-      "Unit Info": {
-        "Unit name": "rWGS",
-        "Minimum capacity multiplier": 0.0,
-        "Maximum capacity multiplier": 100.0
-      },
-      "Connectors": [
-        {
-          "NAME (ALIAS)": "Hydrogen",
-          "TYPE": "MASS",
-          "DIRECTION": "in",
-          "FLOW VALUE": 9421.0,
-          "FLOW UNIT": "kg/h",
-          "TEMPERATURE VALUE": 30,
-          "TEMPERATURE UNIT": "°C",
-          "PRESSURE VALUE": 1,
-          "PRESSURE UNIT": "bar",
-          "VAPOR FRACTION [MASS]": -1,
-          "PHASE": "(G)",
-          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Hydrogen inlet"
-        },
-        {
-          "NAME (ALIAS)": "CO2",
-          "TYPE": "MASS",
-          "DIRECTION": "in",
-          "FLOW VALUE": 66014.0,
-          "FLOW UNIT": "kg/h",
-          "TEMPERATURE VALUE": 30,
-          "TEMPERATURE UNIT": "°C",
-          "PRESSURE VALUE": 1,
-          "PRESSURE UNIT": "bar",
-          "VAPOR FRACTION [MASS]": -1,
-          "PHASE": "(G)",
-          "COMPOSITION [MOLE/MASS]": "MASSFRAC:C02[1]",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "CO2 inlet"
-        },
-        {
-          "NAME (ALIAS)": "Water",
-          "TYPE": "MASS",
-          "DIRECTION": "out",
-          "FLOW VALUE": 29.36,
-          "FLOW UNIT": "m3/h",
-          "TEMPERATURE VALUE": 25,
-          "TEMPERATURE UNIT": "°C",
-          "PRESSURE VALUE": 1,
-          "PRESSURE UNIT": "bar",
-          "VAPOR FRACTION [MASS]": -1,
-          "PHASE": "(L)",
-          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Water condensate"
-        },
-        {
-          "NAME (ALIAS)": "Syngas_rWGS",
-          "TYPE": "MASS",
-          "DIRECTION": "out",
-          "FLOW VALUE": 46069.0,
-          "FLOW UNIT": "kg/h",
-          "TEMPERATURE VALUE": 30,
-          "TEMPERATURE UNIT": "°C",
-          "PRESSURE VALUE": 1,
-          "PRESSURE UNIT": "bar",
-          "VAPOR FRACTION [MASS]": -1,
-          "PHASE": "(G)",
-          "COMPOSITION [MOLE/MASS]": "MOLEFRAC:CH4[4.18%]&H2O[1.10%]&CO[31.57%]&H2[63.14%]",
-          "REFERENCE STREAM": "Yes",
-          "DESCRIPTION": "Syngas as output of the WGS"
-        },
-        {
-          "NAME (ALIAS)": "Electricity",
-          "TYPE": "ELECTRICITY",
-          "DIRECTION": "in",
-          "FLOW VALUE": 12074.3,
-          "FLOW UNIT": "kW",
-          "TEMPERATURE VALUE": "-",
-          "TEMPERATURE UNIT": "-",
-          "PRESSURE VALUE": "-",
-          "PRESSURE UNIT": "-",
-          "VAPOR FRACTION [MASS]": "-",
-          "PHASE": "-",
-          "COMPOSITION [MOLE/MASS]": "-",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Electricity consumption for compression"
-        },
-        {
-          "NAME (ALIAS)": "HEAT STREAMS DESCRIPTION",
-          "TYPE": null,
-          "DIRECTION": null,
-          "FLOW VALUE": NaN,
-          "FLOW UNIT": null,
-          "TEMPERATURE VALUE": null,
-          "TEMPERATURE UNIT": null,
-          "PRESSURE VALUE": null,
-          "PRESSURE UNIT": null,
-          "VAPOR FRACTION [MASS]": null,
-          "PHASE": null,
-          "COMPOSITION [MOLE/MASS]": null,
-          "REFERENCE STREAM": null,
-          "DESCRIPTION": null
-        },
-        {
-          "NAME (ALIAS)": "There are 6 intercooling hot streams, 2 hot streams for product cooling and 2 cold streams for preheating and to provide heat to the endothermic reaction.",
-          "TYPE": null,
-          "DIRECTION": null,
-          "FLOW VALUE": NaN,
-          "FLOW UNIT": null,
-          "TEMPERATURE VALUE": null,
-          "TEMPERATURE UNIT": null,
-          "PRESSURE VALUE": null,
-          "PRESSURE UNIT": null,
-          "VAPOR FRACTION [MASS]": null,
-          "PHASE": null,
-          "COMPOSITION [MOLE/MASS]": null,
-          "REFERENCE STREAM": null,
-          "DESCRIPTION": null
-        }
-      ],
-      "Heat Streams": [
-        {
-          "NAME": "q_rWGS_hot1",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 165.4,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 30.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 5029.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 14.192812593632157,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 9421,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty hydrogen first compression intercooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_hot2",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 107.7,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 30.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 2880.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 14.163708039092818,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 9421,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty hydrogen second compression intercooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_hot3",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 115.7,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 30.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 1435.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 0.913140344085281,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 66014,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty CO2 first compression intercooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_hot4",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 92.72,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 30.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 1053.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 0.9155641382192894,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 66014,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty CO2 second compression intercooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_hot5",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 750.0,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 99.34,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 48387.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 5.811233194244188,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 46069,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty of rWGS product cooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_hot6",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 99.34,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 30.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 20310.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 22.888630147791943,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 46069,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 2.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty of rWGS product subcooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_hot7",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 91.53,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 30.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 746.9,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 0.85,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 51411.36318008432,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty of recycling compression intercooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_hot8",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": 115.9,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 30.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 1065.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 0.8681601063986483,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 51411.3631800843,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty of recycling compression intercooling",
-          "type_raw": "Hot",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_cold1",
-          "TYPE": "Cold",
-          "INLET TEMPERATURE VALUE": 28.87,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 700.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 0.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 48387.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": 2.0461926711349347,
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": 126846.36318008433,
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty of rWGS feed preheating",
-          "type_raw": "Cold",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "q_rWGS_cold2",
-          "TYPE": "Cold",
-          "INLET TEMPERATURE VALUE": 700.0,
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": 750.0,
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 0.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 7606.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": "-",
-          "SPEC HEAT CAP UNIT": "-",
-          "MASS FLOW VALUE": "-",
-          "MASS FLOW UNIT": "-",
-          "DTMIN CONTR VALUE": 8.0,
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": " Heat duty of rWGS endothermic reactor",
-          "type_raw": "Cold",
-          "is_phase_change": false
-        },
-        {
-          "NAME": "EQUIPMENTS DESCRIPTION",
-          "TYPE": null,
-          "INLET TEMPERATURE VALUE": NaN,
-          "INLET TEMPERATURE UNIT": null,
-          "OUTLET TEMPERATURE VALUE": NaN,
-          "OUTLET TEMPERATURE UNIT": null,
-          "INLET ENTHALPY FLOW VALUE": NaN,
-          "INLET ENTHALPY FLOW UNIT": null,
-          "OUTLET ENTHALPY FLOW VALUE": NaN,
-          "OUTLET ENTHALPY FLOW UNIT": null,
-          "SPEC HEAT CAP VALUE": null,
-          "SPEC HEAT CAP UNIT": null,
-          "MASS FLOW VALUE": null,
-          "MASS FLOW UNIT": null,
-          "DTMIN CONTR VALUE": NaN,
-          "DTMIN CONTR UNIT": null,
-          "HEAT TRANSFER COEF VALUE": NaN,
-          "HEAT TRANSFER COEF UNIT": null,
-          "HEAT CASCADE": null,
-          "REFERENCE STREAM": null,
-          "DESCRIPTION": null,
-          "type_raw": null,
-          "is_phase_change": false
-        },
-        {
-          "NAME": "A full refractory reactor (asset) is required for cost calculation.",
-          "TYPE": null,
-          "INLET TEMPERATURE VALUE": NaN,
-          "INLET TEMPERATURE UNIT": null,
-          "OUTLET TEMPERATURE VALUE": NaN,
-          "OUTLET TEMPERATURE UNIT": null,
-          "INLET ENTHALPY FLOW VALUE": NaN,
-          "INLET ENTHALPY FLOW UNIT": null,
-          "OUTLET ENTHALPY FLOW VALUE": NaN,
-          "OUTLET ENTHALPY FLOW UNIT": null,
-          "SPEC HEAT CAP VALUE": null,
-          "SPEC HEAT CAP UNIT": null,
-          "MASS FLOW VALUE": null,
-          "MASS FLOW UNIT": null,
-          "DTMIN CONTR VALUE": NaN,
-          "DTMIN CONTR UNIT": null,
-          "HEAT TRANSFER COEF VALUE": NaN,
-          "HEAT TRANSFER COEF UNIT": null,
-          "HEAT CASCADE": null,
-          "REFERENCE STREAM": null,
-          "DESCRIPTION": null,
-          "type_raw": null,
-          "is_phase_change": false
-        }
-      ],
-      "Equipments": {
-        "rWGS_Reactor": {
-          "Type": "Asset",
-          "Subtype": "Refractory Reactor",
-          "Parameters": [
-            {
-              "param": "Lifetime",
-              "value": 25,
-              "unit": "year"
-            },
-            {
-              "param": "Specific investment cost",
-              "value": 200,
-              "unit": "eur/kWth"
-            },
-            {
-              "param": "CEPCI 2008",
-              "value": 575.4,
-              "unit": "-"
-            }
-          ]
-        },
-        "OPERATING COST DESCRIPTION": {
-          "Type": null,
-          "Subtype": null,
-          "Parameters": []
-        },
-        "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.": {
-          "Type": null,
-          "Subtype": null,
-          "Parameters": []
-        },
-        "The variable operating cost is calculated by multiplying the specific operating cost [EUR/kWh or EUR/kg] and reference capacity [kW or kg/h]": {
-          "Type": null,
-          "Subtype": null,
-          "Parameters": []
-        },
-        "FIXED OPERATING COST [EUR/y]": {
-          "Type": "VARIABLE OPERATING COST [EUR/h]",
-          "Subtype": null,
-          "Parameters": []
-        },
-        "0": {
-          "Type": 0,
-          "Subtype": null,
-          "Parameters": []
-        }
-      }
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "CO2_input",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Mass flow rate of CO2 consumed at 30C and 1bar",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 66014,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$CO_{2,\\text{input}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of CO2 consumed at 30C and 1bar"
     },
-    "DOCUMENTATION": {
-      "Unit Description": "",
-      "Unit Info": {
-        "Unit name": "Unknown",
-        "Minimum capacity multiplier": null,
-        "Maximum capacity multiplier": null
+    {
+      "VARIABLE NAME": "H2_input",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Mass flow rate of H2 consumed at 30C and 1bar",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 9421,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 200000,
+      "LATEX SYNTAX": "$H_{2,\\text{input}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of H2 consumed at 30C and 1bar"
+    },
+    {
+      "VARIABLE NAME": "Syngas_ouput",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Mass flow rate of syngas produced at 5 bar, molfrac",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 46069,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$Syngas_{\\text{output}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of syngas produced at 5 bar, molfrac"
+    },
+    {
+      "VARIABLE NAME": "Water_output",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Water production in the reverse water gas shift reaction",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 29.36,
+      "PHYSICAL UNIT": "m3/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$Water_{\\text{output}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Water production in the reverse water gas shift reaction"
+    },
+    {
+      "VARIABLE NAME": "LHV_syngas",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lower heating value of syngas from reverse water gas shift process",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 25094,
+      "PHYSICAL UNIT": "kJ/kg",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5000,
+      "MAX BOUND": 40000,
+      "LATEX SYNTAX": "$LHV_{\\text{syngas}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lower heating value of syngas from reverse water gas shift process"
+    },
+    {
+      "VARIABLE NAME": "Q_cold1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty of rWGS feed preheating",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 48387,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$Q_{\\text{cold1}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of rWGS feed preheating"
+    },
+    {
+      "VARIABLE NAME": "Q_cold2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty of rWGS endothermic reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 7606,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$Q_{\\text{cold2}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of rWGS endothermic reactor"
+    },
+    {
+      "VARIABLE NAME": "Q_hot1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty hydrogen first compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5029,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 200000,
+      "LATEX SYNTAX": "$Q_{\\text{hot1}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty hydrogen first compression intercooling, only use if low pressure electrolysis SOEC"
+    },
+    {
+      "VARIABLE NAME": "Q_hot2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty hydrogen second compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2880,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 200000,
+      "LATEX SYNTAX": "$Q_{\\text{hot2}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty hydrogen second compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "Q_hot3",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty CO2 first compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1435,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$Q_{\\text{hot3}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty CO2 first compression intercooling, low pressure CO2 - not compressed"
+    },
+    {
+      "VARIABLE NAME": "Q_hot4",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty CO2 second compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1053,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$Q_{\\text{hot4}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty CO2 second compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "Q_hot5",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty of rWGS product cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 48387,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$Q_{\\text{hot5}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of rWGS product cooling"
+    },
+    {
+      "VARIABLE NAME": "Q_hot6",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty of rWGS product cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 20310,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$Q_{\\text{hot6}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of rWGS product cooling"
+    },
+    {
+      "VARIABLE NAME": "Q_hot7",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty of recycling compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 746.9,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 50000,
+      "LATEX SYNTAX": "$Q_{\\text{hot7}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of recycling compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "Q_hot8",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Heat duty of recycling compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1065,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 50000,
+      "LATEX SYNTAX": "$Q_{\\text{hot8}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of recycling compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_cold1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet rWGS feed preheating",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 28.87,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 150,
+      "LATEX SYNTAX": "$T_{\\text{in,cold1}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet rWGS feed preheating"
+    },
+    {
+      "VARIABLE NAME": "Tin_cold2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet of rWGS endothermic reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 700,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 200,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$T_{\\text{in,cold2}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of rWGS endothermic reactor"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet first hydrogen intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 165.4,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$T_{\\text{in,hot1}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet first hydrogen intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet second hydrogen intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 107.7,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$T_{\\text{in,hot2}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet second hydrogen intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot3",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet first CO2 intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 115.7,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$T_{\\text{in,hot3}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet first CO2 intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot4",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet second CO2 intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 92.72,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$T_{\\text{in,hot4}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet second CO2 intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot5",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet rWGS product cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 750,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 400,
+      "MAX BOUND": 1200,
+      "LATEX SYNTAX": "$T_{\\text{in,hot5}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet rWGS product cooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot6",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet rWGS product cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 99.34,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 50,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$T_{\\text{in,hot6}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet rWGS product cooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot7",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet of recycling compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 91.53,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$T_{\\text{in,hot7}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of recycling compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tin_hot8",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet of recycling compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 115.9,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$T_{\\text{in,hot8}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of recycling compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_cold1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet rWGS feed preheating",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 700,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 300,
+      "MAX BOUND": 1100,
+      "LATEX SYNTAX": "$T_{\\text{out,cold1}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet rWGS feed preheating"
+    },
+    {
+      "VARIABLE NAME": "Tout_cold2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet of rWGS endothermic reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 750,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 1200,
+      "LATEX SYNTAX": "$T_{\\text{out,cold2}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of rWGS endothermic reactor"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet first hydrogen intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{\\text{out,hot1}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet first hydrogen intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet second hydrogen intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{\\text{out,hot2}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet second hydrogen intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot3",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet second CO2 intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{\\text{out,hot3}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet second CO2 intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot4",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet second CO2 intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{\\text{out,hot4}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet second CO2 intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot5",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet rWGS product cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 99.34,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 50,
+      "MAX BOUND": 400,
+      "LATEX SYNTAX": "$T_{\\text{out,hot5}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet rWGS product cooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot6",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet rWGS product cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{\\text{out,hot6}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet rWGS product cooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot7",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet of recycling compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{\\text{out,hot7}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of recycling compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "Tout_hot8",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet of recycling compression intercooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{\\text{out,hot8}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of recycling compression intercooling"
+    },
+    {
+      "VARIABLE NAME": "dtmin_gas",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum temperature difference contribution for gaseous streams",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 8,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.1,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$\\Delta T_{\\text{min,gas}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution for gaseous streams"
+    },
+    {
+      "VARIABLE NAME": "dtmin_2ph",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum temperature difference contribution for phase change streams",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.1,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$\\Delta T_{\\text{min,2ph}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution for phase change streams"
+    },
+    {
+      "VARIABLE NAME": "H2_compr",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power consumption in two stage H2 compressor up to 5 bar",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 7909,
+        "formula": "=5029+2880"
       },
-      "Connectors": [],
-      "Heat Streams": [],
-      "Equipments": {}
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "5029+2880",
+      "MIN BOUND": 0,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$H_{2,\\text{compr}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in two stage H2 compressor up to 5 bar"
+    },
+    {
+      "VARIABLE NAME": "CO2_compr",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power consumption in two stage CO compressor up to 5 bar",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 2420,
+        "formula": "=1409+1011"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "1409+1011",
+      "MIN BOUND": 0,
+      "MAX BOUND": 200000,
+      "LATEX SYNTAX": "$CO_{2,\\text{compr}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in two stage CO compressor up to 5 bar"
+    },
+    {
+      "VARIABLE NAME": "Recy_compr",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power consumption in two stage recompressor to 5 bar",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1745.3,
+        "formula": "=718.3+1027"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "718.3+1027",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$Recy_{\\text{compr}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in two stage recompressor to 5 bar"
+    },
+    {
+      "VARIABLE NAME": "Syng_compr_to_FT",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power consumption in two stage syngas compression up to 41 bar (to Fischer–Tropsch plant)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 9442,
+        "formula": "=4772+4670"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "4772+4670",
+      "MIN BOUND": 0,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$Syng_{\\text{compr→FT}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in two stage syngas compression up to 41 bar (to Fischer–Tropsch plant)"
+    },
+    {
+      "VARIABLE NAME": "Syng_compr_to_MeOH",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power consumption in two stage syngas compression up to 35 bar (to Methanol plant)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 8692,
+        "formula": "=4489+4203"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "4489+4203",
+      "MIN BOUND": 0,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$Syng_{\\text{compr→MeOH}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in two stage syngas compression up to 35 bar (to Methanol plant)"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime of rWGS",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 25,
+      "PHYSICAL UNIT": "yr",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$n$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime of rWGS"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 0.5,
+      "LATEX SYNTAX": "$i$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2020",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "2020 CEPCI",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 596.2,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 2000,
+      "LATEX SYNTAX": "$CEPCI_{2020}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "2020 CEPCI"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2008",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "CEPCI 2008",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 575.4,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 2000,
+      "LATEX SYNTAX": "$CEPCI_{2008}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CEPCI 2008"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_rWGS_spec",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Specific investment cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 200,
+      "PHYSICAL UNIT": "eur/kWth",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$C_{inv2,\\text{rWGS,spec}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost of reverse water-gas shift unit"
+    },
+    {
+      "VARIABLE NAME": "Syngas_output_kg",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Mass flow rate of syngas production",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 46069,
+        "formula": "=1*Syngas_ouput"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "1*Syngas_ouput",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$Syngas_{\\text{output,kg}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of syngas production"
+    },
+    {
+      "VARIABLE NAME": "Syngas_output_kw",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Energy flow rate of syngas production",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 321126.5238888889,
+        "formula": "=Syngas_ouput*LHV_syngas/3600"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "Syngas_ouput*LHV_syngas/3600",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10000000,
+      "LATEX SYNTAX": "$Syngas_{\\text{output,kW}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Energy flow rate of syngas production. Uncomment if the gas is used to supply a furnace"
+    },
+    {
+      "VARIABLE NAME": "Power_rWGS",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power consumption in the compression of the RWGS reactants up to 5 bar",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 12074.3,
+        "formula": "=Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._compr+Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._compr+Recy_compr"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "H2_compr+CO2_compr+Recy_compr",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$Power_{\\text{rWGS}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in the compression of the RWGS reactants up to 5 bar"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualization factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.07822671821227395,
+        "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(1+i)^n)/((1+i)^n-1)",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$Annuity$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualization factor"
+    },
+    {
+      "VARIABLE NAME": "heat_costing",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Preheating from 450 °C to 750 °C corresponds to only 40% of preheating from 30C to 750C",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 26960.8,
+        "formula": "=0.4*Q_cold1+Q_cold2"
+      },
+      "PHYSICAL UNIT": "kWth",
+      "FORMULA OR PATH": "0.4*Q_cold1+Q_cold2",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$heat_{\\text{costing}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Preheating from 450 °C to 750 °C corresponds to only 40% of preheating from 30C to 750C"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_rWGS",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Investment cost of rWGS (2020)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 437058.92735135596,
+        "formula": "=Cinv2_rWGS_spec*heat_costing*(CEPCI_2020/CEPCI_2008)*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "Cinv2_rWGS_spec*heat_costing*(CEPCI_2020/CEPCI_2008)*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 5000000000,
+      "LATEX SYNTAX": "$C_{inv2,\\text{rWGS}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost of rWGS"
     }
-  },
+  ],
   "CONNECTORS": {
     "EXTERNAL CONNECTORS": [
       {
@@ -531,11 +822,11 @@
         "NAME (ALIAS)": "Water",
         "TYPE": "MASS",
         "FLOW UNIT": "m3/h",
-        "TEMPERATURE": 25,
+        "TEMPERATURE": 25.0,
         "TEMPERATURE UNIT": "°C",
-        "PRESSURE": 1,
+        "PRESSURE": 1.0,
         "PRESSURE UNIT": "bar",
-        "VAPOR FRACTION [MASS]": -1,
+        "VAPOR FRACTION [MASS]": -1.0,
         "PHASE": "(L)",
         "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
         "DESCRIPTION": "Water condensate"
@@ -545,11 +836,11 @@
         "NAME (ALIAS)": "CO2",
         "TYPE": "MASS",
         "FLOW UNIT": "kg/h",
-        "TEMPERATURE": 30,
+        "TEMPERATURE": 30.0,
         "TEMPERATURE UNIT": "°C",
-        "PRESSURE": 1,
+        "PRESSURE": 1.0,
         "PRESSURE UNIT": "bar",
-        "VAPOR FRACTION [MASS]": -1,
+        "VAPOR FRACTION [MASS]": -1.0,
         "PHASE": "(G)",
         "COMPOSITION [MOLE/MASS]": "MASSFRAC:C02[1]",
         "DESCRIPTION": "CO2 inlet"
@@ -559,11 +850,11 @@
         "NAME (ALIAS)": "Hydrogen",
         "TYPE": "MASS",
         "FLOW UNIT": "kg/h",
-        "TEMPERATURE": 30,
+        "TEMPERATURE": 30.0,
         "TEMPERATURE UNIT": "°C",
-        "PRESSURE": 1,
+        "PRESSURE": 1.0,
         "PRESSURE UNIT": "bar",
-        "VAPOR FRACTION [MASS]": -1,
+        "VAPOR FRACTION [MASS]": -1.0,
         "PHASE": "(G)",
         "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
         "DESCRIPTION": "Hydrogen inlet"
@@ -573,45 +864,544 @@
         "NAME (ALIAS)": "Syngas_rWGS",
         "TYPE": "MASS",
         "FLOW UNIT": "kg/h",
-        "TEMPERATURE": 30,
+        "TEMPERATURE": 30.0,
         "TEMPERATURE UNIT": "°C",
-        "PRESSURE": 1,
+        "PRESSURE": 1.0,
         "PRESSURE UNIT": "bar",
-        "VAPOR FRACTION [MASS]": -1,
+        "VAPOR FRACTION [MASS]": -1.0,
         "PHASE": "(G)",
         "COMPOSITION [MOLE/MASS]": "MOLEFRAC:CH4[4.18%]&H2O[1.10%]&CO[31.57%]&H2[63.14%]",
         "DESCRIPTION": "Syngas as output of the WGS"
-      },
-      {
-        "UID": "Precheck that each of these internal connectors has at least one in and one out within a model.",
-        "NAME (ALIAS)": null,
-        "TYPE": null,
-        "FLOW UNIT": null,
-        "TEMPERATURE": null,
-        "TEMPERATURE UNIT": null,
-        "PRESSURE": null,
-        "PRESSURE UNIT": null,
-        "VAPOR FRACTION [MASS]": null,
-        "PHASE": null,
-        "COMPOSITION [MOLE/MASS]": null,
-        "DESCRIPTION": null
       }
     ],
-    "INTERNAL CONNECTORS": [
-      {
-        "UID": "-",
-        "NAME (ALIAS)": "-",
-        "TYPE": "-",
-        "FLOW UNIT": "-",
-        "TEMPERATURE": "-",
-        "TEMPERATURE UNIT": "-",
-        "PRESSURE": "-",
-        "PRESSURE UNIT": "-",
-        "VAPOR FRACTION [MASS]": "-",
-        "PHASE": "-",
-        "COMPOSITION [MOLE/MASS]": "-",
-        "DESCRIPTION": "-"
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "rWGS": {
+      "Unit Description": "The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C).",
+      "Unit Info": {
+        "Unit name": "rWGS",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 100.0
+      },
+      "Connectors Description": "The unit interfaces with the CO2​ capture and Hydrogen production layers. It outputs a syngas tailored for downstream chemical synthesis and a water byproduct.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "Hydrogen",
+          "TYPE": "MASS",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 9421,
+            "formula": "=The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C)._input"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(G)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Hydrogen inlet"
+        },
+        {
+          "NAME (ALIAS)": "CO2",
+          "TYPE": "MASS",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 66014,
+            "formula": "=The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C)._input"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(G)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:C02[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "CO2 inlet"
+        },
+        {
+          "NAME (ALIAS)": "Water",
+          "TYPE": "MASS",
+          "DIRECTION": "out",
+          "FLOW VALUE": {
+            "value": 29.36,
+            "formula": "=Water_output"
+          },
+          "FLOW UNIT": "m3/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Water condensate"
+        },
+        {
+          "NAME (ALIAS)": "Syngas_rWGS",
+          "TYPE": "MASS",
+          "DIRECTION": "out",
+          "FLOW VALUE": {
+            "value": 46069,
+            "formula": "=Syngas_ouput"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(G)",
+          "COMPOSITION [MOLE/MASS]": "MOLEFRAC:CH4[4.18%]&H2O[1.10%]&CO[31.57%]&H2[63.14%]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Syngas as output of the WGS"
+        },
+        {
+          "NAME (ALIAS)": "Electricity",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 12074.3,
+            "formula": "=Power_rWGS"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Electricity consumption for compression"
+        }
+      ],
+      "Heat Streams Description": "There are 6 intercooling hot streams, 2 hot streams for product cooling and 2 cold streams for preheating and to provide heat to the endothermic reaction.",
+      "Heat Streams": [
+        {
+          "NAME": "q_rWGS_hot1",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 165.4,
+            "formula": "=Tin_hot1"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Tout_hot1"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 5029,
+            "formula": "=Q_hot1"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 14.192812593632157,
+            "formula": "=q_rWGS_hot1/(q_rWGS_hot1-q_rWGS_hot1)/q_rWGS_hot1*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 9421,
+            "formula": "=The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C)._input"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty hydrogen first compression intercooling"
+        },
+        {
+          "NAME": "q_rWGS_hot2",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 107.7,
+            "formula": "=Tin_hot2"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Tout_hot2"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 2880,
+            "formula": "=Q_hot2"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 14.163708039092818,
+            "formula": "=q_rWGS_hot2/(q_rWGS_hot2-q_rWGS_hot2)/q_rWGS_hot2*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 9421,
+            "formula": "=The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C)._input"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty hydrogen second compression intercooling"
+        },
+        {
+          "NAME": "q_rWGS_hot3",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 115.7,
+            "formula": "=Tin_hot3"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Tout_hot3"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 1435,
+            "formula": "=Q_hot3"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 0.913140344085281,
+            "formula": "=q_rWGS_hot3/(q_rWGS_hot3-q_rWGS_hot3)/q_rWGS_hot3*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 66014,
+            "formula": "=The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C)._input"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty CO2 first compression intercooling"
+        },
+        {
+          "NAME": "q_rWGS_hot4",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 92.72,
+            "formula": "=Tin_hot4"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Tout_hot4"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 1053,
+            "formula": "=Q_hot4"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 0.9155641382192894,
+            "formula": "=q_rWGS_hot4/(q_rWGS_hot4-q_rWGS_hot4)/q_rWGS_hot4*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 66014,
+            "formula": "=The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C)._input"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty CO2 second compression intercooling"
+        },
+        {
+          "NAME": "q_rWGS_hot5",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 750,
+            "formula": "=Tin_hot5"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 99.34,
+            "formula": "=Tout_hot5"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 48387,
+            "formula": "=Q_hot5"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 5.811233194244188,
+            "formula": "=q_rWGS_hot5/(q_rWGS_hot5-q_rWGS_hot5)/q_rWGS_hot5*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 46069,
+            "formula": "=Syngas_ouput"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty of rWGS product cooling"
+        },
+        {
+          "NAME": "q_rWGS_hot6",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 99.34,
+            "formula": "=Tin_hot6"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Tout_hot6"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 20310,
+            "formula": "=Q_hot6"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 22.888630147791943,
+            "formula": "=q_rWGS_hot6/(q_rWGS_hot6-q_rWGS_hot6)/q_rWGS_hot6*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 46069,
+            "formula": "=Syngas_ouput"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 2.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty of rWGS product subcooling"
+        },
+        {
+          "NAME": "q_rWGS_hot7",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 91.53,
+            "formula": "=Tin_hot7"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Tout_hot7"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 746.9,
+            "formula": "=Q_hot7"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 0.85,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 51411.36318008432,
+            "formula": "=q_rWGS_hot7/(q_rWGS_hot7-q_rWGS_hot7)/q_rWGS_hot7*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty of recycling compression intercooling"
+        },
+        {
+          "NAME": "q_rWGS_hot8",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 115.9,
+            "formula": "=Tin_hot8"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Tout_hot8"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 1065,
+            "formula": "=Q_hot8"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 0.8681601063986483,
+            "formula": "=q_rWGS_hot8/(q_rWGS_hot8-q_rWGS_hot8)/q_rWGS_hot8*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": 51411.3631800843,
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty of recycling compression intercooling"
+        },
+        {
+          "NAME": "q_rWGS_cold1",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 28.87,
+            "formula": "=Tin_cold1"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 700,
+            "formula": "=Tout_cold1"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 48387,
+            "formula": "=Q_cold1"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 2.0461926711349347,
+            "formula": "=q_rWGS_cold1/(q_rWGS_cold1-q_rWGS_cold1)/q_rWGS_cold1*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 126846.36318008433,
+            "formula": "=The rWGS unit converts CO2​ and The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C).​ into a synthesis gas (CO+The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C).​) via a high-temperature endothermic reaction (750°C)._input+The rWGS unit converts CO2​ and H2​ into a synthesis gas (CO+H2​) via a high-temperature endothermic reaction (750°C)._input+q_rWGS_hot7"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty of rWGS feed preheating"
+        },
+        {
+          "NAME": "q_rWGS_cold2",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 700,
+            "formula": "=Tin_cold2"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 750,
+            "formula": "=Tout_cold2"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 7606,
+            "formula": "=Q_cold2"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": "-",
+          "SPEC HEAT CAP UNIT": "-",
+          "MASS FLOW VALUE": "-",
+          "MASS FLOW UNIT": "-",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": " Heat duty of rWGS endothermic reactor"
+        }
+      ],
+      "Equipments Description": "A full refractory reactor (asset) is required for cost calculation.",
+      "Equipments": {
+        "rWGS_Reactor": {
+          "Type": "Asset",
+          "Subtype": "Refractory Reactor",
+          "Reference": "@Florez-Orrego et al",
+          "Parameters": [
+            {
+              "Parameter": "Lifetime",
+              "Value": 25.0,
+              "Unit": "year"
+            },
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 200.0,
+              "Unit": "eur/kWth"
+            },
+            {
+              "Parameter": "CEPCI 2008",
+              "Value": 575.4,
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
       }
-    ]
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
   }
 }
