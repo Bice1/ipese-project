@@ -34,6 +34,9 @@ from utils.constants import (
     METADATA_TABLE_EXCLUDE,
     PLOTLY_LAYOUT_BASE,
 )
+from utils.styles import inject_css, badge as _badge_html
+
+inject_css()
 
 # ---------------------------------------------------------------------------
 # Session state — initialise models if not already loaded
@@ -119,13 +122,6 @@ def _meta(key: str, default: str = "N/A") -> str:
     """Return metadata value as a clean string."""
     val = model.metadata.get(key)
     return str(val).strip() if val is not None and str(val).strip() else default
-
-
-def _badge_html(text: str, color: str) -> str:
-    return (
-        f'<span style="background:{color};color:white;padding:3px 10px;'
-        f'border-radius:4px;font-size:11px;font-weight:600;">{text}</span>'
-    )
 
 
 # ---------------------------------------------------------------------------
@@ -226,11 +222,12 @@ with tab_overview:
         desc = _meta("DESCRIPTION", "")
         if desc and desc != "N/A":
             st.subheader("Description")
-            with st.container(border=True):
-                st.markdown(
-                    f'<p style="color:#333333;line-height:1.6;">{desc}</p>',
-                    unsafe_allow_html=True,
-                )
+            st.markdown(
+                f'<div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:8px;'
+                f'box-shadow:0 1px 3px rgba(0,0,0,0.06);padding:16px 20px;margin-bottom:12px;">'
+                f'<p style="color:#334155;line-height:1.7;margin:0;">{desc}</p></div>',
+                unsafe_allow_html=True,
+            )
 
         st.subheader("Metadata")
         meta_rows = []
@@ -270,8 +267,17 @@ with tab_overview:
                 st.caption(suppl_path.name)
 
                 if suppl_ext == ".pdf":
+                    import base64 as _b64
+                    _pdf_b64 = _b64.b64encode(suppl_bytes).decode("utf-8")
+                    st.markdown(
+                        f'<iframe src="data:application/pdf;base64,{_pdf_b64}" '
+                        f'width="100%" height="620" '
+                        f'style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;">'
+                        f'</iframe>',
+                        unsafe_allow_html=True,
+                    )
                     st.download_button(
-                        "Download PDF",
+                        "⬇ Download PDF",
                         data=suppl_bytes,
                         file_name=suppl_path.name,
                         mime="application/pdf",
@@ -305,13 +311,10 @@ with tab_overview:
             st.image(str(bfd_resolved), caption="Block Flow Diagram", use_container_width=True)
         else:
             st.markdown(
-                """
-                <div style="
-                    border: 2px dashed #CCCCCC; border-radius: 8px;
-                    padding: 48px 24px; text-align: center;
-                    color: #AAAAAA; font-size: 13px; background: #FAFAFA;
-                ">Block Flow Diagram not available</div>
-                """,
+                '<div style="border:2px dashed #cbd5e1;border-radius:8px;'
+                'padding:48px 24px;text-align:center;color:#94a3b8;'
+                'font-size:13px;background:#f8fafc;">'
+                'Block Flow Diagram not available</div>',
                 unsafe_allow_html=True,
             )
 
@@ -483,14 +486,30 @@ with tab_heat:
             H_gcc = [h for (_, h) in result.gcc]
 
             fig_gcc = go.Figure()
+            # 1 — visible curve
             fig_gcc.add_trace(go.Scatter(
                 x=H_gcc, y=T_gcc, mode="lines+markers",
                 name="Grand Composite Curve",
                 line=dict(color=COLOR_GCC, width=2.5),
                 marker=dict(size=5, color=COLOR_GCC),
-                fill="tozerox", fillcolor="rgba(90, 138, 94, 0.08)",
             ))
-            fig_gcc.add_vline(x=0, line_color="#CCCCCC", line_width=1.5)
+            # 2 — ligne verticale invisible à x=max (référence droite)
+            x_max = max(H_gcc)
+            fig_gcc.add_trace(go.Scatter(
+                x=[x_max] * len(T_gcc), y=T_gcc,
+                mode="lines", line=dict(width=0),
+                showlegend=False, hoverinfo="skip",
+            ))
+
+            # 3 — courbe dupliquée, fill entre elle et la ligne verticale droite
+            fig_gcc.add_trace(go.Scatter(
+                x=H_gcc, y=T_gcc, mode="lines",
+                fill="tonextx",
+                fillcolor="rgba(90, 138, 94, 0.12)",
+                line=dict(width=0),
+                showlegend=False, hoverinfo="skip",
+            ))
+            fig_gcc.add_vline(x=0, line_color="#cbd5e1", line_width=1.5)
 
             if T_gcc:
                 fig_gcc.add_annotation(
@@ -518,7 +537,7 @@ with tab_heat:
             fig_gcc.update_layout(**{
                 **PLOTLY_LAYOUT_BASE,
                 "title": {"text": f"Grand Composite Curve  —  {cascade_label_display}", "x": 0.04, "font": {"size": 15}},
-                "xaxis": {**PLOTLY_LAYOUT_BASE["xaxis"], "title": "Net Heat Flow [kW]", "zeroline": True, "zerolinewidth": 2, "zerolinecolor": "#CCCCCC"},
+                "xaxis": {**PLOTLY_LAYOUT_BASE["xaxis"], "title": "Net Heat Flow [kW]", "zeroline": True, "zerolinewidth": 2, "zerolinecolor": "#cbd5e1"},
                 "yaxis": {**PLOTLY_LAYOUT_BASE["yaxis"], "title": "Temperature [°C]  (shifted)"},
                 "height": 480,
             })
@@ -539,17 +558,28 @@ with tab_heat:
             ]
 
             fig_carnot = go.Figure()
-            # Shaded area between curve and η=0 axis
-            fig_carnot.add_trace(go.Scatter(
-                x=[0] * len(carnot_y), y=carnot_y,
-                mode="lines", line=dict(width=0), showlegend=False,
-            ))
+            # 1 — visible curve
             fig_carnot.add_trace(go.Scatter(
                 x=H_gcc, y=carnot_y, mode="lines+markers",
                 name="Carnot GCC",
                 line=dict(color=COLOR_GCC, width=2.5),
                 marker=dict(size=5, color=COLOR_GCC),
-                fill="tonextx", fillcolor="rgba(90, 138, 94, 0.1)",
+            ))
+            # 2 — ligne verticale invisible à x=max (référence droite)
+            x_max = max(H_gcc)
+            fig_carnot.add_trace(go.Scatter(
+                x=[x_max] * len(carnot_y), y=carnot_y,
+                mode="lines", line=dict(width=0),
+                showlegend=False, hoverinfo="skip",
+            ))
+
+            # 3 — courbe dupliquée, fill entre elle et la ligne verticale droite
+            fig_carnot.add_trace(go.Scatter(
+                x=H_gcc, y=carnot_y, mode="lines",
+                fill="tonextx",
+                fillcolor="rgba(90, 138, 94, 0.12)",
+                line=dict(width=0),
+                showlegend=False, hoverinfo="skip",
             ))
             # η=0 reference line (pinch level)
             fig_carnot.add_hline(

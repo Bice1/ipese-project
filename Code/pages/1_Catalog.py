@@ -23,6 +23,9 @@ from utils.constants import (
     CONFIDENTIALITY_COLORS,
 )
 from utils.loader import load_all_models
+from utils.styles import inject_css, badge as _badge, CSS_CARD
+
+inject_css()
 
 # ---------------------------------------------------------------------------
 # Session state — initialise models if not already loaded
@@ -243,15 +246,6 @@ st.divider()
 # Model cards
 # ---------------------------------------------------------------------------
 
-def _badge(text: str, color: str) -> str:
-    """Return an inline HTML badge."""
-    return (
-        f'<span style="background:{color};color:white;padding:3px 10px;'
-        f'border-radius:4px;font-size:11px;font-weight:600;'
-        f'letter-spacing:0.05em;">{text}</span>'
-    )
-
-
 for name, model in filtered.items():
     with st.container(border=True):
         col_left, col_mid, col_img, col_right = st.columns([3, 4, 2, 1])
@@ -269,8 +263,8 @@ for name, model in filtered.items():
                 cat_color = CATEGORY_COLORS.get(cat_slug, "#888888")
                 cat_label = CATEGORY_DISPLAY_NAMES.get(cat_slug, cat_slug)
                 st.markdown(
-                    f'<span style="background:{cat_color};color:white;padding:2px 8px;'
-                    f'border-radius:10px;font-size:10px;font-weight:600;">'
+                    f'<span style="background:{cat_color};color:#ffffff;padding:2px 10px;'
+                    f'border-radius:10px;font-size:10px;font-weight:600;letter-spacing:0.03em;">'
                     f'{cat_label}</span>',
                     unsafe_allow_html=True,
                 )
@@ -308,19 +302,19 @@ for name, model in filtered.items():
             if desc:
                 truncated = desc[:280] + "..." if len(desc) > 280 else desc
                 st.markdown(
-                    f'<p style="color:#444444;font-size:13px;margin:0;">{truncated}</p>',
+                    f'<p style="color:#334155;font-size:13px;margin:0;line-height:1.6;">{truncated}</p>',
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    '<p style="color:#AAAAAA;font-size:13px;font-style:italic;">No description available.</p>',
+                    '<p style="color:#94a3b8;font-size:13px;font-style:italic;">No description available.</p>',
                     unsafe_allow_html=True,
                 )
 
             keywords = _meta(model, "KEYWORDS")
             if keywords:
                 st.markdown(
-                    f'<p style="color:#888888;font-size:11px;margin-top:6px;">'
+                    f'<p style="color:#64748b;font-size:11px;margin-top:6px;">'
                     f'Keywords: {keywords}</p>',
                     unsafe_allow_html=True,
                 )
@@ -336,8 +330,8 @@ for name, model in filtered.items():
                     pass
             else:
                 st.markdown(
-                    '<div style="border:1px dashed #CCCCCC;border-radius:6px;'
-                    'padding:24px 8px;text-align:center;color:#CCCCCC;font-size:11px;">'
+                    '<div style="border:1px dashed #cbd5e1;border-radius:6px;'
+                    'padding:24px 8px;text-align:center;color:#94a3b8;font-size:11px;">'
                     'No BFD</div>',
                     unsafe_allow_html=True,
                 )
@@ -346,8 +340,8 @@ for name, model in filtered.items():
             layer = _meta(model, "SHARING LAYER")
             if layer:
                 st.markdown(
-                    f'<p style="color:#666666;font-size:12px;text-align:center;margin-bottom:4px;">'
-                    f'Sharing layer<br><strong style="font-size:20px;">{layer}</strong></p>',
+                    f'<p style="color:#64748b;font-size:12px;text-align:center;margin-bottom:4px;">'
+                    f'Sharing layer<br><strong style="font-size:20px;color:#0f172a;">{layer}</strong></p>',
                     unsafe_allow_html=True,
                 )
 

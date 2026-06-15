@@ -14,6 +14,10 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 import plotly.graph_objects as go
@@ -26,6 +30,9 @@ if str(_CODE_DIR) not in sys.path:
 from utils.categories import CATEGORIES
 from utils.constants import DATA_DIR
 from utils.loader import load_all_models
+from utils.styles import inject_css
+
+inject_css()
 
 # ---------------------------------------------------------------------------
 # Load models
@@ -226,8 +233,8 @@ st.divider()
 # Tabs
 # ---------------------------------------------------------------------------
 
-tab_graph, tab_matrix, tab_table = st.tabs(
-    ["Network Graph", "Symbiosis Matrix", "Connector Table"]
+tab_graph, tab_matrix, tab_table, tab_wip = st.tabs(
+    ["Network Graph", "Symbiosis Matrix", "Connector Table", "Network Graph (WIP)"]
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -588,3 +595,124 @@ with tab_table:
             use_container_width=True,
             hide_index=True,
         )
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TAB 4 — Network Graph (WIP)  [networkX MultiDiGraph + matplotlib]
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def _assign_rads(graph_edges: list[tuple]) -> dict[tuple, float]:
+    pair_groups: dict[tuple, list] = defaultdict(list)
+    for p, c, uid in graph_edges:
+        pair_groups[(p, c)].append(uid)
+    rad_map: dict[tuple, float] = {}
+    for (u, v), uids in pair_groups.items():
+        n = len(uids)
+        if n == 1:
+            rads = [0.15]
+        elif n == 2:
+            rads = [0.2, -0.2]
+        elif n == 3:
+            rads = [0.25, 0.0, -0.25]
+        else:
+            rads = [round(0.4 - i * 0.8 / (n - 1), 3) for i in range(n)]
+        for i, uid in enumerate(uids):
+            rad_map[(u, v, i)] = rads[i]
+    return rad_map
+
+
+with tab_wip:
+    if not graph_rows:
+        st.info("No connector data to display. Select at least one model and one UID.")
+    else:
+        G_wip = nx.MultiDiGraph()
+
+        if layout_mode == "Model → Model":
+            for r in graph_rows:
+                G_wip.add_node(r["Model"])
+            rad_map = _assign_rads(graph_edges)
+            pair_counter: dict[tuple, int] = defaultdict(int)
+            for p, c, uid in graph_edges:
+                idx = pair_counter[(p, c)]
+                G_wip.add_edge(
+                    p, c, key=f"{uid}_{idx}",
+                    uid=uid,
+                    color=uid_color.get(uid, _DEFAULT_COLOR),
+                    rad=rad_map[(p, c, idx)],
+                )
+                pair_counter[(p, c)] += 1
+            model_nodes_wip = list(G_wip.nodes())
+            uid_nodes_wip: list = []
+
+        else:  # hub-and-spoke
+            for r in graph_rows:
+                G_wip.add_node(r["Model"])
+                G_wip.add_node(r["UID"])
+            for r in graph_rows:
+                m, uid, direction = r["Model"], r["UID"], r["Direction"]
+                color = uid_color.get(uid, _DEFAULT_COLOR)
+                if direction == "OUT":
+                    G_wip.add_edge(m, uid, key=f"{m}_OUT_{uid}", uid=uid, color=color, rad=0.15)
+                else:
+                    G_wip.add_edge(uid, m, key=f"{uid}_IN_{m}", uid=uid, color=color, rad=0.15)
+            _model_set_wip = {r["Model"] for r in graph_rows}
+            model_nodes_wip = [n for n in G_wip.nodes() if n in _model_set_wip]
+            uid_nodes_wip   = [n for n in G_wip.nodes() if n not in _model_set_wip]
+
+        n_wip   = max(len(G_wip.nodes()), 1)
+        pos_wip = nx.spring_layout(G_wip, seed=42, k=3.5 / math.sqrt(n_wip))
+
+        if layout_mode == "Model → Model" and G_wip.number_of_edges() == 0:
+            st.info("No symbiosis edges — models share no OUT→IN UIDs. Isolated nodes shown.")
+
+        fig_wip, ax_wip = plt.subplots(figsize=(14, 10))
+        ax_wip.set_facecolor("#f8f9fa")
+        fig_wip.patch.set_facecolor("#f8f9fa")
+        ax_wip.axis("off")
+
+        for u, v, k, data in G_wip.edges(keys=True, data=True):
+            nx.draw_networkx_edges(
+                G_wip, pos_wip, edgelist=[(u, v, k)], ax=ax_wip,
+                edge_color=[data["color"]],
+                connectionstyle=f"arc3,rad={data['rad']}",
+                arrowsize=20, width=2.0, arrows=True,
+                min_source_margin=15, min_target_margin=15,
+            )
+
+        nx.draw_networkx_nodes(
+            G_wip, pos_wip, nodelist=model_nodes_wip, ax=ax_wip,
+            node_color=[_model_color(n) for n in model_nodes_wip],
+            node_size=1200, node_shape="o", linewidths=2, edgecolors="#ffffff",
+        )
+        nx.draw_networkx_labels(
+            G_wip, pos_wip,
+            labels={n: n for n in model_nodes_wip}, ax=ax_wip,
+            font_size=9, font_weight="bold", font_color="#1a1a1a",
+        )
+
+        if uid_nodes_wip:
+            nx.draw_networkx_nodes(
+                G_wip, pos_wip, nodelist=uid_nodes_wip, ax=ax_wip,
+                node_color=[uid_color.get(n, _UID_NODE_COLOR) for n in uid_nodes_wip],
+                node_size=400, node_shape="D", linewidths=1.5, edgecolors="#ffffff",
+            )
+            nx.draw_networkx_labels(
+                G_wip, pos_wip,
+                labels={n: n for n in uid_nodes_wip}, ax=ax_wip,
+                font_size=8, font_color="#444444",
+            )
+
+        visible_uids = sorted({data["uid"] for _, _, _, data in G_wip.edges(keys=True, data=True)})
+        legend_handles = [
+            mpatches.Patch(color=uid_color.get(uid, _DEFAULT_COLOR), label=uid)
+            for uid in visible_uids
+        ]
+        if legend_handles:
+            ax_wip.legend(
+                handles=legend_handles, title="UID", loc="upper right",
+                framealpha=0.9, edgecolor="#cccccc", fontsize=9, title_fontsize=10,
+            )
+
+        plt.tight_layout()
+        st.pyplot(fig_wip, use_container_width=True)
+        plt.close(fig_wip)

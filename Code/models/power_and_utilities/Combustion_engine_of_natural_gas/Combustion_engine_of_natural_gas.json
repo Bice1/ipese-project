@@ -1,0 +1,608 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Combustion engine of natural gas",
+    "Authors and Contributors": "Daniel Flórez-Orrego, EPFL IPESE research group",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2026-04-21 00:00:00",
+    "Last Updated": "2026-04-21 00:00:00",
+    "Model Status": "Maintained",
+    "Version": "1.0.1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "1000kW of natural gas consumption",
+    "TRL": "9",
+    "Keywords": "Natural Gas, Cogeneration, Engine, Electricity",
+    "Description": "Combustion engine of natural gas with cogeneration",
+    "DOI": "",
+    "Main Related Publication": "",
+    "References": "[1] Cengel, Y. and Boles, M., 2010. Thermodynamics: An Engineering Approach with Student Resources DVD;\n[2] JENBACHER TYPE 4. Available at: https://www.jenbacher.com/en/gas-engines/type-4. Accessed in August 28th, 2023;\n[3] Biomethane potential https://www.europeanbiogas.eu/wp-content/uploads/2022/07/GfC_national-biomethane-potentials_070722.pdf ;\n[4] Marechal, Sachan, Salgueiro, Handbook of process integration, 2013",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/NatgasEngine.svg",
+    "URL": "",
+    "Supplementary Material": "[\"C:\\\\Users\\\\Quentin\\\\Documents\\\\epfl\\\\ipese project\\\\Code\\\\models\\\\power_and_utilities\\\\Combustion_engine_of_natural_gas\\\\Natgas Engine ET.md\", \"C:\\\\Users\\\\Quentin\\\\Documents\\\\epfl\\\\ipese project\\\\Code\\\\models\\\\power_and_utilities\\\\Combustion_engine_of_natural_gas\\\\marechal2013.pdf\"]"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "eta_el",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power generation efficiency",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.433,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$η_{el}$",
+      "REFERENCE": "[2]",
+      "DESCRIPTION": "Power generation efficiency"
+    },
+    {
+      "VARIABLE NAME": "eta_th_fg",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Thermal efficiency for heat in flue gases",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.21,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$η_{th,fg}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Thermal generation efficiency for high grade heat in flue gases"
+    },
+    {
+      "VARIABLE NAME": "eta_th_cw",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Thermal efficiency for heat in cooling water",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.236,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$η_{th,cw}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Thermal generation efficiency for low grade heat in cooling water"
+    },
+    {
+      "VARIABLE NAME": "fg_Tin",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Flue gas inlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 400,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 350,
+      "MAX BOUND": 600,
+      "LATEX SYNTAX": "$T_{fg,in}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "High-grade waste heat flue gas inlet temperature"
+    },
+    {
+      "VARIABLE NAME": "fg_Tout",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Waste heat flue gas outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 150,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$T_{fg,out}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "High-grade waste heat flue gas outlet temperature"
+    },
+    {
+      "VARIABLE NAME": "cw_Tin",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Low-grade waste heat cooling water inlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 90,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 70,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$T_{cw,in}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Low-grade waste heat cooling water inlet temperature"
+    },
+    {
+      "VARIABLE NAME": "cw_Tout",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Low-grade waste heat cooling water outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$T_{cw,out}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Low-grade waste heat cooling water outlet temperature"
+    },
+    {
+      "VARIABLE NAME": "dtmin_liquid",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum temperature difference contribution for liquid",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2,
+      "MAX BOUND": 15,
+      "LATEX SYNTAX": "$\\Delta T_{min,liquid}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution for liquid"
+    },
+    {
+      "VARIABLE NAME": "dtmin_gas",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum temperature difference contribution for gas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 8,
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 25,
+      "LATEX SYNTAX": "$\\Delta T_{min,gas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution for gases"
+    },
+    {
+      "VARIABLE NAME": "Fuel_LHV",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Lower heating value of natural gas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 50000,
+      "PHYSICAL UNIT": "kJ/kg",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 35000,
+      "MAX BOUND": 55000,
+      "LATEX SYNTAX": "$LHV_{fuel}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lower heating value of fuel"
+    },
+    {
+      "VARIABLE NAME": "CogenFuel",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Reference cogeneration unit fuel consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1000,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 50000,
+      "LATEX SYNTAX": "$Cogen_{Fuel}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Reference cogeneration unit fuel consumption"
+    },
+    {
+      "VARIABLE NAME": "CO2fromICE",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Associated CO2 emissions",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 198,
+        "formula": "=CogenFuel/Fuel_LHV*3600*44/16"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "CogenFuel/Fuel_LHV*3600*44/16",
+      "MIN BOUND": 10,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$CO_2fromICE$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Associated CO2 emissions"
+    },
+    {
+      "VARIABLE NAME": "Spec_engineCost",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Engine specific investment cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1200,
+      "PHYSICAL UNIT": "Euro/kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 2500,
+      "LATEX SYNTAX": "$Spec_{engineCost}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Engine specific investment cost"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "yr",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 15,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$n$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 0.15,
+      "LATEX SYNTAX": "$i$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2020",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "2020 CEPCI",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 596.2,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$CEPCI_{2020}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "2020 CEPCI"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2008",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "CEPCI 2008",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 575.4,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$CEPCI_{2008}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CEPCI 2008"
+    },
+    {
+      "VARIABLE NAME": "CogenElec",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power generation",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 433,
+        "formula": "=eta_el*CogenFuel"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "eta_el*CogenFuel",
+      "MIN BOUND": 30,
+      "MAX BOUND": 25000,
+      "LATEX SYNTAX": "$Cogen_{Elec}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power generation"
+    },
+    {
+      "VARIABLE NAME": "Q_cogen_fg",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "High grade heat in flue gases",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 210,
+        "formula": "=eta_th_fg*CogenFuel"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "eta_th_fg*CogenFuel",
+      "MIN BOUND": 15,
+      "MAX BOUND": 15000,
+      "LATEX SYNTAX": "$Q_{cogen,fg}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "High grade heat in flue gases"
+    },
+    {
+      "VARIABLE NAME": "Q_cogen_cw",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Low grade heat in cooling water",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 236,
+        "formula": "=eta_th_cw*CogenFuel"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "eta_th_cw*CogenFuel",
+      "MIN BOUND": 15,
+      "MAX BOUND": 15000,
+      "LATEX SYNTAX": "$Q_{cogen,cw}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Low grade heat in cooling water"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualization factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(i+1)^n)/((i+1)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(i+1)^n)/((i+1)^n-1)",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$Annuity$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualization factor"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_cogen",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Yearly investment cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 35781.7543711942,
+        "formula": "=Spec_engineCost*CogenElec*(CEPCI_2020/CEPCI_2008)*Annuity"
+      },
+      "PHYSICAL UNIT": "Euro/y",
+      "FORMULA OR PATH": "Spec_engineCost*CogenElec*(CEPCI_2020/CEPCI_2008)*Annuity",
+      "MIN BOUND": 5000,
+      "MAX BOUND": 5000000,
+      "LATEX SYNTAX": "$C_{inv2,cogen}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Yearly investment cost"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "NATGAS",
+        "NAME (ALIAS)": "CH4",
+        "TYPE": "ENERGY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1.0]",
+        "DESCRIPTION": "Consumed natural gas"
+      },
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Elec",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Mechanical power output"
+      },
+      {
+        "UID": "CO2INFLUEG",
+        "NAME (ALIAS)": "CO2inFluegas",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+        "DESCRIPTION": "CO2 in flue gas"
+      }
+    ],
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "NatgasEngine": {
+      "Unit Description": "Combined heat and power production (CHP) systems based on internal combustion engine (ICE) using natural gas as fuel.",
+      "Unit Info": {
+        "Unit name": "NatgasEngine",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 100.0
+      },
+      "Connectors Description": "The connectors consists of consumed natural gas, produced electricity and the CO2 emissions associated.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 433,
+            "formula": "=CogenElec"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Mechanical power output"
+        },
+        {
+          "NAME (ALIAS)": "CO2inFluegas",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 198,
+            "formula": "=Combined heat and power production (CHP) systems based on internal combustion engine (ICE) using natural gas as fuel.fromICE"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "CO2 in flue gas"
+        },
+        {
+          "NAME (ALIAS)": "CH4",
+          "TYPE": "ENERGY",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 1000,
+            "formula": "=CogenFuel"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1.0]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Consumed natural gas"
+        }
+      ],
+      "Heat Streams Description": "Two hot heat streams for the heat removal from flue gases and cooling water.",
+      "Heat Streams": [
+        {
+          "NAME": "fgheat",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": 400.0,
+          "INLET TEMPERATURE UNIT": "kW",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 150,
+            "formula": "=fg_Tout"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 210.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 2.4705882352941178,
+            "formula": "=fgheat/fgheat/(fgheat-fgheat)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1224,
+            "formula": "=CogenFuel/Fuel_LHV*3600*17"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Waste heat from flue gas"
+        },
+        {
+          "NAME": "cwheat",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": 90.0,
+          "INLET TEMPERATURE UNIT": "kW",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 40,
+            "formula": "=cw_Tout"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 236.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 4.2,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 4045.714285714286,
+            "formula": "=cwheat/cwheat/(cwheat-cwheat)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin_liquid"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Waste heat from cooling tower"
+        }
+      ],
+      "Equipments Description": "A full Natural Gas Engine (asset) is required for cost calculation.",
+      "Equipments": {
+        "Engine": {
+          "Type": "Asset",
+          "Subtype": "Natural Gas Engine",
+          "Reference": "@Florez-Orrego et al",
+          "Parameters": [
+            {
+              "Parameter": "Engine specific investment cost",
+              "Value": {
+                "value": 1200,
+                "formula": "=Spec_engineCost"
+              },
+              "Unit": "eur/kW"
+            },
+            {
+              "Parameter": "Power generation",
+              "Value": {
+                "value": 433,
+                "formula": "=CogenElec"
+              },
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "CEPCI 2008",
+              "Value": {
+                "value": 575.4,
+                "formula": "=CEPCI_2008"
+              },
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": {
+                "value": 0.0664615359206755,
+                "formula": "=Annuity"
+              },
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

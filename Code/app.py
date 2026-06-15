@@ -15,12 +15,15 @@ if str(_CODE_DIR) not in sys.path:
     sys.path.insert(0, str(_CODE_DIR))
 
 import streamlit as st
+from utils.styles import inject_css
 
 st.set_page_config(
     page_title="IETS Task XXIV — Process Model Database",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+inject_css()
 
 pg = st.navigation([
     st.Page("pages/1_Catalog.py",      title="Catalog",      icon=":material/grid_view:"),

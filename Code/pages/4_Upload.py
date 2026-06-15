@@ -21,6 +21,9 @@ from parser.excel_parser import parse_excel_to_model_json
 from utils.categories import CATEGORIES
 from utils.constants import DATA_DIR
 from utils.loader import load_all_models
+from utils.styles import inject_css
+
+inject_css()
 
 
 # ---------------------------------------------------------------------------
