@@ -1,0 +1,640 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "CoolingTower",
+    "Authors and Contributors": "Daniel Flórez-Orrego, EPFL IPESE research group",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "01.06.2025",
+    "Last Updated": "24.03.2026",
+    "Model Status": "Maintained",
+    "Version": "1.0.1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "Grey box",
+    "Reference Capacity": "100000 kW of cooling",
+    "TRL": "9",
+    "Keywords": "Cold utility, Cooling water, Electricity, Evaporation",
+    "Description": "Cooling tower utility",
+    "DOI": "",
+    "Main Related Publication": "https://www.sciencedirect.com/science/article/pii/S0959652619335176",
+    "References": "[1] Int. J. Environ. Sci. Tech., 5 (2), 251-262, Spring 2008;\n[2] ECOS2105, Florez-Orrego, et al;\n[3] Stull, Wet-Bulb Temperature from Relative Humidity and Air Temperature, 2011, DOI: https://doi.org/10.1175/JAMC-D-11-0143.1;\n[4] Perry Chemical Engineers Handbook;\n[5] https://spxcooling.com/coolingtowers;\n[6] MARLEY, Cooling Tower energy and its management",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "CoolingTower\\Figures\\CoolTower.svg",
+    "URL": "",
+    "Supplementary Material": "[\"C:\\\\Users\\\\Quentin\\\\Desktop\\\\IPESE-PROJECT\\\\Code\\\\models\\\\power_and_utilities\\\\CoolingTower\\\\Cooling water ET.md\"]"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "Cool_Tin",
+      "TYPE": "DECISION",
+      "FULL NAME": "Cooling tower inlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 13,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 20,
+      "LATEX SYNTAX": "$Cool_{Tin}$",
+      "REFERENCE": "[2]",
+      "DESCRIPTION": "Cooling tower supply water temperature"
+    },
+    {
+      "VARIABLE NAME": "Cool_Tout",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Cooling tower outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 40,
+      "LATEX SYNTAX": "$Cool_{Tout}$",
+      "REFERENCE": "[2]",
+      "DESCRIPTION": "Cooling tower return water  temperature"
+    },
+    {
+      "VARIABLE NAME": "cp_water",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Heat capacity water",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 4.2,
+      "PHYSICAL UNIT": "kJ/kgK",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 4,
+      "MAX BOUND": 4.3,
+      "LATEX SYNTAX": "$cp_{water}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat capacity of water at 25°C"
+    },
+    {
+      "VARIABLE NAME": "Cool_Qmax",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Cooling tower reference heat load",
+      "USER GRADE": "OPTIONAL",
+      "DEFAULT VALUE": 100000,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10000,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$Cool_{Qmax}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling tower reference heat load"
+    },
+    {
+      "VARIABLE NAME": "Tdrybulb",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Dry bulb temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 20,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": -10,
+      "MAX BOUND": 45,
+      "LATEX SYNTAX": "$T_{drybulb}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Check the Tdry bulb for each application"
+    },
+    {
+      "VARIABLE NAME": "RelatHum",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Relative humidity",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "%",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$RelatHum$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Check the relative humidity for each application"
+    },
+    {
+      "VARIABLE NAME": "Twetbulb",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Wet bulb temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 12.32,
+        "formula": "=ROUND(Tdrybulb * ATAN(0.151977 * SQRT(RelatHum+8.313659)) + ATAN(Tdrybulb+RelatHum) - ATAN(RelatHum-1.676331) + 0.00391838 * RelatHum^1.5 * ATAN(0.023101*RelatHum) - 4.686035,2)"
+      },
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "Tdrybulb * ATAN(0.151977 * SQRT(RelatHum+8.313659)) + ATAN(Tdrybulb+RelatHum) - ATAN(RelatHum-1.676331) + 0.00391838 * RelatHum^1.5 * ATAN(0.023101*RelatHum) - 4.686035",
+      "MIN BOUND": -15,
+      "MAX BOUND": 30,
+      "LATEX SYNTAX": "$T_{wetbulb}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "check the Twet bulb for each application"
+    },
+    {
+      "VARIABLE NAME": "Cool_Elec",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Cooling electricity per thermal power",
+      "USER GRADE": "OPTIONAL",
+      "DEFAULT VALUE": 0.021,
+      "PHYSICAL UNIT": "kWel/kWth",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.005,
+      "MAX BOUND": 0.05,
+      "LATEX SYNTAX": "$Cool_{Elec}$",
+      "REFERENCE": "MARLEY, Cooling Tower energy and its management",
+      "DESCRIPTION": "Electricity power input per thermal power output. Energy for 400 tons - 30kW"
+    },
+    {
+      "VARIABLE NAME": "dtmin_gas",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Delta Tmin for gas phase",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 8,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 30,
+      "LATEX SYNTAX": "$\\Delta t_{min,\\,gas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimal temperature difference in a heat exchanger operating with gas"
+    },
+    {
+      "VARIABLE NAME": "dtmin_liq",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Delta Tmin for liquid cooling water",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2,
+      "MAX BOUND": 15,
+      "LATEX SYNTAX": "$\\Delta t_{min,\\,liq}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimal temperature difference in a heat exchanger operating with liquid"
+    },
+    {
+      "VARIABLE NAME": "dtmin_2ph",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Delta Tmin for 2 phases fluid",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$\\Delta t_{min,\\,2ph}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimal temperature difference in a heat exchanger operating with two phase mixture"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "year",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$n$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime of the cooling tower"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 0.15,
+      "LATEX SYNTAX": "$i$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate of the cooling tower"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2020",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Actual CEPCI",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 596.2,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "-",
+      "MAX BOUND": "-",
+      "LATEX SYNTAX": "$CEPCI_{2020}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CEPCI (2020)"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2008",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "CEPCI 2008",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 575.4,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "-",
+      "MAX BOUND": "-",
+      "LATEX SYNTAX": "$CEPCI_{2008}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CEPCI for the reference year (2008)"
+    },
+    {
+      "VARIABLE NAME": "E_ref_CT",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Electricity consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 2100,
+        "formula": "=Cool_Elec*Cool_Qmax"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "Cool_Elec*Cool_Qmax",
+      "MIN BOUND": {
+        "value": 50,
+        "formula": "=Cool_Elec*Cool_Qmax"
+      },
+      "MAX BOUND": {
+        "value": 25000,
+        "formula": "=Cool_Elec*Cool_Qmax"
+      },
+      "LATEX SYNTAX": "$E_{ref,\\,CT}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Electricity consumption of the cooling tower"
+    },
+    {
+      "VARIABLE NAME": "range",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature range",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 17,
+        "formula": "=Cool_Tout-Cool_Tin"
+      },
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "Cool_Tout-Cool_Tin",
+      "MIN BOUND": {
+        "value": 5,
+        "formula": "=Cool_Tout-Cool_Tin"
+      },
+      "MAX BOUND": {
+        "value": 35,
+        "formula": "=Cool_Tout-Cool_Tin"
+      },
+      "LATEX SYNTAX": "$range$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Difference between return and supply temperature"
+    },
+    {
+      "VARIABLE NAME": "approach",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Approach temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.6799999999999997,
+        "formula": "=Cool_Tin-Twetbulb"
+      },
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "Cool_Tin-Twetbulb",
+      "MIN BOUND": {
+        "value": -25,
+        "formula": "=Cool_Tin-Twetbulb"
+      },
+      "MAX BOUND": {
+        "value": 35,
+        "formula": "=Cool_Tin-Twetbulb"
+      },
+      "LATEX SYNTAX": "$approach$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Difference between dry and wet bulb temperature"
+    },
+    {
+      "VARIABLE NAME": "water_flow",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Water flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 5042.016806722689,
+        "formula": "=Cool_Qmax/cp_water/range*3600/1000"
+      },
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "Cool_Qmax/cp_water/range*3600/1000",
+      "MIN BOUND": 100,
+      "MAX BOUND": 20000,
+      "LATEX SYNTAX": "$\\dot{m}_{water}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Water flow rate in ton per hour"
+    },
+    {
+      "VARIABLE NAME": "water_vflow",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Water volume flow rate for 1t/m3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 5042.016806722689,
+        "formula": "=water_flow*1"
+      },
+      "PHYSICAL UNIT": "m3/h",
+      "FORMULA OR PATH": "water_flow*1",
+      "MIN BOUND": {
+        "value": 100,
+        "formula": "=water_flow"
+      },
+      "MAX BOUND": {
+        "value": 20000,
+        "formula": "=water_flow"
+      },
+      "LATEX SYNTAX": "$\\dot{V}_{water}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Water volumetric flow rate"
+    },
+    {
+      "VARIABLE NAME": "watermu_CT",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Makeup water in the CT system",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 131.14285714285714,
+        "formula": "=0.00085*1.8*water_vflow*(Cool_Tout-Cool_Tin)"
+      },
+      "PHYSICAL UNIT": "m3/h",
+      "FORMULA OR PATH": "0.00085*1.8*water_vflow*(Cool_Tout-Cool_Tin)",
+      "MIN BOUND": 1,
+      "MAX BOUND": 500,
+      "LATEX SYNTAX": "$\\mu_{water,\\,CT}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Makeup water volumetric flow rate"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annuity",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(i+1)^n)/((i+1)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(i+1)^n)/((i+1)^n-1)",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 0.2,
+      "LATEX SYNTAX": "$Annuity$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualization factor"
+    },
+    {
+      "VARIABLE NAME": "CTCost",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Total investment cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 25480548.14425094,
+        "formula": "=746.49/0.066*(water_flow^0.79)*(range^0.57)*((approach)^(-0.9924))*(0.022*Twetbulb+0.39)^2.447"
+      },
+      "PHYSICAL UNIT": "Eur",
+      "FORMULA OR PATH": "746.49/0.066*(water_flow^0.79)*(range^0.57)*((approach)^(-0.9924))*(0.022*Twetbulb+0.39)^2.447",
+      "MIN BOUND": 1000000,
+      "MAX BOUND": 100000000,
+      "LATEX SYNTAX": "$C_{T,\\,cost}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Total investment cost"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_CT",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualized investment cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1754693.4467686205,
+        "formula": "=CTCost*(CEPCI_2020/CEPCI_2008)*Annuity"
+      },
+      "PHYSICAL UNIT": "Eur/y",
+      "FORMULA OR PATH": "CTCost*(CEPCI_2020/CEPCI_2008)*Annuity",
+      "MIN BOUND": 100000,
+      "MAX BOUND": 10000000,
+      "LATEX SYNTAX": "$C_{inv2,\\,CT}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualized investment cost"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Electricity",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Electricity input"
+      },
+      {
+        "UID": "WATER",
+        "NAME (ALIAS)": "Water",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+        "DESCRIPTION": "Makeup water"
+      }
+    ],
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "CoolingTower": {
+      "Unit Description": "This unit represents a cooling tower removing 100000 kW of heat via evaporative cooling, supplying water at 13°C.",
+      "Unit Info": {
+        "Unit name": "CoolingTower",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 100.0
+      },
+      "Connectors Description": "This unit includes an electricity input for auxiliary equipment (fans and pumps) and a water input representing the circulating cooling water to be cooled. The unit outputs heat to the environment via a thermal stream.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "ELECTRICITY",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 2100,
+            "formula": "=E_ref_CT"
+          },
+          "FLOW UNIT": {
+            "value": "kW",
+            "formula": "=VARIABLES!$F$31"
+          },
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Electricity input"
+        },
+        {
+          "NAME (ALIAS)": "WATER",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 131.14285714285714,
+            "formula": "=watermu_CT"
+          },
+          "FLOW UNIT": {
+            "value": "m3/h",
+            "formula": "=VARIABLES!$F$36"
+          },
+          "TEMPERATURE VALUE": {
+            "value": 25,
+            "formula": "=CONNECTORS!CoolingTower"
+          },
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H20[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Water input"
+        }
+      ],
+      "Heat Streams Description": "There is one heat stream that carries away the waste heat produced during operation",
+      "Heat Streams": [
+        {
+          "NAME": "Cooling tower heat",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 13,
+            "formula": "=Cool_Tin"
+          },
+          "INLET TEMPERATURE UNIT": {
+            "value": "°C",
+            "formula": "=VARIABLES!$F$16"
+          },
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=Cool_Tout"
+          },
+          "OUTLET TEMPERATURE UNIT": {
+            "value": "°C",
+            "formula": "=VARIABLES!$F$17"
+          },
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 100000,
+            "formula": "=Cool_Qmax"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": {
+            "value": "kW",
+            "formula": "=VARIABLES!$F$19"
+          },
+          "SPEC HEAT CAP VALUE": {
+            "value": 4.2,
+            "formula": "=cp_water"
+          },
+          "SPEC HEAT CAP UNIT": {
+            "value": "kJ/kgK",
+            "formula": "=VARIABLES!$F$18"
+          },
+          "MASS FLOW VALUE": {
+            "value": 5042.016806722689,
+            "formula": "=water_vflow"
+          },
+          "MASS FLOW UNIT": {
+            "value": "t/h",
+            "formula": "=VARIABLES!$F$34"
+          },
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin_liq"
+          },
+          "DTMIN CONTR UNIT": {
+            "value": "°C",
+            "formula": "=VARIABLES!$F$25"
+          },
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "Default",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Cooling tower heat load"
+        }
+      ],
+      "Equipments Description": "A full cooling tower (asset) equipment is required for cost calculation.",
+      "Equipments": {
+        "CoolingUtility": {
+          "Type": "Asset",
+          "Subtype": "Cooling tower",
+          "Reference": "@Florez-Orrego et al",
+          "Parameters": [
+            {
+              "Parameter": "Lifetime",
+              "Value": {
+                "value": 40,
+                "formula": "=n"
+              },
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Interest rate",
+              "Value": {
+                "value": 0.06,
+                "formula": "=i"
+              },
+              "Unit": "%"
+            },
+            {
+              "Parameter": "Total investment cost",
+              "Value": {
+                "value": 25480548.14425094,
+                "formula": "=CTCost"
+              },
+              "Unit": "Eur"
+            },
+            {
+              "Parameter": "CEPCI 2008",
+              "Value": {
+                "value": 575.4,
+                "formula": "=CEPCI_2008"
+              },
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

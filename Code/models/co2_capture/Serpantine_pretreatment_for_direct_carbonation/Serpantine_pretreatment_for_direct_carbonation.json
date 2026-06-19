@@ -1,0 +1,1875 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Serpantine pretreatment for direct carbonation",
+    "Authors and Contributors": "Mouhannad Abou Daher; Dareen Dardor",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2026-04-21 00:00:00",
+    "Last Updated": "2026-04-21 00:00:00",
+    "Model Status": "Maintained",
+    "Version": "2",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "1t/h of captured CO2",
+    "TRL": "9",
+    "Keywords": "Mineralization, CO2, Serpantine, CCS",
+    "Description": "Mineralization process: Serpantine mineral pretreatment",
+    "DOI": "",
+    "Main Related Publication": "",
+    "References": "[1] R. Castro-Amoedo, J. Granacher, M. Abou Daher and F. Marechal, Energy Environ. Sci., 2023, DOI:10.1039/D3EE01803B;\n[2] Ostovari et al. (Bardow) - Rock ‘n’ use of CO2: carbon footprint of carbon capture and utilization by mineralization, Sustainable Energy and Fuels, Issue 9, 2020;\n[3] Sipila, S. Teir, and R. Zevenhoven, “Carbon dioxide sequestration by mineral carbonationliterature review update 2007",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/Mineralization.svg",
+    "URL": "",
+    "Supplementary Material": "See SUPPL MATERIAL tab"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "dtmin",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum temperature difference contribution of the pretreatment streams",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2,
+      "MAX BOUND": 15,
+      "LATEX SYNTAX": "$ΔT_{min}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution of the pretreatment streams"
+    },
+    {
+      "VARIABLE NAME": "MC_W",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Power consumption in the multistage compression system",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 382.498,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 5000,
+      "LATEX SYNTAX": "$MC_W$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in the multistage compression system"
+    },
+    {
+      "VARIABLE NAME": "FG_M",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Mass flow rate of the CO2 in flue gas mass",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2.418,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$FG_M$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of the CO2 in flue gas mass"
+    },
+    {
+      "VARIABLE NAME": "Air_Q1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Multistage cooling duty (stage 1)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 13.73,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$Air_{Q1}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Multistage cooling duty (stage 1)"
+    },
+    {
+      "VARIABLE NAME": "Air_Q2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Multistage cooling duty (stage 2)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 93.93,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$Air_{Q2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Multistage cooling duty (stage 2)"
+    },
+    {
+      "VARIABLE NAME": "Air_Q3",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Multistage cooling duty (stage 3)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 100.31,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1500,
+      "LATEX SYNTAX": "$Air_{Q3}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Multistage cooling duty (stage 3)"
+    },
+    {
+      "VARIABLE NAME": "Air_Q4",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Multistage cooling duty (stage 4)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 119.73,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1500,
+      "LATEX SYNTAX": "$Air_{Q4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Multistage cooling duty (stage 4)"
+    },
+    {
+      "VARIABLE NAME": "MC_S1_Ti",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet intercooling stage 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 114.48,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$MC_{S1,Ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet intercooling stage 1"
+    },
+    {
+      "VARIABLE NAME": "MC_S1_To",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet intercooling stage 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 95,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 150,
+      "LATEX SYNTAX": "$MC_{S1,To}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet intercooling stage 1"
+    },
+    {
+      "VARIABLE NAME": "MC_S2_Ti",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet intercooling stage 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 234.2,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 400,
+      "LATEX SYNTAX": "$MC_{S2,Ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet intercooling stage 2"
+    },
+    {
+      "VARIABLE NAME": "MC_S2_To",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet intercooling stage 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 110,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$MC_{S2,To}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet intercooling stage 2"
+    },
+    {
+      "VARIABLE NAME": "MC_S3_Ti",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet intercooling stage 3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 253.934,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 400,
+      "LATEX SYNTAX": "$MC_{S3,Ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet intercooling stage 3"
+    },
+    {
+      "VARIABLE NAME": "MC_S3_To",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet intercooling stage 3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 130,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$MC_{S3,To}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet intercooling stage 3"
+    },
+    {
+      "VARIABLE NAME": "MC_S4_Ti",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature inlet intercooling stage 4",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 280.66,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 450,
+      "LATEX SYNTAX": "$MC_{S4,Ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet intercooling stage 4"
+    },
+    {
+      "VARIABLE NAME": "MC_S4_To",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature outlet intercooling stage 4",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 144,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$MC_{S4,To}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet intercooling stage 4"
+    },
+    {
+      "VARIABLE NAME": "B5_Ti",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine pretreatment inlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 25,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$B5_{Ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine pretreatment inlet temperature"
+    },
+    {
+      "VARIABLE NAME": "B5_To",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine pretreatment outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 600,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 400,
+      "MAX BOUND": 800,
+      "LATEX SYNTAX": "$B5_{To}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine pretreatment outlet temperature"
+    },
+    {
+      "VARIABLE NAME": "B5_Q",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine activation energy",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 484.5,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 5000,
+      "LATEX SYNTAX": "$B5_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine activation energy"
+    },
+    {
+      "VARIABLE NAME": "Serp_M",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine mass flowrate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$Serp_M$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine mass flowrate"
+    },
+    {
+      "VARIABLE NAME": "Grd_Serp_M",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Grounded serpentine mass flowrate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.9,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$GrdSerp_M$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Grounded serpentine mass flowrate"
+    },
+    {
+      "VARIABLE NAME": "Magnetite_M",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Magnetite mass flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.1,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 5,
+      "LATEX SYNTAX": "$Magnetite_M$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Magnetite mass flow rate"
+    },
+    {
+      "VARIABLE NAME": "Elec_grd",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Electricity power per ton of serpentine",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 83,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 400,
+      "LATEX SYNTAX": "$Elec_{Grd}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Electricity power per ton of serpentine"
+    },
+    {
+      "VARIABLE NAME": "Cooling_Q",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine cooling duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 484.5,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 5000,
+      "LATEX SYNTAX": "$Cooling_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine cooling duty"
+    },
+    {
+      "VARIABLE NAME": "H3_Ti",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine preheating inlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 29.7,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$H3_{Ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine preheating inlet temperature"
+    },
+    {
+      "VARIABLE NAME": "H3_To",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine preheating outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 155,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 250,
+      "LATEX SYNTAX": "$H3_{To}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine preheating outlet temperature"
+    },
+    {
+      "VARIABLE NAME": "H3_Q",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine preheating duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 109.7275,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 2000,
+      "LATEX SYNTAX": "$H3_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine preheating duty"
+    },
+    {
+      "VARIABLE NAME": "Pump_Serp",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpentine pumping power consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 9.578,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$Pump_{Serp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpentine pumping power consumption"
+    },
+    {
+      "VARIABLE NAME": "MCW",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized compression power per ton of CO2 mineralized",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 158.18775847808104,
+        "formula": "=MC_W/FG_M"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "MC_W/FG_M",
+      "MIN BOUND": 10,
+      "MAX BOUND": 500,
+      "LATEX SYNTAX": "$MC_W$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized compression power per ton of CO2 mineralized"
+    },
+    {
+      "VARIABLE NAME": "CO2Q1",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized CO2 cooling duty per ton of CO2 mineralized",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 5.678246484698097,
+        "formula": "=Air_VARIABLE TYPES/FG_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "Air_Q1/FG_M",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$CO2_{Q1}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized CO2 cooling duty per ton of CO2 mineralized"
+    },
+    {
+      "VARIABLE NAME": "CO2Q2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized cooling duty per ton of CO2 mineralized",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 38.84615384615385,
+        "formula": "=Air_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters./FG_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "Air_Q2/FG_M",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$CO2_{Q2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized cooling duty per ton of CO2 mineralized"
+    },
+    {
+      "VARIABLE NAME": "CO2Q3",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized cooling duty per ton of CO2 mineralized",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 41.484698097601324,
+        "formula": "=Air_Literature: These variables are defined from the literature sources. They include physical constants, reported efficiencies or other variables that are not measured but assumed from literature sources./FG_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "Air_Q3/FG_M",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$CO2_{Q3}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized cooling duty per ton of CO2 mineralized"
+    },
+    {
+      "VARIABLE NAME": "CO2Q4",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized cooling duty per ton of CO2 mineralized",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 49.516129032258064,
+        "formula": "=Air_Measured: These variables are directly measured directly in the industrial or technological system./FG_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "Air_Q4/FG_M",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$CO2_{Q4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized cooling duty per ton of CO2 mineralized"
+    },
+    {
+      "VARIABLE NAME": "B5Q",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized serpentine activation energy",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 484.5,
+        "formula": "=Decision: These variable are set by the engineers to as degrees of freedom to evaluate their impact on the performance of the energy system_Q/Serp_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "B5_Q/Serp_M",
+      "MIN BOUND": 10,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$B5_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized serpentine activation energy"
+    },
+    {
+      "VARIABLE NAME": "CoolingQ",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized serpentine cooling duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 484.5,
+        "formula": "=Cooling_Q/Serp_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "Cooling_Q/Serp_M",
+      "MIN BOUND": 10,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$Cooling_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized serpentine cooling duty"
+    },
+    {
+      "VARIABLE NAME": "H3Q",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized serpentine preheating duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 109.7275,
+        "formula": "=Literature: These variables are defined from the literature sources. They include physical constants, reported efficiencies or other variables that are not measured but assumed from literature sources._Q/Serp_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "H3_Q/Serp_M",
+      "MIN BOUND": 1,
+      "MAX BOUND": 500,
+      "LATEX SYNTAX": "$H3_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized serpentine preheating duty"
+    },
+    {
+      "VARIABLE NAME": "PumpSerp",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized serpentine pumping power consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 9.578,
+        "formula": "=Pump_Serp/Serp_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "Pump_Serp/Serp_M",
+      "MIN BOUND": 0.1,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$Pump_{Serp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized serpentine pumping power consumption"
+    },
+    {
+      "VARIABLE NAME": "Captured_CO2",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Captured CO₂ mass flow or amount",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$Captured_{CO2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "reference CO2 mineralization capacity 1 t/h"
+    },
+    {
+      "VARIABLE NAME": "Factory_lifetime",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Factory lifetime",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 50,
+      "PHYSICAL UNIT": "year",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$Factory_{lifetime}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Factory lifetime"
+    },
+    {
+      "VARIABLE NAME": "Mass_min_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum mass of multistage cooling (MC)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 150,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$Mass_{min,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum mass of multistage cooling (MC)"
+    },
+    {
+      "VARIABLE NAME": "Mass_max_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum mass of multistage cooling (MC)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1500,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1000,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$Mass_{max,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum mass of multistage cooling (MC)"
+    },
+    {
+      "VARIABLE NAME": "Pump_P",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Pump change in pressure",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 100,
+      "PHYSICAL UNIT": "bar",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 300,
+      "LATEX SYNTAX": "$Pump_P$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Pump change in pressure"
+    },
+    {
+      "VARIABLE NAME": "Mass_min_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum pump mass",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.5,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 5,
+      "LATEX SYNTAX": "$Mass_{min,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum pump mass"
+    },
+    {
+      "VARIABLE NAME": "Mass_max_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum pump mass",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$Mass_{max,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum pump mass"
+    },
+    {
+      "VARIABLE NAME": "Scaling_min_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum pump scaling factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$Scaling_{min,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum pump scaling factor"
+    },
+    {
+      "VARIABLE NAME": "Scaling_max_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum pump scaling factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 10,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$Scaling_{max,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum pump scaling factor"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 0.2,
+      "LATEX SYNTAX": "$i$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Number of years (project lifetime)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "year",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$n$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Number of years (project lifetime)"
+    },
+    {
+      "VARIABLE NAME": "Op_hours",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Operating hours per year",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 8760,
+      "PHYSICAL UNIT": "h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 8760,
+      "LATEX SYNTAX": "$Op_{hours}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Operating hours per year"
+    },
+    {
+      "VARIABLE NAME": "CS_material",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Cost scaling factor for material",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": "CS",
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 5,
+      "LATEX SYNTAX": "$CS_{material}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cost scaling factor for material"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annuity (annualization factor)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(i+1)^n)/((i+1)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(i+1)^n)/((i+1)^n-1)",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$Annuity$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annuity (annualization factor)"
+    },
+    {
+      "VARIABLE NAME": "Fmin_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum pump flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 4.789,
+        "formula": "=PumpSerp*Mass_min_Pump"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "PumpSerp*Mass_min_Pump",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$F_{min,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum pump flow rate to be used for pump costing"
+    },
+    {
+      "VARIABLE NAME": "Fmax_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum pump flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 287.34,
+        "formula": "=PumpSerp*Mass_max_Pump"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "PumpSerp*Mass_max_Pump",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$F_{max,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum pump cost, to be used for pump costing"
+    },
+    {
+      "VARIABLE NAME": "costMin_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum pump cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0,
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$cost_{min,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum pump cost"
+    },
+    {
+      "VARIABLE NAME": "costMax_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum pump cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0,
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10000000,
+      "LATEX SYNTAX": "$cost_{max,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum pump cost"
+    },
+    {
+      "VARIABLE NAME": "costinv2_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Second investment cost coefficient for pump",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=(costMax_Pump-costMin_Pump)/(Fmax_Pump-Fmin_Pump)"
+      },
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "(costMax_Pump-costMin_Pump)/(Fmax_Pump-Fmin_Pump)",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$cost_{inv2,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Second investment cost coefficient for pump"
+    },
+    {
+      "VARIABLE NAME": "costinv1_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "First investment cost coefficient for pump",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=costMin_Pump-Fmin_Pump*costinv2_Pump"
+      },
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "costMin_Pump-Fmin_Pump*costinv2_Pump",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$cost_{inv1,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "First investment cost coefficient for pump"
+    },
+    {
+      "VARIABLE NAME": "Cinv1_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "First investment cost coefficient for pump (alternative form)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=costinv1_Pump*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "costinv1_Pump*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$C_{inv1,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "First investment cost coefficient for pump (alternative form)"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_Pump",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Second investment cost coefficient for pump (alternative form)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=costinv2_Pump*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "costinv2_Pump*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$C_{inv2,Pump}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Second investment cost coefficient for pump (alternative form)"
+    },
+    {
+      "VARIABLE NAME": "Fmin_Pump_unit",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum flow rate per pump unit",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=Mass_min_Pump*Scaling_min_Pump"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "Mass_min_Pump*Scaling_min_Pump",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$F_{min,Pump,unit}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum flow rate per pump unit to be used for unit sizing"
+    },
+    {
+      "VARIABLE NAME": "Fmax_Pump_unit",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum flow rate per pump unit",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 300,
+        "formula": "=Mass_max_Pump*Scaling_max_Pump"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "Mass_max_Pump*Scaling_max_Pump",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$F_{max,Pump,unit}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum flow rate per pump unit to be used for unit sizing"
+    },
+    {
+      "VARIABLE NAME": "Fmin_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum flow rate through multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 23.728163771712154,
+        "formula": "=MCW*Mass_min_MC/1000"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "MCW*Mass_min_MC/1000",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$F_{min,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum flow rate through multistage cooling"
+    },
+    {
+      "VARIABLE NAME": "Fmax_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum flow rate through multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 237.28163771712155,
+        "formula": "=MCW*Mass_max_MC/1000"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "MCW*Mass_max_MC/1000",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$F_{max,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum flow rate through multistage cooling"
+    },
+    {
+      "VARIABLE NAME": "costMin_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum cost of multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0,
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$cost_{min,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum cost of multistage cooling"
+    },
+    {
+      "VARIABLE NAME": "costMax_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum cost of multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0,
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10000000,
+      "LATEX SYNTAX": "$cost_{max,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum cost of multistage cooling"
+    },
+    {
+      "VARIABLE NAME": "costinv2_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Second investment cost coefficient for multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=(costMax_MC-costMin_MC)/(Fmax_MC-Fmin_MC)"
+      },
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "(costMax_MC-costMin_MC)/(Fmax_MC-Fmin_MC)",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$cost_{inv2,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Second investment cost coefficient for multistage cooling"
+    },
+    {
+      "VARIABLE NAME": "costinv1_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "First investment cost coefficient for multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=IF(costMin_MC-Fmin_MC*costinv2_MC<0,0,costMin_MC-Fmin_MC*costinv2_MC)"
+      },
+      "PHYSICAL UNIT": "eur",
+      "FORMULA OR PATH": "IF(costMin_MC-Fmin_MC*costinv2_MC<0,0,costMin_MC-Fmin_MC*costinv2_MC)",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$cost_{inv1,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "First investment cost coefficient for multistage cooling"
+    },
+    {
+      "VARIABLE NAME": "Cinv1_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "First investment cost coefficient for multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=costinv1_MC*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "costinv1_MC*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$C_{inv1,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "First investment cost coefficient for multistage cooling"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_MC",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Second investment cost coefficient for multistage cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0,
+        "formula": "=costinv2_MC*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "costinv2_MC*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1000000,
+      "LATEX SYNTAX": "$C_{inv2,MC}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Second investment cost coefficient for multistage cooling"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "CO2",
+        "NAME (ALIAS)": "CO2",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "CO2[1.0]",
+        "DESCRIPTION": "Raw CO2 from source"
+      },
+      {
+        "UID": "CO2_Min",
+        "NAME (ALIAS)": "CO2_Min",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 144.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 140.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "CO2[1.0]",
+        "DESCRIPTION": "Compressed/heated CO2 for mineralization conditions"
+      },
+      {
+        "UID": "Serp",
+        "NAME (ALIAS)": "Serp",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 0.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+        "DESCRIPTION": "Raw mined mineral ore"
+      },
+      {
+        "UID": "Grd_Serp",
+        "NAME (ALIAS)": "Grd_Serp",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 0.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+        "DESCRIPTION": "Ground mineral (10-38 μm)"
+      },
+      {
+        "UID": "Magnetite",
+        "NAME (ALIAS)": "Magnetite",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 0.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "Fe3O4[1.0]",
+        "DESCRIPTION": "Magnetic byproduct"
+      },
+      {
+        "UID": "PreT_Serp",
+        "NAME (ALIAS)": "PreT_Serp",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 155.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 0.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+        "DESCRIPTION": "Activated/Preheated ore"
+      },
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Elec",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Total power demand"
+      }
+    ],
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "CO2_PreT": {
+      "Unit Description": "Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar).",
+      "Unit Info": {
+        "Unit name": "CO2_PreT",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 10000.0
+      },
+      "Connectors Description": "Interface points for raw CO2 feed, pressurized CO2 delivery to the reactor, and electrical power supply.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "CO2",
+          "TYPE": "MASS",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 1,
+            "formula": "=Captured_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)."
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "CO2[1.0]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Raw CO2 from source"
+        },
+        {
+          "NAME (ALIAS)": "CO2_Min",
+          "TYPE": "MASS",
+          "DIRECTION": "out",
+          "FLOW VALUE": {
+            "value": 1,
+            "formula": "=Captured_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)."
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 144.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 140.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "CO2[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Compressed/heated CO2 for mineralization conditions"
+        },
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 158.18775847808104,
+            "formula": "=MCW"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Total power demand"
+        }
+      ],
+      "Heat Streams Description": "Thermal energy removed from the CO2 gas between compression stages to improve efficiency and manage outlet temperatures.",
+      "Heat Streams": [
+        {
+          "NAME": "Stage1",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 114.48,
+            "formula": "=MC_UNIT DESCRIPTION_Ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 95,
+            "formula": "=MC_UNIT DESCRIPTION_To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 5.678246484698097,
+            "formula": "=Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar).UNIT DESCRIPTION"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1.049367933517102,
+            "formula": "=Stage1/Stage1/(Stage1-Stage1)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1,
+            "formula": "=Captured_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)."
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Multistage cooling duties (stage 1) "
+        },
+        {
+          "NAME": "Stage2",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 234.2,
+            "formula": "=MC_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)._Ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 110,
+            "formula": "=MC_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)._To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 38.84615384615385,
+            "formula": "=Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar).Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)."
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1.1259754738015608,
+            "formula": "=Stage2/Stage2/(Stage2-Stage2)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1,
+            "formula": "=Captured_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)."
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Multistage cooling duties (stage 2) "
+        },
+        {
+          "NAME": "Stage3",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 253.934,
+            "formula": "=MC_S3_Ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 130,
+            "formula": "=MC_S3_To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 41.484698097601324,
+            "formula": "=Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar).Q3"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1.205035850947801,
+            "formula": "=Stage3/Stage3/(Stage3-Stage3)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1,
+            "formula": "=Captured_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)."
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Multistage cooling duties (stage 3) "
+        },
+        {
+          "NAME": "Stage4",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 280.66,
+            "formula": "=MC_S4_Ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 144,
+            "formula": "=MC_S4_To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 49.516129032258064,
+            "formula": "=Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar).Q4"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1.304390930163391,
+            "formula": "=Stage4/Stage4/(Stage4-Stage4)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1,
+            "formula": "=Captured_Multistage compression and intercooling system to bring CO2 from ambient conditions to mineralization pressure (140 bar)."
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Multistage cooling duties (stage 4) "
+        }
+      ],
+      "Equipments Description": "Physical hardware including a multistage compressor train and intercooling heat exchangers (Stages 1-4).",
+      "Equipments": {
+        "CO2_Compressor": {
+          "Type": "Asset",
+          "Subtype": "Multistage Compressor",
+          "Reference": "@Turton et al.",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 1500.0,
+              "Unit": "eur/kW"
+            },
+            {
+              "Parameter": "Total power consumption",
+              "Value": 382.5,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.07,
+              "Unit": "-"
+            }
+          ]
+        },
+        "Intercooler_Train": {
+          "Type": "Asset",
+          "Subtype": "Shell & Tube Heat Exchanger",
+          "Reference": "@Peters & Timmerhaus",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 450.0,
+              "Unit": "eur/kW"
+            },
+            {
+              "Parameter": "Total cooling duty (Q1-Q4)",
+              "Value": 327.7,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.07,
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Grinding": {
+      "Unit Description": "Mechanical size reduction and magnetic separation unit to prepare raw serpentine ore for thermal activation.",
+      "Unit Info": {
+        "Unit name": "Grinding",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 10000.0
+      },
+      "Connectors Description": "Stream interfaces for raw mineral feed, ground product, magnetic byproducts, and the electrical power required for milling.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "Serp",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 1,
+            "formula": "=Serp_M"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 0.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Raw mined mineral ore"
+        },
+        {
+          "NAME (ALIAS)": "Grd_Serp",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 0.9,
+            "formula": "=Grd_Serp_M"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 0.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Ground mineral (10-38 μm)"
+        },
+        {
+          "NAME (ALIAS)": "Magnetite",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 0.1,
+            "formula": "=Magnetite_M"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 0.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "Fe3O4[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Magnetic byproduct"
+        },
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 83,
+            "formula": "=Elec_grd"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Total power demand"
+        }
+      ],
+      "Heat Streams Description": "No heat streams.",
+      "Heat Streams": [
+        {
+          "NAME": "-",
+          "TYPE": "-",
+          "INLET TEMPERATURE VALUE": "-",
+          "INLET TEMPERATURE UNIT": "-",
+          "OUTLET TEMPERATURE VALUE": "-",
+          "OUTLET TEMPERATURE UNIT": "-",
+          "INLET ENTHALPY FLOW VALUE": "-",
+          "INLET ENTHALPY FLOW UNIT": "-",
+          "OUTLET ENTHALPY FLOW VALUE": "-",
+          "OUTLET ENTHALPY FLOW UNIT": "-",
+          "SPEC HEAT CAP VALUE": "-",
+          "SPEC HEAT CAP UNIT": "-",
+          "MASS FLOW VALUE": "-",
+          "MASS FLOW UNIT": "-",
+          "DTMIN CONTR VALUE": "-",
+          "DTMIN CONTR UNIT": "-",
+          "HEAT TRANSFER COEF VALUE": "-",
+          "HEAT TRANSFER COEF UNIT": "-",
+          "HEAT CASCADE": "-",
+          "REFERENCE STREAM": "-",
+          "DESCRIPTION": "-"
+        }
+      ],
+      "Equipments Description": "Capital assets including a high-energy ball mill for particle size reduction and a magnetic separator for iron removal.",
+      "Equipments": {
+        "Ball_Mill": {
+          "Type": "Asset",
+          "Subtype": "Industrial Ball Mill",
+          "Reference": "@Mular et al.",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 1100.0,
+              "Unit": "eur/kW"
+            },
+            {
+              "Parameter": "Power consumption",
+              "Value": 83.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.07,
+              "Unit": "-"
+            }
+          ]
+        },
+        "Mag_Separator": {
+          "Type": "Asset",
+          "Subtype": "Magnetic Drum Separator",
+          "Reference": "@Wills' Mineral Proc.",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 15000.0,
+              "Unit": "eur/(t/h)"
+            },
+            {
+              "Parameter": "Mineral feed capacity",
+              "Value": 1.0,
+              "Unit": "t/h"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.07,
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Serp_PreT": {
+      "Unit Description": "Thermal activation unit (calciner) used to dehydroxylate serpentine at high temperatures (600°C) to maximize chemical reactivity.",
+      "Unit Info": {
+        "Unit name": "Serp_PreT",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 100.0
+      },
+      "Connectors Description": "Interfaces for ground mineral feed, activated mineral discharge, and the electrical power for kiln operation and material handling.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "Grd_Serp",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 0.9,
+            "formula": "=Grd_Serp_M"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 0.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Ground mineral (10-38 μm)"
+        },
+        {
+          "NAME (ALIAS)": "PreT_Serp",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 0.9,
+            "formula": "=Grd_Serp_M"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 155.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 0.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Activated/Preheated ore"
+        },
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 9.578,
+            "formula": "=Pump_Serp"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Total power demand"
+        }
+      ],
+      "Heat Streams Description": "There are two cold streams to preheat and activate the serpentine and one hot stream for the cooling of the activated serpentine,",
+      "Heat Streams": [
+        {
+          "NAME": "Activation_Q",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 25,
+            "formula": "=UNIT NAME_Ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 600,
+            "formula": "=UNIT NAME_To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 484.5,
+            "formula": "=UNIT NAMEQ"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kWh/t",
+          "SPEC HEAT CAP VALUE": {
+            "value": 3.370434782608696,
+            "formula": "=Activation_Q/Activation_Q/(Activation_Q-Activation_Q)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 0.9,
+            "formula": "=Grd_Serp_M"
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Serpentine activation"
+        },
+        {
+          "NAME": "PreT_Q",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 29.7,
+            "formula": "=H3_Ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 155,
+            "formula": "=H3_To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 109.7275,
+            "formula": "=H3Q"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kWh/t",
+          "SPEC HEAT CAP VALUE": {
+            "value": 3.502873104549083,
+            "formula": "=PreT_Q/PreT_Q/(PreT_Q-PreT_Q)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 0.9,
+            "formula": "=Grd_Serp_M"
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Serpentine preheating before mineralization"
+        },
+        {
+          "NAME": "Cooling",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 600,
+            "formula": "=UNIT NAME_To"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 25,
+            "formula": "=UNIT NAME_Ti"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 484.5,
+            "formula": "=CoolingQ"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kWh/t",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 3.370434782608696,
+            "formula": "=Cooling/Cooling/(Cooling-Cooling)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 0.9,
+            "formula": "=Grd_Serp_M"
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Serpentine cooling duty"
+        }
+      ],
+      "Equipments Description": "High-temperature processing assets including a rotary kiln for activation and a solid-solid heat recovery system.",
+      "Equipments": {
+        "Rotary_Kiln": {
+          "Type": "Asset",
+          "Subtype": "Indirect Calciner",
+          "Reference": "@Aspen/Turton",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 2100.0,
+              "Unit": "eur/kW"
+            },
+            {
+              "Parameter": "Thermal duty (Activation)",
+              "Value": 436.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.07,
+              "Unit": "-"
+            }
+          ]
+        },
+        "Solid_Cooler": {
+          "Type": "Asset",
+          "Subtype": "Rotary Cooler",
+          "Reference": "@Peters & Timmerhaus",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 850.0,
+              "Unit": "eur/(t/h)"
+            },
+            {
+              "Parameter": "Solids throughput",
+              "Value": 0.9,
+              "Unit": "t/h"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.07,
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "a. CO2_PreT (Compression & Conditioning)",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

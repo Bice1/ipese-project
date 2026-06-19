@@ -1,0 +1,2218 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Methanol to SNG",
+    "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2025-11-13 00:00:00",
+    "Last Updated": "2025-11-13 00:00:00",
+    "Model Status": "Maintained",
+    "Version": "1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "56681kw of produced CH4",
+    "TRL": "9",
+    "Keywords": "MeOH, SNG, Methanol to SNG, Methanol reforming, Synthetic natural gas",
+    "Description": "Methanol reforming, WGS and PSA to get stoich ratio for SNG production ([(H2-CO2)/(CO+CO2)] = 3)",
+    "DOI": "",
+    "Main Related Publication": "Domingos et al. https://www.sciencedirect.com/science/article/pii/S009813542200148X?via%3Dihub",
+    "References": "[1] Domingos et al. https://www.sciencedirect.com/science/article/pii/S009813542200148X?via%3Dihub;\n[2] https://www.sciencedirect.com/science/article/pii/S0196890422000413;",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/MeOHtoSNG.svg",
+    "URL": "",
+    "Supplementary Material": "[\"C:\\\\Users\\\\Quentin\\\\Desktop\\\\IPESE-PROJECT\\\\Code\\\\models\\\\synthetic_fuels_biofuels\\\\Methanol_to_SNG\\\\MethanoltoSNG ET.md\"]"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "dtmin_gas",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "DTmin for gaseous streams",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 8,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 4,
+      "MAX BOUND": 15,
+      "LATEX SYNTAX": "$\\mathrm{dtmin\\_gas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution of the gaseous streams"
+    },
+    {
+      "VARIABLE NAME": "dtmin_liq",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "DTmin for liquids",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$\\mathrm{dtmin\\_liq}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution from liquids"
+    },
+    {
+      "VARIABLE NAME": "dtmin_2ph",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "DTmin for phase change",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 5,
+      "LATEX SYNTAX": "$\\mathrm{dtmin\\_2ph}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution from phase change"
+    },
+    {
+      "VARIABLE NAME": "MeOH_feed",
+      "TYPE": "DECISION",
+      "FULL NAME": "Methanol pumped to reformer",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 12103,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 9682.4,
+      "MAX BOUND": 14523.6,
+      "LATEX SYNTAX": "$\\mathrm{MeOH\\_feed}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Methanol pumped to reformer at 350C and 35bar"
+    },
+    {
+      "VARIABLE NAME": "water_feed",
+      "TYPE": "DECISION",
+      "FULL NAME": "Water consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 14953,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 11962.4,
+      "MAX BOUND": 17943.6,
+      "LATEX SYNTAX": "$\\mathrm{water\\_feed}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Water consumption at 1 bar to be pumped up to 35bar"
+    },
+    {
+      "VARIABLE NAME": "water_cond",
+      "TYPE": "DECISION",
+      "FULL NAME": "Water condensate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 10731,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 8584.8,
+      "MAX BOUND": 12877.2,
+      "LATEX SYNTAX": "$\\mathrm{water\\_cond}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Water condensate at 1 bar"
+    },
+    {
+      "VARIABLE NAME": "O2_feed",
+      "TYPE": "DECISION",
+      "FULL NAME": "Oxygen consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1760,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1408,
+      "MAX BOUND": 2112,
+      "LATEX SYNTAX": "$\\mathrm{O2\\_feed}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Oxygen consumption at 1 bar to be compressed up to 35bar"
+    },
+    {
+      "VARIABLE NAME": "o2_h1_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet first O2 compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 156,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 140.4,
+      "MAX BOUND": 171.6,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h1\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet first O2 compressor"
+    },
+    {
+      "VARIABLE NAME": "o2_h1_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature of intercooling first O2 compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 35,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h1\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature of intercooling first O2 compressor"
+    },
+    {
+      "VARIABLE NAME": "o2_h1_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Intercooling duty of first O2 compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 55,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 44,
+      "MAX BOUND": 66,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h1\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Intercooling duty of first O2 compressor from 1 to 3 bar"
+    },
+    {
+      "VARIABLE NAME": "o2_h2_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet second O2 compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 163,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 146.7,
+      "MAX BOUND": 179.3,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h2\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet second O2 compressor"
+    },
+    {
+      "VARIABLE NAME": "o2_h2_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature of intercooling second O2 compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 35,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h2\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature of intercooling second O2 compressor"
+    },
+    {
+      "VARIABLE NAME": "o2_h2_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Intercooling duty of second O2 compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 59,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 47.2,
+      "MAX BOUND": 70.8,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h2\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Intercooling duty of second O2 compressor from 3 to 10 bar"
+    },
+    {
+      "VARIABLE NAME": "o2_h3_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet third O2 compressor 3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 163,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 146.7,
+      "MAX BOUND": 179.3,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h3\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet third O2 compressor 3"
+    },
+    {
+      "VARIABLE NAME": "o2_h3_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature of intercooling O2 compressor 3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 35,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 30,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h3\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature of intercooling O2 compressor 3"
+    },
+    {
+      "VARIABLE NAME": "o2_h3_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Intercooling duty of O2 compressor 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 61,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 48.8,
+      "MAX BOUND": 73.2,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h3\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Intercooling duty of O2 compressor 2 from 10 to 30 bar"
+    },
+    {
+      "VARIABLE NAME": "o2_h4_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature of oxygen preheater inlet",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 50,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 45,
+      "MAX BOUND": 55,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h4\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature of oxygen preheater inlet"
+    },
+    {
+      "VARIABLE NAME": "o2_h4_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature of oxygen preheater outlet",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 350,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 315,
+      "MAX BOUND": 385,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h4\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature of oxygen preheater outlet"
+    },
+    {
+      "VARIABLE NAME": "o2_h4_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Oxygen preheating after compressor outlet",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 145,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 116,
+      "MAX BOUND": 174,
+      "LATEX SYNTAX": "$\\mathrm{o2\\_h4\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Oxygen preheating after compressor outlet at 35 bar"
+    },
+    {
+      "VARIABLE NAME": "e_o2_1",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in first oxygen compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 57,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 45.6,
+      "MAX BOUND": 68.4,
+      "LATEX SYNTAX": "$\\mathrm{e\\_o2\\_1}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in first oxygen compressor"
+    },
+    {
+      "VARIABLE NAME": "e_o2_2",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in second oxygen compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 58,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 46.4,
+      "MAX BOUND": 69.6,
+      "LATEX SYNTAX": "$\\mathrm{e\\_o2\\_2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in second oxygen compressor"
+    },
+    {
+      "VARIABLE NAME": "e_o2_3",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in third oxygen compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 58,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 46.4,
+      "MAX BOUND": 69.6,
+      "LATEX SYNTAX": "$\\mathrm{e\\_o2\\_3}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in third oxygen compressor"
+    },
+    {
+      "VARIABLE NAME": "e_o2_4",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in fourth oxygen compressor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 7,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5.6,
+      "MAX BOUND": 8.4,
+      "LATEX SYNTAX": "$\\mathrm{e\\_o2\\_4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in fourth oxygen compressor"
+    },
+    {
+      "VARIABLE NAME": "e_pump_1",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in water pump",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 18,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 14.4,
+      "MAX BOUND": 21.6,
+      "LATEX SYNTAX": "$\\mathrm{e\\_pump\\_1}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in methanol pump from 1 to 35 bar"
+    },
+    {
+      "VARIABLE NAME": "e_pump_2",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in methanol pump",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 21,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 16.8,
+      "MAX BOUND": 25.2,
+      "LATEX SYNTAX": "$\\mathrm{e\\_pump\\_2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in water pump from 1 to 35 bar"
+    },
+    {
+      "VARIABLE NAME": "mix_c1_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet  HEX 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 22,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 15,
+      "MAX BOUND": 30,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c1\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the methanol and water preheating in HEX 1"
+    },
+    {
+      "VARIABLE NAME": "mix_c1_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of  HEX 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 131,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 117.9,
+      "MAX BOUND": 144.1,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c1\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the methanol and water preheating in HEX 1"
+    },
+    {
+      "VARIABLE NAME": "mix_c1_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Preheating  power in HEX 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 3495,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2796,
+      "MAX BOUND": 4194,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c1\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "PreHeating of methanol and water in HEX 1"
+    },
+    {
+      "VARIABLE NAME": "mix_c2_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of  HEX 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 131,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 117.9,
+      "MAX BOUND": 144.1,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c2\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the methanol and water preheating in HEX 2"
+    },
+    {
+      "VARIABLE NAME": "mix_c2_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of HEX 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 241,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 216.9,
+      "MAX BOUND": 265.1,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c2\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the methanol and water preheating in HEX 2"
+    },
+    {
+      "VARIABLE NAME": "mix_c2_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "PreHeating of HEX 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 13437,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10749.6,
+      "MAX BOUND": 16124.4,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c2\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "PreHeating of methanol and water in HEX 2"
+    },
+    {
+      "VARIABLE NAME": "mix_c3_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of HEX 3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 241,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 216.9,
+      "MAX BOUND": 265.1,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c3\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the methanol and water preheating in HEX 3"
+    },
+    {
+      "VARIABLE NAME": "mix_c3_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of HEX 3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 350,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 315,
+      "MAX BOUND": 385,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c3\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the methanol and water preheating in HEX 3"
+    },
+    {
+      "VARIABLE NAME": "mix_c3_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Preheating power of HEX 3",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1894,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1515.2,
+      "MAX BOUND": 2272.8,
+      "LATEX SYNTAX": "$\\mathrm{mix\\_c3\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "PreHeating of methanol and water in HEX 3"
+    },
+    {
+      "VARIABLE NAME": "gas_h11_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of first water gas shift",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 365,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 328.5,
+      "MAX BOUND": 401.5,
+      "LATEX SYNTAX": "$\\mathrm{gas\\_h11\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the cooler after the first water gas shift reactor"
+    },
+    {
+      "VARIABLE NAME": "gas_h11_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of the first water gas shift",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 179,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 161.1,
+      "MAX BOUND": 196.9,
+      "LATEX SYNTAX": "$\\mathrm{gas\\_h11\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the cooler after the first water gas shift reactor"
+    },
+    {
+      "VARIABLE NAME": "gas_h11_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Cooling duty of the first water gas shift",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 3563,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2850.4,
+      "MAX BOUND": 4275.6,
+      "LATEX SYNTAX": "$\\mathrm{gas\\_h11\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling duty of the cooler after the first water gas shift reactor"
+    },
+    {
+      "VARIABLE NAME": "gas_h12_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of second water gas shif",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 179,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 161.1,
+      "MAX BOUND": 196.9,
+      "LATEX SYNTAX": "$\\mathrm{gas\\_h12\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the cooler after the second water gas shift reactor"
+    },
+    {
+      "VARIABLE NAME": "gas_h12_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of second water gas shift",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 35,
+      "LATEX SYNTAX": "$\\mathrm{gas\\_h12\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the cooler after the second water gas shift reactor"
+    },
+    {
+      "VARIABLE NAME": "gas_h12_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Cooling duty of the second water gas shift",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 10022,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 8017.6,
+      "MAX BOUND": 12026.4,
+      "LATEX SYNTAX": "$\\mathrm{gas\\_h12\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling duty of the cooler after the second water gas shift reactor"
+    },
+    {
+      "VARIABLE NAME": "FeedstockATR",
+      "TYPE": "DECISION",
+      "FULL NAME": "Mass flow rate of total feed to ATR",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 28815,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 23052,
+      "MAX BOUND": 34578,
+      "LATEX SYNTAX": "$\\mathrm{FeedstockATR}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of total feed to ATR"
+    },
+    {
+      "VARIABLE NAME": "syngastoSNGtotal",
+      "TYPE": "DECISION",
+      "FULL NAME": "Mass flow rate of syngas to methanator",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 12709,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10167.2,
+      "MAX BOUND": 15250.8,
+      "LATEX SYNTAX": "$\\mathrm{syngastoSNGtotal}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of syngas to methanator 35 bar, massfrac [76.91%CO2, 7.18%CO, 15.64%H2, 0%CH4]"
+    },
+    {
+      "VARIABLE NAME": "syngastoSNGtotal_molf",
+      "TYPE": "DECISION",
+      "FULL NAME": "Molar flow rate of syngas to methanator",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1243,
+      "PHYSICAL UNIT": "kmol/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 994.4,
+      "MAX BOUND": 1491.6,
+      "LATEX SYNTAX": "$\\mathrm{syngastoSNGtotal\\_molf}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molar flow rate of syngas to methanator 35 bar, molfrac [17.87%CO2, 2.62%CO, 79.36%H2, 0%CH4]"
+    },
+    {
+      "VARIABLE NAME": "CO2sep",
+      "TYPE": "DECISION",
+      "FULL NAME": "Low pressure CO2 separated in the PSA unit",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5375,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 4300,
+      "MAX BOUND": 6450,
+      "LATEX SYNTAX": "$\\mathrm{CO2sep}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Low pressure CO2 separated in the PSA unit at 1 bar before the methanation process"
+    },
+    {
+      "VARIABLE NAME": "sngprod_c1_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of the preheater of methanator",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 35,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_c1\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the preheater to the methanator"
+    },
+    {
+      "VARIABLE NAME": "sngprod_c1_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of the preheater of methanator",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 250,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 225,
+      "MAX BOUND": 275,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_c1\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the preheater to the methanator"
+    },
+    {
+      "VARIABLE NAME": "sngprod_c1_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Methanator feed preheating",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2429,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1943.2,
+      "MAX BOUND": 2914.8,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_c1\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Methanator feed preheating"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h1_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of the first methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 610,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 549,
+      "MAX BOUND": 671,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h1\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the first methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h1_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of the first methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 300,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 270,
+      "MAX BOUND": 330,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h1\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the first methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h1_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Cooling duty of the first methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 10200,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 8160,
+      "MAX BOUND": 12240,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h1\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling duty of the first methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h2_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of the second methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 462,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 415.8,
+      "MAX BOUND": 508.2,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h2\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the second methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h2_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of the second methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 200,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 180,
+      "MAX BOUND": 220,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h2\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the second methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h2_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Cooling duty of the second methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 3889,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 3111.2,
+      "MAX BOUND": 4666.8,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h2\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling duty of the second methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h3_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature inlet of the third methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 212,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 190.8,
+      "MAX BOUND": 233.2,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h3\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of the third methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h3_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Temperature outlet of the third methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 35,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h3\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of the third methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "sngprod_h3_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Cooling duty of the third methanator intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 6003,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 4802.4,
+      "MAX BOUND": 7203.6,
+      "LATEX SYNTAX": "$\\mathrm{sngprod\\_h3\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling duty of the third methanator intercooler"
+    },
+    {
+      "VARIABLE NAME": "LHV_CH4",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Lower heating value of methane",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 50000,
+      "PHYSICAL UNIT": "kJ/kg",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 48000,
+      "MAX BOUND": 52000,
+      "LATEX SYNTAX": "$\\mathrm{LHV\\_CH4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lower heating value of methane"
+    },
+    {
+      "VARIABLE NAME": "CH4massflow",
+      "TYPE": "DECISION",
+      "FULL NAME": "Mass flow of produced methane",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 4081,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 3264.8,
+      "MAX BOUND": 4897.2,
+      "LATEX SYNTAX": "$\\mathrm{CH4massflow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow of produced methane at 30°C and 35 bar"
+    },
+    {
+      "VARIABLE NAME": "CH4molflow",
+      "TYPE": "DECISION",
+      "FULL NAME": "Molar flow of produced methane",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 257,
+      "PHYSICAL UNIT": "kmol/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 205.6,
+      "MAX BOUND": 308.4,
+      "LATEX SYNTAX": "$\\mathrm{CH4molflow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molar flow of produced methane at 30°C and 35 bar"
+    },
+    {
+      "VARIABLE NAME": "Condensateflow",
+      "TYPE": "DECISION",
+      "FULL NAME": "Water production in methanation reaction",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 7.06,
+      "PHYSICAL UNIT": "m3/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5.65,
+      "MAX BOUND": 8.47,
+      "LATEX SYNTAX": "$\\mathrm{Condensateflow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Water production in methanation reaction"
+    },
+    {
+      "VARIABLE NAME": "CO2unconverted",
+      "TYPE": "DECISION",
+      "FULL NAME": "Low pressure unconverted CO2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 34,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 27.2,
+      "MAX BOUND": 40.8,
+      "LATEX SYNTAX": "$\\mathrm{CO2unconverted}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Low pressure unconverted CO2 at 1 bar, separated in the PSA unit after the methanation section"
+    },
+    {
+      "VARIABLE NAME": "Spec_reformwgspsa",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Specific price of methanator per kg/h of feedstock",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1000,
+      "PHYSICAL UNIT": "Eur/(kg/h)",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 700,
+      "MAX BOUND": 1300,
+      "LATEX SYNTAX": "$\\mathrm{Spec\\_reformwgspsa}$",
+      "REFERENCE": "[2]",
+      "DESCRIPTION": "350M Eur for 8000 tpd of ATR feedstock"
+    },
+    {
+      "VARIABLE NAME": "Spec_MethntrCost",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Investment cost of methanator",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 300,
+      "PHYSICAL UNIT": "Eur/kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 210,
+      "MAX BOUND": 390,
+      "LATEX SYNTAX": "$\\mathrm{Spec\\_MethntrCost}$",
+      "REFERENCE": "[2]",
+      "DESCRIPTION": "Investment cost of methanator"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime of the methanator",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "yr",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 20,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$\\mathrm{n}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime of the methanator"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.04,
+      "MAX BOUND": 0.12,
+      "LATEX SYNTAX": "$\\mathrm{i}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2020",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "CEPCI 2020",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 596.2,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 596.2,
+      "MAX BOUND": 850,
+      "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2020}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CEPCI 2020"
+    },
+    {
+      "VARIABLE NAME": "CH4energyflow",
+      "TYPE": "DECISION",
+      "FULL NAME": "Energy flow rate of produced methane",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 56680.555555555555,
+        "formula": "=Measured: These variables are directly measured directly in the industrial or technological system.massflow*LHV_Measured: These variables are directly measured directly in the industrial or technological system./3600"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "CH4massflow*LHV_CH4/3600",
+      "MIN BOUND": 45344.45,
+      "MAX BOUND": 68016.67,
+      "LATEX SYNTAX": "$\\mathrm{CH4energyflow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Energy flow rate of produced methane from methanol reforming"
+    },
+    {
+      "VARIABLE NAME": "waterfeedm3",
+      "TYPE": "DECISION",
+      "FULL NAME": "Volumetric flow rate of water feed",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 4.222,
+        "formula": "=(water_feed-water_cond)/1000"
+      },
+      "PHYSICAL UNIT": "m3/h",
+      "FORMULA OR PATH": "(water_feed-water_cond)/1000",
+      "MIN BOUND": 3.38,
+      "MAX BOUND": 5.06,
+      "LATEX SYNTAX": "$\\mathrm{waterfeedm3}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volumetric flow rate of water feed"
+    },
+    {
+      "VARIABLE NAME": "e_demand",
+      "TYPE": "DECISION",
+      "FULL NAME": "Total power consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 219,
+        "formula": "=e_o2_1+e_o2_2+e_o2_3+e_o2_4+e_pump_1+e_pump_2"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "e_o2_1+e_o2_2+e_o2_3+e_o2_4+e_pump_1+e_pump_2",
+      "MIN BOUND": 175.2,
+      "MAX BOUND": 262.8,
+      "LATEX SYNTAX": "$\\mathrm{e\\_demand}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Total power consumption"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualization factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(i+1)^n)/((i+1)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(i+1)^n)/((i+1)^n-1)",
+      "MIN BOUND": 0.05,
+      "MAX BOUND": 0.11,
+      "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualization factor"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_Reform",
+      "TYPE": "DECISION",
+      "FULL NAME": "Investment cost of the reforming section",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1915089.1575542644,
+        "formula": "=Spec_reformwgspsa*FeedstockATR*(CEPCI_2020/CEPCI_2020)*Annuity"
+      },
+      "PHYSICAL UNIT": "Eur/y",
+      "FORMULA OR PATH": "Spec_reformwgspsa*FeedstockATR*(CEPCI_2020/CEPCI_2020)*Annuity",
+      "MIN BOUND": 1340562.41,
+      "MAX BOUND": 2489615.91,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_Reform}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost of the reforming section"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_SyngastoSNG",
+      "TYPE": "DECISION",
+      "FULL NAME": "Investment cost of the methanation section",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1130123.0337178197,
+        "formula": "=Spec_MethntrCost*Measured: These variables are directly measured directly in the industrial or technological system.energyflow*(CEPCI_2020/CEPCI_2020)*Annuity"
+      },
+      "PHYSICAL UNIT": "Eur/y",
+      "FORMULA OR PATH": "Spec_MethntrCost*CH4energyflow*(CEPCI_2020/CEPCI_2020)*Annuity",
+      "MIN BOUND": 791086.12,
+      "MAX BOUND": 1469159.94,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_SyngastoSNG}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost of the methanation section"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "METHANOL",
+        "NAME (ALIAS)": "MeohProd",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 30.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4O[1]",
+        "DESCRIPTION": "Consumed methanol feedstock into the MeOH reforming unit"
+      },
+      {
+        "UID": "WATER",
+        "NAME (ALIAS)": "water",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 30.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+        "DESCRIPTION": "Consumed water feedstock into the MeOH reforming unit"
+      },
+      {
+        "UID": "OXYGEN",
+        "NAME (ALIAS)": "oxyvent",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 30.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+        "DESCRIPTION": "Consumed oxygen from ASU or electrolyzer into the MeOH reforming unit"
+      },
+      {
+        "UID": "CO2",
+        "NAME (ALIAS)": "CO2",
+        "TYPE": "EMISSIONS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 30.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+        "DESCRIPTION": "CO2 separated in PSA unit and unconverted CO2 from methanation section"
+      },
+      {
+        "UID": "SNG",
+        "NAME (ALIAS)": "CH4",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": 30.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 35.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[0.99]",
+        "DESCRIPTION": "Produced SNG from methanator"
+      },
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Elec",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Consumed electricity for O2 compressors and pumps"
+      }
+    ],
+    "INTERNAL CONNECTORS": [
+      {
+        "UID": "SYNGAS",
+        "NAME (ALIAS)": "MeohSyngasToSNG",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 35.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 35.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[0.7691]&CO[0.0718]&H2[0.1564]",
+        "DESCRIPTION": "Intermediate syngas from MeOH reforming unit into the methanator"
+      }
+    ]
+  },
+  "UNITS": {
+    "MeOHReform": {
+      "Unit Description": "This unit models the autothermal reforming (ATR) of methanol combined with water gas shift (WGS) reactors and a pressure swing adsorption (PSA) unit to produce a syngas with stoichiometric ratio [(H2−CO2)/(CO+CO2)] = 3 suitable for SNG production via methanation. The unit consumes methanol (12 103 kg/h) and produces syngas (12 709 kg/h) . Total electrical demand is 219 kW.",
+      "Unit Info": {
+        "Unit name": "MeOHReform",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 1000.0
+      },
+      "Connectors Description": "Methanol, water and oxygen are fed into the ATR reformer at 1 bar and compressed/pumped to 35 bar internally. The unit outputs syngas to the methanator and separated CO2 at low pressure. Electricity is consumed for O2 compression and feed pumping. No steam connectors are required as the ATR is autothermal. Net water flow accounts for condensate recovery.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "MeohProd",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 12103,
+            "formula": "=MeOH_feed"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4O[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed methanol feedstock into the MeOH reforming unit"
+        },
+        {
+          "NAME (ALIAS)": "water",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 4222,
+            "formula": "=water_feed-water_cond"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed water feedstock into the MeOH reforming unit"
+        },
+        {
+          "NAME (ALIAS)": "oxyvent",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 1760,
+            "formula": "=This unit models the autothermal reforming (ATR) of methanol combined with water gas shift (WGS) reactors and a pressure swing adsorption (PSA) unit to produce a syngas with stoichiometric ratio [(H2−CO2)/(CO+CO2)] = 3 suitable for SNG production via methanation. The unit consumes methanol (12 103 kg/h) and produces syngas (12 709 kg/h) . Total electrical demand is 219 kW._feed"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:O2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed oxygen from ASU or electrolyzer into the MeOH reforming unit"
+        },
+        {
+          "NAME (ALIAS)": "MeohSyngasToSNG",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 35.0,
+          "TEMPERATURE UNIT": "C",
+          "PRESSURE VALUE": 35.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[0.7691]&CO[0.0718]&H2[0.1564]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Intermediate syngas from MeOH reforming unit into the methanator"
+        },
+        {
+          "NAME (ALIAS)": "CO2",
+          "TYPE": "EMISSIONS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 5375,
+            "formula": "=This unit models the autothermal reforming (ATR) of methanol combined with water gas shift (WGS) reactors and a pressure swing adsorption (PSA) unit to produce a syngas with stoichiometric ratio [(H2−CO2)/(CO+CO2)] = 3 suitable for SNG production via methanation. The unit consumes methanol (12 103 kg/h) and produces syngas (12 709 kg/h) . Total electrical demand is 219 kW.sep"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "CO2 separated in PSA unit and unconverted CO2 from methanation section"
+        },
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 219,
+            "formula": "=e_demand"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed electricity for O2 compressors and pumps"
+        }
+      ],
+      "Heat Streams Description": "Oxygen is intercooled between the four compression stages and then preheated before entering the ATR. The methanol/water mixture is preheated in three stages (liquid sensible, vaporisation, superheating). The syngas leaving the ATR is cooled in two stages after the WGS reactors to condense water before the PSA.",
+      "Heat Streams": [
+        {
+          "NAME": "qt_h110",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 156,
+            "formula": "=o2_h1_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 35,
+            "formula": "=o2_h1_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 55,
+            "formula": "=o2_h1_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 0.9297520661157025,
+            "formula": "=(qt_h110-qt_h110)/qt_h110/(qt_h110-qt_h110)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1760,
+            "formula": "=This unit models the autothermal reforming (ATR) of methanol combined with water gas shift (WGS) reactors and a pressure swing adsorption (PSA) unit to produce a syngas with stoichiometric ratio [(H2−CO2)/(CO+CO2)] = 3 suitable for SNG production via methanation. The unit consumes methanol (12 103 kg/h) and produces syngas (12 709 kg/h) . Total electrical demand is 219 kW._feed"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "O2 Comp Stage 1 Intercooling (1 to 3 bar)"
+        },
+        {
+          "NAME": "qt_h111",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 163,
+            "formula": "=o2_h2_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 35,
+            "formula": "=o2_h2_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 59,
+            "formula": "=o2_h2_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 0.9428267045454546,
+            "formula": "=(qt_h111-qt_h111)/qt_h111/(qt_h111-qt_h111)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1760,
+            "formula": "=This unit models the autothermal reforming (ATR) of methanol combined with water gas shift (WGS) reactors and a pressure swing adsorption (PSA) unit to produce a syngas with stoichiometric ratio [(H2−CO2)/(CO+CO2)] = 3 suitable for SNG production via methanation. The unit consumes methanol (12 103 kg/h) and produces syngas (12 709 kg/h) . Total electrical demand is 219 kW._feed"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "O2 Comp Stage 2 Intercooling (3 to 10 bar)"
+        },
+        {
+          "NAME": "qt_h112",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 163,
+            "formula": "=o2_h3_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 35,
+            "formula": "=o2_h3_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 61,
+            "formula": "=o2_h3_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 0.9747869318181819,
+            "formula": "=(qt_h112-qt_h112)/qt_h112/(qt_h112-qt_h112)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1760,
+            "formula": "=This unit models the autothermal reforming (ATR) of methanol combined with water gas shift (WGS) reactors and a pressure swing adsorption (PSA) unit to produce a syngas with stoichiometric ratio [(H2−CO2)/(CO+CO2)] = 3 suitable for SNG production via methanation. The unit consumes methanol (12 103 kg/h) and produces syngas (12 709 kg/h) . Total electrical demand is 219 kW._feed"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "O2 Comp Stage 3 Intercooling (10 to 30 bar)"
+        },
+        {
+          "NAME": "qt_h113",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 50,
+            "formula": "=o2_h4_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 350,
+            "formula": "=o2_h4_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 145,
+            "formula": "=o2_h4_ho"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 0.9886363636363635,
+            "formula": "=(qt_h113-qt_h113)/qt_h113/(qt_h113-qt_h113)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1760,
+            "formula": "=This unit models the autothermal reforming (ATR) of methanol combined with water gas shift (WGS) reactors and a pressure swing adsorption (PSA) unit to produce a syngas with stoichiometric ratio [(H2−CO2)/(CO+CO2)] = 3 suitable for SNG production via methanation. The unit consumes methanol (12 103 kg/h) and produces syngas (12 709 kg/h) . Total electrical demand is 219 kW._feed"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "O2 final preheating to reactor entry"
+        },
+        {
+          "NAME": "qt_c118",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 22,
+            "formula": "=mix_c1_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 131,
+            "formula": "=mix_c1_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 3495,
+            "formula": "=mix_c1_ho"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 4.266380568470966,
+            "formula": "=(qt_c118-qt_c118)/qt_c118/(qt_c118-qt_c118)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 27056,
+            "formula": "=MeOH_feed+water_feed"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Liquid MeOH/Water mixture preheating"
+        },
+        {
+          "NAME": "qt_c119",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 131,
+            "formula": "=mix_c2_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 241,
+            "formula": "=mix_c2_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 13437,
+            "formula": "=mix_c2_ho"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1787.8917800118274,
+            "formula": "=-(qt_c119-qt_c119)/qt_c119*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kg",
+          "MASS FLOW VALUE": {
+            "value": 27056,
+            "formula": "=MeOH_feed+water_feed"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Latent heat of vaporization for MeOH/Water mix"
+        },
+        {
+          "NAME": "qt_c120",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 241,
+            "formula": "=mix_c3_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 350,
+            "formula": "=mix_c3_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 1894,
+            "formula": "=mix_c3_ho"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 2.3120242622844094,
+            "formula": "=(qt_c120-qt_c120)/qt_c120/(qt_c120-qt_c120)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 27056,
+            "formula": "=MeOH_feed+water_feed"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Superheating of MeOH/Water vapor to 350C"
+        },
+        {
+          "NAME": "qt_h119",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 365,
+            "formula": "=gas_h11_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 179,
+            "formula": "=gas_h11_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 3563,
+            "formula": "=gas_h11_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 5.426177537381434,
+            "formula": "=(qt_h119-qt_h119)/qt_h119/(qt_h119-qt_h119)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "High-temp syngas cooling post-WGS"
+        },
+        {
+          "NAME": "qt_h120",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 179,
+            "formula": "=gas_h12_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=gas_h12_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 10022,
+            "formula": "=gas_h12_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 2838.8700920607444,
+            "formula": "=(qt_h120-qt_h120)/qt_h120*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kg",
+          "MASS FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Low-temp syngas cooling and water condensation"
+        }
+      ],
+      "Equipments Description": "The main equipment items cover the four-stage O2 compressor train with intercoolers, the feed pumps (methanol and water), the heat exchanger network (preheating and cooling), and the ATR reformer vessel.",
+      "Equipments": {
+        "O2CompressorTrain": {
+          "Type": "Compressor",
+          "Subtype": "Multi-stage centrifugal",
+          "Reference": "@Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Power",
+              "Value": 180.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Stages",
+              "Value": 4.0,
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Pressure ratio",
+              "Value": 35.0,
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Carbon Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "FeedPumps": {
+          "Type": "Pump",
+          "Subtype": "Centrifugal",
+          "Reference": "@Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Power",
+              "Value": 39.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Number",
+              "Value": 2.0,
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Stainless Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "HeatExchangerNetwork": {
+          "Type": "Heat Exchanger",
+          "Subtype": "Shell and tube",
+          "Reference": "@Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Duty",
+              "Value": 32621.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Streams",
+              "Value": 9.0,
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Stainless Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "ATRReformer": {
+          "Type": "Reactor",
+          "Subtype": "Autothermal fixed-bed",
+          "Reference": "@Domingos et al.",
+          "Parameters": [
+            {
+              "Parameter": "Feedstock",
+              "Value": 28815.0,
+              "Unit": "kg/h"
+            },
+            {
+              "Parameter": "Temperature",
+              "Value": 350.0,
+              "Unit": "°C"
+            },
+            {
+              "Parameter": "Pressure",
+              "Value": 35.0,
+              "Unit": "bar"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Stainless Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "PSAUnit": {
+          "Type": "Separation",
+          "Subtype": "Pressure swing adsorption",
+          "Reference": "@Domingos et al.",
+          "Parameters": [
+            {
+              "Parameter": "CO2 separated",
+              "Value": 5375.0,
+              "Unit": "kg/h"
+            },
+            {
+              "Parameter": "Pressure",
+              "Value": 35.0,
+              "Unit": "bar"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Carbon Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "SyngasMethanator": {
+      "Unit Description": "The SyngasMethanator converts syngas from the MeOH reforming unit into substitute natural gas (SNG) via catalytic methanation at 35 bar. The process uses three adiabatic fixed-bed reactors with intercooling to manage the strongly exothermic Sabatier reaction. The unit produces 4 081 kg/h of CH4.",
+      "Unit Info": {
+        "Unit name": "SyngasMethanator",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 1000.0
+      },
+      "Connectors Description": "Syngas is consumed to produce methane. The reaction produces water and CO2.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "water",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 7.06,
+            "formula": "=Condensateflow"
+          },
+          "FLOW UNIT": "m3/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed water feedstock into the MeOH reforming unit"
+        },
+        {
+          "NAME (ALIAS)": "MeohSyngasToSNG",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 35.0,
+          "TEMPERATURE UNIT": "C",
+          "PRESSURE VALUE": 35.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[0.7691]&CO[0.0718]&H2[0.1564]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Intermediate syngas from MeOH reforming unit into the methanator"
+        },
+        {
+          "NAME (ALIAS)": "CO2",
+          "TYPE": "EMISSIONS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 34,
+            "formula": "=The SyngasMethanator converts syngas from the MeOH reforming unit into substitute natural gas (SNG) via catalytic methanation at 35 bar. The process uses three adiabatic fixed-bed reactors with intercooling to manage the strongly exothermic Sabatier reaction. The unit produces 4 081 kg/h of CH4.unconverted"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "CO2 separated in PSA unit and unconverted CO2 from methanation section"
+        },
+        {
+          "NAME (ALIAS)": "CH4",
+          "TYPE": "ENERGY",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 56680.555555555555,
+            "formula": "=UNIT NAMEenergyflow"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": 30.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 35.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[0.99]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Produced SNG from methanator"
+        }
+      ],
+      "Heat Streams Description": "Syngas is preheated and goes throught three fixed-bed reactor followed by intercooling.",
+      "Heat Streams": [
+        {
+          "NAME": "qt_h116",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 610,
+            "formula": "=sngprod_h1_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 300,
+            "formula": "=sngprod_h1_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 10200,
+            "formula": "=sngprod_h1_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 9.320293721238949,
+            "formula": "=(qt_h116-qt_h116)/qt_h116/(qt_h116-qt_h116)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "First bed cooling"
+        },
+        {
+          "NAME": "qt_h117",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 462,
+            "formula": "=sngprod_h2_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 200,
+            "formula": "=sngprod_h2_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 3889,
+            "formula": "=sngprod_h2_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 4.2046298860157405,
+            "formula": "=(qt_h117-qt_h117)/qt_h117/(qt_h117-qt_h117)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Second bed cooling"
+        },
+        {
+          "NAME": "qt_h118",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 212,
+            "formula": "=sngprod_h3_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=sngprod_h3_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 6003,
+            "formula": "=sngprod_h3_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 9.343037165839904,
+            "formula": "=(qt_h118-qt_h118)/qt_h118/(qt_h118-qt_h118)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Third bed cooling"
+        },
+        {
+          "NAME": "qt_c109",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=sngprod_c1_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 250,
+            "formula": "=sngprod_c1_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 2429,
+            "formula": "=sngprod_c1_ho"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 3.127490182333207,
+            "formula": "=(qt_c109-qt_c109)/qt_c109/(qt_c109-qt_c109)*3600"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 12709,
+            "formula": "=syngastoSNGtotal"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Methanator feed preheating"
+        }
+      ],
+      "Equipments Description": "Investment is captured globally via Spec_MethntrCost (300 EUR/kW_CH4) in the VARIABLES sheet. The equipment entries below serve as cross-check references.",
+      "Equipments": {
+        "MethanatorBeds": {
+          "Type": "Reactor",
+          "Subtype": "Adiabatic fixed-bed",
+          "Reference": "Domingos et al.",
+          "Parameters": [
+            {
+              "Parameter": "CH4 output",
+              "Value": 56681.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Beds",
+              "Value": 3.0,
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Pressure",
+              "Value": 35.0,
+              "Unit": "bar"
+            },
+            {
+              "Parameter": "Temperature (max)",
+              "Value": 610.0,
+              "Unit": "°C"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Stainless Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "year"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "IntercoolerHEN": {
+          "Type": "Heat Exchanger",
+          "Subtype": "Shell and tube",
+          "Reference": "Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Total duty",
+              "Value": 20092.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Streams",
+              "Value": 4.0,
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Stainless Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "year"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "SNG_Dryer": {
+          "Type": "Separation",
+          "Subtype": "Molecular sieve",
+          "Reference": "Domingos et al.",
+          "Parameters": [
+            {
+              "Parameter": "SNG flow",
+              "Value": 4081.0,
+              "Unit": "kg/h"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Carbon Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "year"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

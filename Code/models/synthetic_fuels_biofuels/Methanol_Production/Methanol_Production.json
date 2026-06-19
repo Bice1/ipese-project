@@ -1,0 +1,1750 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Methanol Production",
+    "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "11.12.2025",
+    "Last Updated": "11.12.2025",
+    "Model Status": "Maintained",
+    "Version": "1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "12102.8 kg/h",
+    "TRL": "9",
+    "Keywords": "Methanol Production, Syngas, Distillation, Reactor, Compressor",
+    "Description": "Methanol production from purified syngas with H2/CO 2",
+    "DOI": "",
+    "Main Related Publication": "",
+    "References": "[1] Domingos et al. Techno-economic and environmental analysis of methanol and dimethyl ether production from syngas in a kraft pulp process, https://www.sciencedirect.com/science/article/pii/S009813542200148X?via%3Dihub;\n[2] Tountas, A. A., Peng, X., Tavasoli, A. V., Duchesne, P. N., Dingle, T. L., Dong, Y., ... & Ozin, G. A. (2019). Towards solar methanol: past, present, and future. Advanced Science, 6(8), 1801903. \n[3] Kiss, A.A., Pragt, J., Vos, H., Bargeman, G., De Groot, M., 2016. Novel efficient process for methanol synthesis by CO2 hydrogenation. Chem. Eng. J. 284, 260–269.\n[4] https://doi.org/10.1016/j.jcou.2023.102563",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/MeohProduction.svg",
+    "URL": "",
+    "Supplementary Material": "[\"C:\\\\Users\\\\Quentin\\\\Desktop\\\\IPESE-PROJECT\\\\Code\\\\models\\\\synthetic_fuels_biofuels\\\\Methanol_Production\\\\Methanol Production ET.md\"]"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "dtmin_gas",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Minimum temperature difference for gases",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 8,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 3,
+      "MAX BOUND": 15,
+      "LATEX SYNTAX": "$\\mathrm{dtmin\\_gas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution from gases"
+    },
+    {
+      "VARIABLE NAME": "dtmin_liq",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Minimum temperature difference for liquids",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$\\mathrm{dtmin\\_liq}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution from liquids"
+    },
+    {
+      "VARIABLE NAME": "dtmin_2ph",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Minimum temperature difference for phase change",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 5,
+      "LATEX SYNTAX": "$\\mathrm{dtmin\\_2ph}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution from phase change"
+    },
+    {
+      "VARIABLE NAME": "meoh_h1_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of syngas intercooler 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 86,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 70,
+      "MAX BOUND": 110,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h1\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet syngas compressor stage 1 intercooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h1_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of syngas intercooler 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 35,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 45,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h1\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet syngas compressor stage 1 intercooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h1_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of first compressor intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 532.859,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 400,
+      "MAX BOUND": 700,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h1\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of the first syngas compressor stage"
+    },
+    {
+      "VARIABLE NAME": "meoh_h2_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of syngas compressor stage 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 97,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 80,
+      "MAX BOUND": 120,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h2\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet syngas compressor stage 2 intercooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h2_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of syngas compressor stage 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 35,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25,
+      "MAX BOUND": 45,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h2\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet syngas compressor stage 2 intercooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h2_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of second compressor intercooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 651.489,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 850,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h2\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of the second syngas compressor stage"
+    },
+    {
+      "VARIABLE NAME": "e_meoh_1",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in syngas compressor stage 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 611.243,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 450,
+      "MAX BOUND": 800,
+      "LATEX SYNTAX": "$\\mathrm{e\\_meoh\\_1}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in the first syngas compressor stage"
+    },
+    {
+      "VARIABLE NAME": "e_meoh_2",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in syngas compressor stage 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 635.24,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 470,
+      "MAX BOUND": 820,
+      "LATEX SYNTAX": "$\\mathrm{e\\_meoh\\_2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in the second syngas compressor stage"
+    },
+    {
+      "VARIABLE NAME": "meoh_c1_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of preheater 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 64,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 50,
+      "MAX BOUND": 80,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_c1\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of preheating"
+    },
+    {
+      "VARIABLE NAME": "meoh_c1_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of preheater 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 175,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 150,
+      "MAX BOUND": 190,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_c1\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of preheating"
+    },
+    {
+      "VARIABLE NAME": "meoh_c1_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of preheater 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1815.71,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1200,
+      "MAX BOUND": 2400,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_c1\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of preheating"
+    },
+    {
+      "VARIABLE NAME": "meoh_c2_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of preheater 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 175,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 150,
+      "MAX BOUND": 190,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_c2\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of preheating"
+    },
+    {
+      "VARIABLE NAME": "meoh_c2_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of preheater 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 210,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 195,
+      "MAX BOUND": 220,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_c2\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of preheating"
+    },
+    {
+      "VARIABLE NAME": "meoh_c2_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of preheater 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 575.533,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 400,
+      "MAX BOUND": 800,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_c2\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of preheating"
+    },
+    {
+      "VARIABLE NAME": "meoh_h5_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of reactor effluent cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 210,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 195,
+      "MAX BOUND": 220,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h5\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h5_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of reactor effluent cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 153,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 130,
+      "MAX BOUND": 170,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h5\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h5_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of reactor effluent cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1815.71,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1200,
+      "MAX BOUND": 2400,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h5\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of reactor effluent cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h6_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of preflash cooler 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 134,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 160,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h6\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of preflash cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h6_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of preflash cooler 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 20,
+      "MAX BOUND": 40,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h6\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature out of preflash cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h6_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of preflash cooler 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 4192.08,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 3000,
+      "MAX BOUND": 5500,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h6\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of preflash cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h10_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of preflash cooler 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 20,
+      "MAX BOUND": 40,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h10\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of preflash cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h10_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of preflash cooler 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 20,
+      "MAX BOUND": 40,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h10\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature out of preflash cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h10_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of preflash cooler 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 12.496,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 25,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h10\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of preflash cooling"
+    },
+    {
+      "VARIABLE NAME": "meoh_h7_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of methanol reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 210,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 195,
+      "MAX BOUND": 220,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h7\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of methanol reactor"
+    },
+    {
+      "VARIABLE NAME": "meoh_h7_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of methanol reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 210,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 195,
+      "MAX BOUND": 220,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h7\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of methanol reactor"
+    },
+    {
+      "VARIABLE NAME": "meoh_h7_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of methanol reactor cooling",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 10746.2647,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 8000,
+      "MAX BOUND": 14000,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h7\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty cooling of isothermal methanol reactor"
+    },
+    {
+      "VARIABLE NAME": "meoh_h8_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of distillation condenser",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 54,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 45,
+      "MAX BOUND": 65,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h8\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of condenser of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h8_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of distillation condenser",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 54,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 45,
+      "MAX BOUND": 65,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h8\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of condenser of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h8_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of distillation condenser",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5324.68,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 4000,
+      "MAX BOUND": 7000,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h8\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of the condenser of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h9_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of distillation reboiler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 67,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 60,
+      "MAX BOUND": 75,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h9\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of reboiler of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h9_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of distillation reboiler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 67,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 60,
+      "MAX BOUND": 75,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h9\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of reboiler of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h9_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of distillation reboiler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5643.52,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 4200,
+      "MAX BOUND": 7500,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h9\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of the reboiler of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h11_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of condenser effluent cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 54,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 45,
+      "MAX BOUND": 65,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h11\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of cooler of condenser effluent of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h11_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of condenser effluent cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 25,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 15,
+      "MAX BOUND": 30,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h11\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of cooler of condenser effluent of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h11_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of condenser effluent cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 344.68,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 250,
+      "MAX BOUND": 500,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h11\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of subcooling of condenser effluent of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h12_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of column bottoms cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 67,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 60,
+      "MAX BOUND": 75,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h12\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of cooler of bottoms effluent of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h12_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of column bottoms cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 25,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 15,
+      "MAX BOUND": 30,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h12\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of cooler of condenser effluent of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h12_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of column bottoms cooler",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2.65,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 6,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h12\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of subcooling of distillation column"
+    },
+    {
+      "VARIABLE NAME": "meoh_h13_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of purge flaring 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1000,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 900,
+      "MAX BOUND": 1100,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h13\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of cooler of bottoms effluent of purge flaring 1"
+    },
+    {
+      "VARIABLE NAME": "meoh_h13_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of purge flaring 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1000,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 900,
+      "MAX BOUND": 1100,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h13\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of cooler of condenser effluent of purge flaring 1"
+    },
+    {
+      "VARIABLE NAME": "meoh_h13_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of purge flaring 1",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 3634,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 3000,
+      "MAX BOUND": 4000,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h13\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of subcooling of purge flaring 1"
+    },
+    {
+      "VARIABLE NAME": "meoh_h14_ti",
+      "TYPE": "DECISION",
+      "FULL NAME": "Inlet temperature of purge flaring 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1000,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 900,
+      "MAX BOUND": 1100,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h14\\_ti}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature inlet of cooler of bottoms effluent of purge flaring 2"
+    },
+    {
+      "VARIABLE NAME": "meoh_h14_to",
+      "TYPE": "DECISION",
+      "FULL NAME": "Outlet temperature of purge flaring 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 150,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h14\\_to}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature outlet of cooler of condenser effluent of purge flaring 2"
+    },
+    {
+      "VARIABLE NAME": "meoh_h14_ho",
+      "TYPE": "DECISION",
+      "FULL NAME": "Heat duty of purge flaring 2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 2190,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1500,
+      "MAX BOUND": 2500,
+      "LATEX SYNTAX": "$\\mathrm{meoh\\_h14\\_ho}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heat duty of subcooling of purge flaring 2"
+    },
+    {
+      "VARIABLE NAME": "e_meoh_5",
+      "TYPE": "DECISION",
+      "FULL NAME": "Power consumption in methanol circulator pump",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 479.627,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 350,
+      "MAX BOUND": 650,
+      "LATEX SYNTAX": "$\\mathrm{e\\_meoh\\_5}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in the circulator pump of methanol"
+    },
+    {
+      "VARIABLE NAME": "CO2inflarestack",
+      "TYPE": "MEASURED",
+      "FULL NAME": "CO2 in purge gas flare stack",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1093.2,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 800,
+      "MAX BOUND": 1400,
+      "LATEX SYNTAX": "$\\mathrm{CO_2inflarestack}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CO2 in purge gas flare stack"
+    },
+    {
+      "VARIABLE NAME": "SynGasCons",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Mass flow rate of syngas consumed",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 14247.7,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10000,
+      "MAX BOUND": 18000,
+      "LATEX SYNTAX": "$\\mathrm{SynGasCons}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of syngas consumed in the methanol production unit H2:CO 2:1 molar"
+    },
+    {
+      "VARIABLE NAME": "meohmarketotal",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Mass flow rate of methanol produced",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 12102.8,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 8500,
+      "MAX BOUND": 16000,
+      "LATEX SYNTAX": "$\\mathrm{meohmarket1}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of methanol produced"
+    },
+    {
+      "VARIABLE NAME": "LHV_meoh",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Lower heating value of methanol",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 22400,
+      "PHYSICAL UNIT": "kJ/kg",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 19500,
+      "MAX BOUND": 22700,
+      "LATEX SYNTAX": "$\\mathrm{LHV\\_meoh}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lower heating value of methanol"
+    },
+    {
+      "VARIABLE NAME": "Base_MeOHCost",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Reference methanol plant cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 18300000,
+      "PHYSICAL UNIT": "Eur",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 15000000,
+      "MAX BOUND": 22000000,
+      "LATEX SYNTAX": "$\\mathrm{Base\\_MeOHCost}$",
+      "REFERENCE": "[4]",
+      "DESCRIPTION": "Reference methanol plant investment cost 18.3M Eur per 30.2 MW of methanol produced(2022)"
+    },
+    {
+      "VARIABLE NAME": "Base_MeOHCapac",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Reference methanol plant capacity (power)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30200,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 25000,
+      "MAX BOUND": 36000,
+      "LATEX SYNTAX": "$\\mathrm{Base\\_MeOHCapac}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Reference methanol plant energy production rate for costing"
+    },
+    {
+      "VARIABLE NAME": "sc",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Scaling power coefficient",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.8,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.6,
+      "MAX BOUND": 0.9,
+      "LATEX SYNTAX": "$\\mathrm{sc}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Scaling power coefficient"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime of methanol plant",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "year",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 20,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$\\mathrm{n}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime of the methanol production plant"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.04,
+      "MAX BOUND": 0.1,
+      "LATEX SYNTAX": "$\\mathrm{i}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2022",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "2022 CEPCI",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 816,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 700,
+      "MAX BOUND": 900,
+      "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2022}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "2022 CEPCI"
+    },
+    {
+      "VARIABLE NAME": "meohmarketoKW",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Methanol energy flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 75306.3111111111,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "meohmarket1/3600*LHV_meoh",
+      "MIN BOUND": 60000,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$\\mathrm{meohmarketoKW}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Energy flow rate of methanol produced"
+    },
+    {
+      "VARIABLE NAME": "e_demand",
+      "TYPE": "DECISION",
+      "FULL NAME": "Total electrical demand",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1726.1100000000001,
+        "formula": "=e_meoh_1+e_meoh_2+e_meoh_5"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "e_meoh_1+e_meoh_2+e_meoh_5",
+      "MIN BOUND": 1300,
+      "MAX BOUND": 2200,
+      "LATEX SYNTAX": "$\\mathrm{e\\_demand}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption for syngas compressor and methanol circulator"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualization factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(i+1)^n)/((i+1)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(i+1)^n)/((i+1)^n-1)",
+      "MIN BOUND": 0.04,
+      "MAX BOUND": 0.12,
+      "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualization factor"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_meoh",
+      "TYPE": "DECISION",
+      "FULL NAME": "Investment cost of methanol plant",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 2526277.2333468036,
+        "formula": "=Base_MeOHCost*((meohmarketoKW/Base_MeOHCapac)^sc)*(CEPCI_2022/CEPCI_2022)*Annuity"
+      },
+      "PHYSICAL UNIT": "Eur/y",
+      "FORMULA OR PATH": "Base_MeOHCost*((meohmarketoKW/Base_MeOHCapac)^sc)*(CEPCI_2022/CEPCI_2022)*Annuity",
+      "MIN BOUND": 1500000,
+      "MAX BOUND": 5000000,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_meoh}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost of methanol plant"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "SYNGAS",
+        "NAME (ALIAS)": "Syngas",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 35.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MOLEFRAC:H2[0.6424]&CO[0.3127]",
+        "DESCRIPTION": "Purified syngas feed into the methanol synthesis unit"
+      },
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Elec",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Net electrical power consumed by the methanol synthesis unit."
+      },
+      {
+        "UID": "MEOH",
+        "NAME (ALIAS)": "Meoh",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH3OH[1]",
+        "DESCRIPTION": "Marketable methanol product flow from the methanol synthesis unit"
+      },
+      {
+        "UID": "CO2-FLUEGAS",
+        "NAME (ALIAS)": "CO2inFlueGas",
+        "TYPE": "EMISSIONS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 150.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+        "DESCRIPTION": "CO2-containing flue gas from purge gas flaring, potentially capturable"
+      }
+    ],
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "MeohProduction": {
+      "Unit Description": "This unit models the production of methanol from purified syngas (H2:CO = 2:1), at a production capacity of 12102.8 kg/h of methanol, with syngas compression from 35 to 90 bar, catalytic methanol synthesis, and distillation purification.",
+      "Unit Info": {
+        "Unit name": "MeohProduction",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 100.0
+      },
+      "Connectors Description": "Purified syngas is compressed and converted to methanol over a catalyst. The crude methanol is separated by distillation yielding marketable methanol. Purge gas is flared producing CO2-containing flue gas. Electricity is consumed by compressors and the recirculation pump.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 1726.1100000000001,
+            "formula": "=e_demand"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Net electrical power consumed by the methanol synthesis unit."
+        },
+        {
+          "NAME (ALIAS)": "Meoh",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 12102.8,
+            "formula": "=meohmarketotal"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH3OH[1]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Marketable methanol product flow from the methanol synthesis unit"
+        },
+        {
+          "NAME (ALIAS)": "Syngas",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 14247.7,
+            "formula": "=SynGasCons"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 35.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 35.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MOLEFRAC:H2[0.6424]&CO[0.3127]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Purified syngas feed (H2:CO = 2:1) into the methanol synthesis unit"
+        },
+        {
+          "NAME (ALIAS)": "CO2inFlueGas",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 1093.2,
+            "formula": "=This unit models the production of methanol from purified syngas (H2:CO = 2:1), at a production capacity of 12102.8 kg/h of methanol, with syngas compression from 35 to 90 bar, catalytic methanol synthesis, and distillation purification.inflarestack"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 150.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "CO2-containing flue gas from purge gas flaring, potentially capturable"
+        }
+      ],
+      "Heat Streams Description": "The syngas is compressed in two stages with intercooling, preheated and fed to the methanol reactor. The reactor exotherm is recovered, crude methanol is flashed and purified by distillation. Purge gas is flared.",
+      "Heat Streams": [
+        {
+          "NAME": "qt_c110",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 64,
+            "formula": "=meoh_c1_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 175,
+            "formula": "=meoh_c1_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 1815.71,
+            "formula": "=meoh_c1_ho"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 2.9,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 20306.169617893756,
+            "formula": "=(qt_c110-qt_c110)/qt_c110/(qt_c110-qt_c110)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Syngas preheating before methanol converter "
+        },
+        {
+          "NAME": "qt_c111",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 175,
+            "formula": "=meoh_c2_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 210,
+            "formula": "=meoh_c2_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": {
+            "value": 575.533,
+            "formula": "=meoh_c2_ho"
+          },
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 2.9,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 20412.99310344828,
+            "formula": "=(qt_c111-qt_c111)/qt_c111/(qt_c111-qt_c111)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Syngas final preheat before methanol reactor inlet"
+        },
+        {
+          "NAME": "qt_h118",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 86,
+            "formula": "=meoh_h1_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 35,
+            "formula": "=meoh_h1_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 532.859,
+            "formula": "=meoh_h1_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 2.6399753272870874,
+            "formula": "=qt_h118/qt_h118*3600/(qt_h118-qt_h118)"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 14247.7,
+            "formula": "=SynGasCons"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Intercooling after syngas compressor stage 1"
+        },
+        {
+          "NAME": "qt_h119",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 97,
+            "formula": "=meoh_h2_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 35,
+            "formula": "=meoh_h2_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 651.489,
+            "formula": "=meoh_h2_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 2.6550526434713744,
+            "formula": "=qt_h119/qt_h119*3600/(qt_h119-qt_h119)"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 14247.7,
+            "formula": "=SynGasCons"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Intercooling after syngas compressor stage 2"
+        },
+        {
+          "NAME": "qt_h122",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 210,
+            "formula": "=meoh_h5_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 153,
+            "formula": "=meoh_h5_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 1815.71,
+            "formula": "=meoh_h5_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 2.2,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 52125.64593301435,
+            "formula": "=((qt_h122-qt_h122)/qt_h122/(qt_h122-qt_h122))*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 2,
+            "formula": "=dtmin_2ph"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Reactor outlet cooling via feed-effluent heat exchanger"
+        },
+        {
+          "NAME": "qt_h123",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 134,
+            "formula": "=meoh_h6_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=meoh_h6_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 4192.08,
+            "formula": "=meoh_h6_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 2.2,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 65959.3006993007,
+            "formula": "=((qt_h123-qt_h123)/qt_h123/(qt_h123-qt_h123))*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 2,
+            "formula": "=dtmin_2ph"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Cooling methanol-rich stream to flash separation conditions"
+        },
+        {
+          "NAME": "qt_h124",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 210,
+            "formula": "=meoh_h7_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 210,
+            "formula": "=meoh_h7_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 10746.2647,
+            "formula": "=meoh_h7_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": "-",
+          "SPEC HEAT CAP UNIT": "-",
+          "MASS FLOW VALUE": "-",
+          "MASS FLOW UNIT": "-",
+          "DTMIN CONTR VALUE": {
+            "value": 2,
+            "formula": "=dtmin_2ph"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Methanol reactor exothermic reaction heat removal"
+        },
+        {
+          "NAME": "qt_h125",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 54,
+            "formula": "=meoh_h8_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 54,
+            "formula": "=meoh_h8_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 5324.68,
+            "formula": "=meoh_h8_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 1060.0,
+          "SPEC HEAT CAP UNIT": "kJ/kg",
+          "MASS FLOW VALUE": {
+            "value": 18083.818867924532,
+            "formula": "=((qt_h125)/qt_h125)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Distillation column condenser, methanol vapour condensation"
+        },
+        {
+          "NAME": "qt_h126",
+          "TYPE": "Cold",
+          "INLET TEMPERATURE VALUE": {
+            "value": 67,
+            "formula": "=meoh_h9_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 67,
+            "formula": "=meoh_h9_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": 0.0,
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 5643.52,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 1100.0,
+          "SPEC HEAT CAP UNIT": "kJ/kg",
+          "MASS FLOW VALUE": {
+            "value": 18469.70181818182,
+            "formula": "=qt_h126/qt_h126*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Distillation column reboiler, methanol-water mixture vaporisation"
+        },
+        {
+          "NAME": "qt_h127",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=meoh_h10_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 30,
+            "formula": "=meoh_h10_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 12.496,
+            "formula": "=meoh_h10_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 1150.0,
+          "SPEC HEAT CAP UNIT": "kJ/kg",
+          "MASS FLOW VALUE": {
+            "value": 39.11791304347826,
+            "formula": "=((qt_h127)/qt_h127)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Pre-flash 2 condensation duty"
+        },
+        {
+          "NAME": "qt_h128",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 54,
+            "formula": "=meoh_h11_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 25,
+            "formula": "=meoh_h11_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 344.68,
+            "formula": "=meoh_h11_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 3.5353688459666786,
+            "formula": "=qt_h128/qt_h128*3600/(qt_h128-qt_h128)"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 12102.8,
+            "formula": "=meohmarketotal"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin_liq"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.5,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Cooling of liquid methanol distillate from condenser temperature to storage "
+        },
+        {
+          "NAME": "qt_h129",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 67,
+            "formula": "=meoh_h12_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 25,
+            "formula": "=meoh_h12_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 2.65,
+            "formula": "=meoh_h12_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 2.5,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 90.85714285714286,
+            "formula": "=((qt_h129-qt_h129)/qt_h129/(qt_h129-qt_h129))*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin_liq"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.5,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Cooling of liquid bottoms stream from reboiler temperature to storage"
+        },
+        {
+          "NAME": "qt_h130",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 1000,
+            "formula": "=meoh_h13_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 1000,
+            "formula": "=meoh_h13_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 3634,
+            "formula": "=meoh_h13_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": "-",
+          "SPEC HEAT CAP UNIT": "-",
+          "MASS FLOW VALUE": "-",
+          "MASS FLOW UNIT": "-",
+          "DTMIN CONTR VALUE": {
+            "value": 8,
+            "formula": "=dtmin_gas"
+          },
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Purge gas combustion in flare, isothermal radiation heat release"
+        },
+        {
+          "NAME": "qt_h131",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 1000,
+            "formula": "=meoh_h14_ti"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 150,
+            "formula": "=meoh_h14_to"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 2190,
+            "formula": "=meoh_h14_ho"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 1.1,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 8432.085561497326,
+            "formula": "=((qt_h131-qt_h131)/qt_h131/(qt_h131-qt_h131))*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 8.0,
+          "DTMIN CONTR UNIT": "°C",
+          "HEAT TRANSFER COEF VALUE": 0.1,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Flue gas cooling from flare stack outlet to stack discharge temperature"
+        }
+      ],
+      "Equipments Description": "Syngas compressors, a methanol synthesis reactor, a feed-effluent heat exchanger, flash separators, a distillation column and a recirculation pump are the main equipment items for cost calculation.",
+      "Equipments": {
+        "SyngasCompressor1": {
+          "Type": "Compressor",
+          "Subtype": "Centrifugal",
+          "Reference": "@Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Power",
+              "Value": 611.243,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Carbon Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "SyngasCompressor2": {
+          "Type": "Compressor",
+          "Subtype": "Centrifugal",
+          "Reference": "@Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Power",
+              "Value": 635.24,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Carbon Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "MeOHReactor": {
+          "Type": "Reactor",
+          "Subtype": "Fixed-bed catalytic",
+          "Reference": "@Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Volume",
+              "Value": "-",
+              "Unit": "m3"
+            },
+            {
+              "Parameter": "Pressure",
+              "Value": 90.0,
+              "Unit": "bar"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Stainless Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "DistillationColumn": {
+          "Type": "Distillation",
+          "Subtype": "Tray column",
+          "Reference": "@Towler and Sinnott",
+          "Parameters": [
+            {
+              "Parameter": "Diameter",
+              "Value": "-",
+              "Unit": "m"
+            },
+            {
+              "Parameter": "Pressure",
+              "Value": 1.0,
+              "Unit": "bar"
+            },
+            {
+              "Parameter": "Material",
+              "Value": "Stainless Steel",
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 20.0,
+              "Unit": "years"
+            },
+            {
+              "Parameter": "Date",
+              "Value": 2025.0,
+              "Unit": "year"
+            }
+          ]
+        },
+        "MeOHUnit": {
+          "Type": "Asset",
+          "Subtype": "-",
+          "Reference": "@Domingos et al",
+          "Parameters": [
+            {
+              "Parameter": "Capital",
+              "Value": 18300000.0,
+              "Unit": "EUR"
+            },
+            {
+              "Parameter": "Lifetime",
+              "Value": 40.0,
+              "Unit": "years"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

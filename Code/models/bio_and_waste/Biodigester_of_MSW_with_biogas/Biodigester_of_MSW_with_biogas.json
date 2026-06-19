@@ -1,0 +1,1196 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Biodigester of MSW with biogas",
+    "Authors and Contributors": "Daniel Florez-Orrego, Meire Domingos",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2025-11-13",
+    "Last Updated": "2025-11-13",
+    "Model Status": "Maintained",
+    "Version": "1.0.1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "154407kW of produced biogas",
+    "TRL": "9",
+    "Keywords": "Biogas, Biodigestion, Municipal Solid Waste",
+    "Description": "Biodigester of municipal solid waste with biogas purification to natural gaz",
+    "DOI": "",
+    "Main Related Publication": "",
+    "References": "[1] Remy, F. (2018). Potential for the anaerobic digestion of municipal solid waste (MSW) in the city of Curitiba, Brazil;\n[2] Bauer, F., Hulteberg, C., Persson, T., & Tamm, D. (2013). Biogas upgrading-Review of commercial technologies;\n[3] Hamzah et al. 2019. Comparative start-up between mesophilic and thermophilic for acidified palm oil mill effluent treatment. IOP Conf. Ser.: Earth Environ. Sci. 268 012028;\n[4] Mesophilic and thermophilic systems 2023 https://www.walesadcentre.org.uk/ad-information/technologies/mesophilic-and-thermophilic-systems/",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/biodigester.svg",
+    "URL": "",
+    "Supplementary Material": "[\"C:\\\\Users\\\\Quentin\\\\Desktop\\\\IPESE-PROJECT\\\\Code\\\\models\\\\bio_and_waste\\\\Biodigester_of_MSW_with_biogas\\\\Biodigestion of MSW ET.md\"]"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "Biomassflow",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Digestible organic waste input",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 270,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$\\mathrm{Biomassflow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Reference digestable organic fraction of municipal solid waste"
+    },
+    {
+      "VARIABLE NAME": "TS",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Dry matter ratio",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.3,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{TS}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Dry matter ratio of wastes, tTS/twaste"
+    },
+    {
+      "VARIABLE NAME": "VS",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Volatile solids fraction",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.7,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{VS}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volatile solids, tVS/tTS"
+    },
+    {
+      "VARIABLE NAME": "BMP",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Biomethane potential",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 300,
+      "PHYSICAL UNIT": "Nm3/t",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 150,
+      "MAX BOUND": 600,
+      "LATEX SYNTAX": "$\\mathrm{BMP}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Biomethane potential, Nm3/tVS"
+    },
+    {
+      "VARIABLE NAME": "k",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Exponential degradation coefficient",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.2,
+      "PHYSICAL UNIT": "1/days",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.02,
+      "MAX BOUND": 0.5,
+      "LATEX SYNTAX": "$\\mathrm{k}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Exponential coefficient"
+    },
+    {
+      "VARIABLE NAME": "t",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Retention time",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "days",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 100,
+      "LATEX SYNTAX": "$\\mathrm{t}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Retention time"
+    },
+    {
+      "VARIABLE NAME": "CH4inBiogas",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Methane fraction in biogas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.553,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{CH4inBiogas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Methane fraction in biogas, Nm3CH4/Nm3Biogas"
+    },
+    {
+      "VARIABLE NAME": "CH4_VolLHV",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Volumetric LHV of CH4",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 9.1,
+      "PHYSICAL UNIT": "kWh/Nm3",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "9.5",
+      "MAX BOUND": "10.5",
+      "LATEX SYNTAX": "$\\mathrm{CH4\\_VolLHV}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volumetric lower heating value of methane, kWh/Nm3CH4"
+    },
+    {
+      "VARIABLE NAME": "CH4_MassLHV",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Mass LHV of CH4",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 50000,
+      "PHYSICAL UNIT": "kJ/kg",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "49900",
+      "MAX BOUND": "50100",
+      "LATEX SYNTAX": "$\\mathrm{CH4\\_MassLHV}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass lower heating value of methane, kJ/kg_CH4"
+    },
+    {
+      "VARIABLE NAME": "Biogas_VolLHV",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Volumetric LHV of biogas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "kWh/Nm3",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 3.5,
+      "MAX BOUND": 8,
+      "LATEX SYNTAX": "$\\mathrm{Biogas\\_VolLHV}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volumetric lower heating value of biogas"
+    },
+    {
+      "VARIABLE NAME": "Tempin",
+      "TYPE": "DECISION",
+      "FULL NAME": "Thermophilic digester temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 55,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "50",
+      "MAX BOUND": "65",
+      "LATEX SYNTAX": "$\\mathrm{Tempin}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Thermophilic anaerobic reactor temperature"
+    },
+    {
+      "VARIABLE NAME": "SpecHeatDigester",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Specific heating duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 28.5,
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 80,
+      "LATEX SYNTAX": "$\\mathrm{SpecHeatDigester}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Specific heating duty of biowaste in the digester"
+    },
+    {
+      "VARIABLE NAME": "dtmin_biod",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Minimum ΔT for digester heating",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 20,
+      "LATEX SYNTAX": "$\\mathrm{dtmin\\_biod}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution of biodigester heating"
+    },
+    {
+      "VARIABLE NAME": "MW_CH4",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Molecular weight of CH4",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 16,
+      "PHYSICAL UNIT": "kg/kmol",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "16",
+      "MAX BOUND": "16",
+      "LATEX SYNTAX": "$\\mathrm{MW\\_CH4}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molecular weight of methane"
+    },
+    {
+      "VARIABLE NAME": "MW_CO2",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Molecular weight of CO2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 44,
+      "PHYSICAL UNIT": "kg/kmol",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "44",
+      "MAX BOUND": "44",
+      "LATEX SYNTAX": "$\\mathrm{MW\\_CO2}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molecular weight of carbon dioxide"
+    },
+    {
+      "VARIABLE NAME": "eff_comp",
+      "TYPE": "DECISION",
+      "FULL NAME": "Biogas compressor efficiency",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.8,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{eff\\_comp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Biogas compressor efficiency"
+    },
+    {
+      "VARIABLE NAME": "Ru",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Universal gas constant",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 8.314,
+      "PHYSICAL UNIT": "kJ/kmolK",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "8.314",
+      "MAX BOUND": "8.314",
+      "LATEX SYNTAX": "$\\mathrm{Ru}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Universal gas constant"
+    },
+    {
+      "VARIABLE NAME": "T_comp",
+      "TYPE": "DECISION",
+      "FULL NAME": "Intercooler outlet temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 311,
+      "PHYSICAL UNIT": "K",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 273.15,
+      "MAX BOUND": 373.15,
+      "LATEX SYNTAX": "$\\mathrm{T\\_comp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature of compressor intercooling"
+    },
+    {
+      "VARIABLE NAME": "P_in",
+      "TYPE": "DECISION",
+      "FULL NAME": "Compressor inlet pressure",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1,
+      "PHYSICAL UNIT": "bar",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.5,
+      "MAX BOUND": 5,
+      "LATEX SYNTAX": "$\\mathrm{P\\_in}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Pressure in before the compressor"
+    },
+    {
+      "VARIABLE NAME": "P_out",
+      "TYPE": "DECISION",
+      "FULL NAME": "Compressor outlet pressure",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 30,
+      "PHYSICAL UNIT": "bar",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1.1,
+      "MAX BOUND": 250,
+      "LATEX SYNTAX": "$\\mathrm{P\\_out}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Compressor outlet pressure"
+    },
+    {
+      "VARIABLE NAME": "ScrubDuty",
+      "TYPE": "DECISION",
+      "FULL NAME": "Water scrubbing power duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.2,
+      "PHYSICAL UNIT": "kWh/Nm3",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.05,
+      "MAX BOUND": 0.5,
+      "LATEX SYNTAX": "$\\mathrm{ScrubDuty}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Water scrubbing power duty, kWh/Nm3biogas"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{i}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime of digester",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "year",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 5,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$\\mathrm{n}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime of the biodigester"
+    },
+    {
+      "VARIABLE NAME": "digesterCost",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Biodigester CAPEX (specific)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1870000,
+      "PHYSICAL UNIT": "eur/tph",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10000,
+      "MAX BOUND": 2500000,
+      "LATEX SYNTAX": "$\\mathrm{digesterCost}$",
+      "REFERENCE": "[1]",
+      "DESCRIPTION": "Biodigester specific investment cost - Upper bound estimated, Eur/tphWaste"
+    },
+    {
+      "VARIABLE NAME": "comprCost",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Compressor CAPEX (specific)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 176.47,
+      "PHYSICAL UNIT": "eur/kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 2000,
+      "LATEX SYNTAX": "$\\mathrm{comprCost}$",
+      "REFERENCE": "Turton (2008)",
+      "DESCRIPTION": "Linearized investment for 450-3000 kW centrifugal compressor"
+    },
+    {
+      "VARIABLE NAME": "waterScrubCost",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Water scrubbing CAPEX (specific)",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1500,
+      "PHYSICAL UNIT": "eurh/Nm3",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$\\mathrm{waterScrubCost}$",
+      "REFERENCE": "[2]",
+      "DESCRIPTION": "Water scrubbing specific cost, Eur/(Nm3biogas/h)"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2020",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "2020 CEPCI index",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 596.2,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 800,
+      "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2020}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "2020 CEPCI"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2008",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "CEPCI 2008 index",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 575.4,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 650,
+      "LATEX SYNTAX": "$\\mathrm{CEPCI\\_2008}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CEPCI 2008"
+    },
+    {
+      "VARIABLE NAME": "VolFlowExp",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Volumetric flow rate exponential",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.9975212478233336,
+        "formula": "=1-EXP(-k*t)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "1-exp(-kt)",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$\\mathrm{VolFlowExp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volumetric flow rate exponential factor"
+    },
+    {
+      "VARIABLE NAME": "Biogas_VolFlow",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Biogas volumetric flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 30683.248508996214,
+        "formula": "=Biomassflow*TS*VS*BMP*VolFlowExp/Measured: These variables are directly measured directly in the industrial or technological system.inBiogas"
+      },
+      "PHYSICAL UNIT": "Nm3/h",
+      "FORMULA OR PATH": "Biomassflow*TS*VS*BMP*VolFlowExp/CH4inBiogas",
+      "MIN BOUND": 10,
+      "MAX BOUND": 250000,
+      "LATEX SYNTAX": "$\\mathrm{Biogas\\_VolFlow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volumetric flow rate of biogas"
+    },
+    {
+      "VARIABLE NAME": "Biogas_kW",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Biogas energy flow",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 153416.24254498107,
+        "formula": "=Biogas_VolLHV*Biogas_VolFlow"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "Biogas_VolLHV*Biogas_VolFlow",
+      "MIN BOUND": 100,
+      "MAX BOUND": 1500000,
+      "LATEX SYNTAX": "$\\mathrm{Biogas\\_kW}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Energy flow rate of biogas"
+    },
+    {
+      "VARIABLE NAME": "CH4_VolFlow",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Methane volumetric flow rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 16967.836425474907,
+        "formula": "=Measured: These variables are directly measured directly in the industrial or technological system.inBiogas*Biogas_VolFlow"
+      },
+      "PHYSICAL UNIT": "Nm3/h",
+      "FORMULA OR PATH": "CH4inBiogas*Biogas_VolFlow",
+      "MIN BOUND": 5,
+      "MAX BOUND": 150000,
+      "LATEX SYNTAX": "$\\mathrm{CH4\\_VolFlow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volumetric flow rate of biomethane in biogas"
+    },
+    {
+      "VARIABLE NAME": "CH4_kW",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Methane energy flow",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 154407.31147182165,
+        "formula": "=Measured: These variables are directly measured directly in the industrial or technological system._VolFlow*Measured: These variables are directly measured directly in the industrial or technological system._VolLHV"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "CH4_VolFlow*CH4_VolLHV",
+      "MIN BOUND": 100,
+      "MAX BOUND": 1500000,
+      "LATEX SYNTAX": "$\\mathrm{CH4\\_kW}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Energy flow rate of biomethane in biogas"
+    },
+    {
+      "VARIABLE NAME": "CH4_MassFlow",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Methane mass flow",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 11117.32642597116,
+        "formula": "=Measured: These variables are directly measured directly in the industrial or technological system._kW/Measured: These variables are directly measured directly in the industrial or technological system._MassLHV*3600"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "CH4_kW/CH4_MassLHV*3600",
+      "MIN BOUND": 10,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$\\mathrm{CH4\\_MassFlow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of biomethane in biogas"
+    },
+    {
+      "VARIABLE NAME": "CH4_massfrac",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Methane mass fraction",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.3102819469771357,
+        "formula": "=(Measured: These variables are directly measured directly in the industrial or technological system.inBiogas*MW_Measured: These variables are directly measured directly in the industrial or technological system.)/((Measured: These variables are directly measured directly in the industrial or technological system.inBiogas*MW_Measured: These variables are directly measured directly in the industrial or technological system.)+((1-Measured: These variables are directly measured directly in the industrial or technological system.inBiogas)*MW_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.))"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(CH4inBiogas*MW_CH4)/((CH4inBiogas*MW_CH4)+((1-CH4inBiogas)*MW_CO2))",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{CH4\\_massfrac}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Biomethane mass fraction in biogas, kgCH4/kgbiogas"
+    },
+    {
+      "VARIABLE NAME": "CO2_massfrac",
+      "TYPE": "MEASURED",
+      "FULL NAME": "CO2 mass fraction in biogas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.6897180530228644,
+        "formula": "=1-Measured: These variables are directly measured directly in the industrial or technological system._massfrac"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "1-CH4_massfrac",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{CO2\\_massfrac}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass fraction of CO2 in biogas, kgCO2/kgbiogas"
+    },
+    {
+      "VARIABLE NAME": "Biogas_MassFlow",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Biogas mass flow",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 35829.75591805985,
+        "formula": "=Measured: These variables are directly measured directly in the industrial or technological system._MassFlow/Measured: These variables are directly measured directly in the industrial or technological system._massfrac"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "CH4_MassFlow/CH4_massfrac",
+      "MIN BOUND": 50,
+      "MAX BOUND": 500000,
+      "LATEX SYNTAX": "$\\mathrm{Biogas\\_MassFlow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Biogas mass flow rate"
+    },
+    {
+      "VARIABLE NAME": "CO2_MassFlow",
+      "TYPE": "MEASURED",
+      "FULL NAME": "CO2 mass flow",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 24712.42949208869,
+        "formula": "=Biogas_MassFlow-Measured: These variables are directly measured directly in the industrial or technological system._MassFlow"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "Biogas_MassFlow-CH4_MassFlow",
+      "MIN BOUND": 10,
+      "MAX BOUND": 400000,
+      "LATEX SYNTAX": "$\\mathrm{CO2\\_MassFlow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "CO2 mass flow rate"
+    },
+    {
+      "VARIABLE NAME": "DigestateFlow",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Digestate mass flow",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 234.17024408194015,
+        "formula": "=Biomassflow-Biogas_MassFlow/1000"
+      },
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "Biomassflow-Biogas_MassFlow/1000",
+      "MIN BOUND": 1,
+      "MAX BOUND": 1000,
+      "LATEX SYNTAX": "$\\mathrm{DigestateFlow}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Digestate mass flow"
+    },
+    {
+      "VARIABLE NAME": "MW_biogas",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Molecular weight of biogas",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 28.516,
+        "formula": "=(Measured: These variables are directly measured directly in the industrial or technological system.inBiogas * MW_Measured: These variables are directly measured directly in the industrial or technological system.) + ((1 - Measured: These variables are directly measured directly in the industrial or technological system.inBiogas) * MW_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.)"
+      },
+      "PHYSICAL UNIT": "kg/kmol",
+      "FORMULA OR PATH": "(CH4inBiogas * MW_CH4) + ((1 - CH4inBiogas) * MW_CO2)",
+      "MIN BOUND": 16,
+      "MAX BOUND": 44,
+      "LATEX SYNTAX": "$\\mathrm{MW\\_biogas}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molecular weight of biogas"
+    },
+    {
+      "VARIABLE NAME": "DigesterQDuty",
+      "TYPE": "DECISION",
+      "FULL NAME": "Digester heating duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 7695,
+        "formula": "=SpecHeatDigester*Biomassflow"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "SpecHeatDigester*Biomassflow",
+      "MIN BOUND": 100,
+      "MAX BOUND": 50000,
+      "LATEX SYNTAX": "$\\mathrm{DigesterQDuty}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Heating supply to thermophilic anaerobic digester"
+    },
+    {
+      "VARIABLE NAME": "CmpDutyBiog",
+      "TYPE": "DECISION",
+      "FULL NAME": "Biogas compressor duty",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 3836.6533931239233,
+        "formula": "=Biogas_MassFlow*(1/eff_comp)*Ru/MW_biogas*T_comp*3.4011/3600"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "Biogas_MassFlow*(1/eff_comp)*Ru/MW_biogas*T_comp*3.4011/3600",
+      "MIN BOUND": 0,
+      "MAX BOUND": 50000,
+      "LATEX SYNTAX": "$\\mathrm{CmpDutyBiog}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Biogas compressor duty, with 3.4011 = ln(P_out/P_in)"
+    },
+    {
+      "VARIABLE NAME": "WaterScrubDuty",
+      "TYPE": "DECISION",
+      "FULL NAME": "Water scrubbing power consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 6136.649701799243,
+        "formula": "=ScrubDuty*Biogas_VolFlow"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "ScrubDuty*Biogas_VolFlow",
+      "MIN BOUND": 0,
+      "MAX BOUND": 50000,
+      "LATEX SYNTAX": "$\\mathrm{WaterScrubDuty}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Power consumption in water scrubbing"
+    },
+    {
+      "VARIABLE NAME": "TotalElec",
+      "TYPE": "DECISION",
+      "FULL NAME": "Total electricity demand",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 9973.303094923167,
+        "formula": "=CmpDutyBiog+WaterScrubDuty"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "CmpDutyBiog+WaterScrubDuty",
+      "MIN BOUND": 0,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$\\mathrm{TotalElec}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Total electricity needed for compresor and water scrubber"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualization factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(1+i)^n)/((1+i)^n-1)",
+      "MIN BOUND": "0",
+      "MAX BOUND": "1",
+      "LATEX SYNTAX": "$\\mathrm{Annuity}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": ""
+    },
+    {
+      "VARIABLE NAME": "Cinv2_comp",
+      "TYPE": "DECISION",
+      "FULL NAME": "Annualized compressor CAPEX",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 46624.688124192115,
+        "formula": "=CmpDutyBiog*comprCost*(CEPCI_2020/CEPCI_2008)*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "CmpDutyBiog*comprCost*(CEPCI_2020/CEPCI_2008)*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 5000000,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_comp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost of compressor"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_waterscrub",
+      "TYPE": "DECISION",
+      "FULL NAME": "Annualized water scrubber CAPEX",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 3169458.6069838717,
+        "formula": "=Biogas_VolFlow*waterScrubCost*(CEPCI_2020/CEPCI_2008)*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "Biogas_VolFlow*waterScrubCost*(CEPCI_2020/CEPCI_2008)*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 20000000,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_waterscrub}$",
+      "REFERENCE": "[2]",
+      "DESCRIPTION": "Investment of biogas scrubbing unit"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_scrubcomp",
+      "TYPE": "DECISION",
+      "FULL NAME": "Total upgrading CAPEX",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 3216083.2951080636,
+        "formula": "=Cinv2_waterscrub+Cinv2_comp"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "Cinv2_waterscrub+Cinv2_comp",
+      "MIN BOUND": 0,
+      "MAX BOUND": 25000000,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_scrubcomp}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Total investment cost scrubber and compressor systems"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_biod",
+      "TYPE": "DECISION",
+      "FULL NAME": "Biodigester CAPEX",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 34769453.00618928,
+        "formula": "=Biomassflow*digesterCost*(CEPCI_2020/CEPCI_2008)*Annuity"
+      },
+      "PHYSICAL UNIT": "eur/year",
+      "FORMULA OR PATH": "Biomassflow*digesterCost*(CEPCI_2020/CEPCI_2008)*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 15000000,
+      "LATEX SYNTAX": "$\\mathrm{Cinv2\\_biod}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Investment cost of biodigester"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "CO2",
+        "NAME (ALIAS)": "CO2",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+        "DESCRIPTION": "CO2 output after the purification process"
+      },
+      {
+        "UID": "NATGAS",
+        "NAME (ALIAS)": "CH4",
+        "TYPE": "ENERGY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1]",
+        "DESCRIPTION": "Natural gaz (CH4) output after the purification process"
+      },
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Elec",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Electricity for biogas compression and water scrubbing."
+      },
+      {
+        "UID": "BIOMSW",
+        "NAME (ALIAS)": "BioMSW",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Biomass from municipal solid waste"
+      },
+      {
+        "UID": "DIGESTATE",
+        "NAME (ALIAS)": "Digestate",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Digestate output of the biodigestion"
+      }
+    ],
+    "INTERNAL CONNECTORS": [
+      {
+        "UID": "BIOGAS",
+        "NAME (ALIAS)": "Biogas",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 55.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[0.31]&CO2[0.69]",
+        "DESCRIPTION": "Biogas going from biodigestion to purification"
+      }
+    ]
+  },
+  "UNITS": {
+    "Biodigester": {
+      "Unit Description": "Thermophilic anaerobic reactor converting organic waste into raw biogas via first-order kinetics.",
+      "Unit Info": {
+        "Unit name": "Biodigester",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 100.0
+      },
+      "Connectors Description": "The connectors are digestible organic fraction of municipal solid waste, raw gas mixture (CH4/CO2) produced from biological degradation and stabilized organic-rich slurry residue, leaves at process temperature.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "BioMSW",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 270,
+            "formula": "=Biomassflow"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Biomass from municipal solid waste"
+        },
+        {
+          "NAME (ALIAS)": "Biogas",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 35829.75591805985,
+            "formula": "=Biogas_MassFlow"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 55.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MOLEFRAC:CH4[0.553]&CO2[0.447]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Biogas going from biodigestion to purification"
+        },
+        {
+          "NAME (ALIAS)": "Digestate",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 234.17024408194015,
+            "formula": "=DigestateFlow"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Digestate output of the biodigestion"
+        }
+      ],
+      "Heat Streams Description": "There is one heat streams that represent the heat duty to keep the reaction at 55°C.",
+      "Heat Streams": [
+        {
+          "NAME": "qt_biod",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 55,
+            "formula": "=Tempin"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 55,
+            "formula": "=Tempin"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 7695,
+            "formula": "=DigesterQDuty"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": "-",
+          "SPEC HEAT CAP UNIT": "-",
+          "MASS FLOW VALUE": "-",
+          "MASS FLOW UNIT": "-",
+          "DTMIN CONTR VALUE": 5.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Isothermal thermal duty required to maintain 55°C"
+        }
+      ],
+      "Equipments Description": "A complete anaerobic digestion vessel and primary auxiliary systems (asset) are required for capital cost estimation and annualization.",
+      "Equipments": {
+        "Biodigester_Vessel": {
+          "Type": "Asset",
+          "Subtype": "Anaerobic Digester",
+          "Reference": "ECOS2105, Florez-Orrego, et al.",
+          "Parameters": [
+            {
+              "Parameter": "Lifetime",
+              "Value": {
+                "value": 40,
+                "formula": "=n"
+              },
+              "Unit": "year"
+            },
+            {
+              "Parameter": "Interest rate",
+              "Value": {
+                "value": 0.06,
+                "formula": "=i"
+              },
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Specific investment cost",
+              "Value": {
+                "value": 1870000,
+                "formula": "=digesterCost"
+              },
+              "Unit": "eurh/t"
+            },
+            {
+              "Parameter": "CEPCI 2008",
+              "Value": {
+                "value": 575.4,
+                "formula": "=CEPCI_2008"
+              },
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "BiogasPurif": {
+      "Unit Description": "This unit performs biogas upgrading via pressurized water scrubbing. It includes a multi-stage compressor to reach scrubbing pressure and a separation column to remove CO2​, yielding high-purity biomethane (CH4​).",
+      "Unit Info": {
+        "Unit name": "BiogasPurif",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 10000.0
+      },
+      "Connectors Description": "The unit consumes electricity for compression and solvent circulation. It receives raw biogas at 55°C and splits it into a biomethane product stream (defined by energy content) and a gaseous CO2​ vent stream, both cooled to 25°C.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 9973.303094923167,
+            "formula": "=TotalElec"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Electricity for biogas compression and water scrubbing."
+        },
+        {
+          "NAME (ALIAS)": "Biogas",
+          "TYPE": "MASS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 35829.75591805985,
+            "formula": "=Biogas_MassFlow"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 55.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MOLEFRAC:CH4[0.553]&CO2[0.447]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Biogas going from biodigestion to purification"
+        },
+        {
+          "NAME (ALIAS)": "CH4",
+          "TYPE": "ENERGY",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 154407.31147182165,
+            "formula": "=CH4_kW"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CH4[1]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Natural gaz (CH4) output after the purification process"
+        },
+        {
+          "NAME (ALIAS)": "CO2",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 24712.42949208869,
+            "formula": "=This unit performs biogas upgrading via pressurized water scrubbing. It includes a multi-stage compressor to reach scrubbing pressure and a separation column to remove CO2​, yielding high-purity biomethane (CH4​)._MassFlow"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:CO2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "CO2 output after the purification process"
+        }
+      ],
+      "Heat Streams Description": "This unit does not have heat streams",
+      "Heat Streams": [
+        {
+          "NAME": "-",
+          "TYPE": "-",
+          "INLET TEMPERATURE VALUE": "-",
+          "INLET TEMPERATURE UNIT": "-",
+          "OUTLET TEMPERATURE VALUE": "-",
+          "OUTLET TEMPERATURE UNIT": "-",
+          "INLET ENTHALPY FLOW VALUE": "-",
+          "INLET ENTHALPY FLOW UNIT": "-",
+          "OUTLET ENTHALPY FLOW VALUE": "-",
+          "OUTLET ENTHALPY FLOW UNIT": "-",
+          "SPEC HEAT CAP VALUE": "-",
+          "SPEC HEAT CAP UNIT": "-",
+          "MASS FLOW VALUE": "-",
+          "MASS FLOW UNIT": "-",
+          "DTMIN CONTR VALUE": "-",
+          "DTMIN CONTR UNIT": "-",
+          "HEAT TRANSFER COEF VALUE": "-",
+          "HEAT TRANSFER COEF UNIT": "-",
+          "HEAT CASCADE": "-",
+          "REFERENCE STREAM": "-",
+          "DESCRIPTION": "-"
+        }
+      ],
+      "Equipments Description": "Capital investment for the purification block, comprising the biogas compressor and the water scrubbing absorption/desorption columns.",
+      "Equipments": {
+        "Purif_System": {
+          "Type": "Asset",
+          "Subtype": "Water Scrubber",
+          "Reference": "Variable Sheet",
+          "Parameters": [
+            {
+              "Parameter": "Lifetime",
+              "Value": {
+                "value": 40,
+                "formula": "=n"
+              },
+              "Unit": "year"
+            },
+            {
+              "Parameter": "Interest rate",
+              "Value": {
+                "value": 0.06,
+                "formula": "=i"
+              },
+              "Unit": "-"
+            },
+            {
+              "Parameter": "Specific investment cost",
+              "Value": {
+                "value": 1500,
+                "formula": "=waterScrubCost"
+              },
+              "Unit": "eurh/Nm3"
+            },
+            {
+              "Parameter": "CEPCI 2008",
+              "Value": 575.4,
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

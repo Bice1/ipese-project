@@ -1,0 +1,578 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Proton-exchange membrane fuel cell",
+    "Authors and Contributors": "Daniel Florez-Orrego, Oktay Boztas",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2026-04-24 00:00:00",
+    "Last Updated": "2026-04-24 00:00:00",
+    "Model Status": "Maintained",
+    "Version": "1.0.1",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "144kW of electricity output",
+    "TRL": "9",
+    "Keywords": "Fuel Cell, Hydrogen, Oxygen, Electricity, Energy Conversion",
+    "Description": "This model represent a PEM fuel cell",
+    "DOI": "",
+    "Main Related Publication": "[1] Fuel Cell Systems Explained, 2003, Second Edition, James Larminie and Andrew Dicks, John Wiley & Sons, Ltd ISBN: 0-470-84857-X, available at: https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781118878330.app2",
+    "References": "[1] Fuel Cell Systems Explained, 2003, Second Edition, James Larminie and Andrew Dicks, John Wiley & Sons, Ltd ISBN: 0-470-84857-X, available at: https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781118878330.app2",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/PEMFuelCell.svg",
+    "URL": "",
+    "Supplementary Material": "[\"C:\\\\Users\\\\Quentin\\\\Desktop\\\\IPESE-PROJECT\\\\Code\\\\models\\\\electrochemical\\\\Proton-exchange_membrane_fuel_cell\\\\PEM Fuel cell ET.md\"]"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "T",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Temperature of the fuel cell",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 80,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 20,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$T_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Temperature of the fuel cell"
+    },
+    {
+      "VARIABLE NAME": "MASSF_H2_IN",
+      "TYPE": "DECISION",
+      "FULL NAME": "Mass flow of the hydrogen",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 7,
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 5000,
+      "LATEX SYNTAX": "$\\dot{m}_{hydrogen}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow of the hydrogen consumed in the fuel cell"
+    },
+    {
+      "VARIABLE NAME": "H2_MOL",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Molecular mass of hydrogen",
+      "USER GRADE": "PRIVATE",
+      "DEFAULT VALUE": 2,
+      "PHYSICAL UNIT": "kg/kmol",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2.015,
+      "MAX BOUND": 2.016,
+      "LATEX SYNTAX": "$M_{hydrogen}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molecular mass of hydrogen consumed"
+    },
+    {
+      "VARIABLE NAME": "H2O_MOL",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Molecular mass of water",
+      "USER GRADE": "PRIVATE",
+      "DEFAULT VALUE": 18,
+      "PHYSICAL UNIT": "kg/kmol",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 18.015,
+      "MAX BOUND": 18.02,
+      "LATEX SYNTAX": "$M_{water}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molecular mass of water"
+    },
+    {
+      "VARIABLE NAME": "O2_MOL",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Molecular mass of oxygen",
+      "USER GRADE": "PRIVATE",
+      "DEFAULT VALUE": 32,
+      "PHYSICAL UNIT": "kg/kmol",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 31.998,
+      "MAX BOUND": 32,
+      "LATEX SYNTAX": "$M_{oxygen}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molecular mass of oxygen"
+    },
+    {
+      "VARIABLE NAME": "F",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Faraday constant",
+      "USER GRADE": "PRIVATE",
+      "DEFAULT VALUE": 96485.33,
+      "PHYSICAL UNIT": "As/mol",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 96485.33,
+      "MAX BOUND": 96485.34,
+      "LATEX SYNTAX": "$F$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Faraday constant"
+    },
+    {
+      "VARIABLE NAME": "V",
+      "TYPE": "DECISION",
+      "FULL NAME": "Voltage of the cell",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1.4,
+      "PHYSICAL UNIT": "V",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.4,
+      "MAX BOUND": 1.23,
+      "LATEX SYNTAX": "$V_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Voltage of the cell"
+    },
+    {
+      "VARIABLE NAME": "EFFIC",
+      "TYPE": "DECISION",
+      "FULL NAME": "Efficiency of the cell",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.55,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$eta_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Efficiency of the cell"
+    },
+    {
+      "VARIABLE NAME": "SIC_VAR",
+      "TYPE": "DECISION",
+      "FULL NAME": "Specific investment cost",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1200,
+      "PHYSICAL UNIT": "Eur/kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$C_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Specific investment cost of the fuell cell"
+    },
+    {
+      "VARIABLE NAME": "DT_MIN",
+      "TYPE": "DECISION",
+      "FULL NAME": "Minimum temperature difference",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$Delta T_{stream}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution of the streams"
+    },
+    {
+      "VARIABLE NAME": "T_rec",
+      "TYPE": "LITERATURE",
+      "FULL NAME": "Cooling return temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 60,
+      "PHYSICAL UNIT": "°C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 40,
+      "MAX BOUND": 180,
+      "LATEX SYNTAX": "$T_{rec, cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling return of the fuel cell"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "DECISION",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$i$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "DECISION",
+      "FULL NAME": "Lifetime",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "year",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$L_{equipment}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime"
+    },
+    {
+      "VARIABLE NAME": "MOLF_H2_IN",
+      "TYPE": "DECISION",
+      "FULL NAME": "Molar flow of hydrogen",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 3.5,
+        "formula": "=MASSF_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._IN/Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._MOL"
+      },
+      "PHYSICAL UNIT": "kmol/h",
+      "FORMULA OR PATH": "MASSF_H2_IN/H2_MOL",
+      "MIN BOUND": 0.005,
+      "MAX BOUND": 2500,
+      "LATEX SYNTAX": "$\\dot{n}_{hydrogen}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Molar flow of hydrogen into the fuel cell"
+    },
+    {
+      "VARIABLE NAME": "MASSF_H2O_OUT",
+      "TYPE": "DECISION",
+      "FULL NAME": "Mass flow of water",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 63,
+        "formula": "=MOLF_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._IN*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.O_MOL"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "MOLF_H2_IN*H2O_MOL/1000",
+      "MIN BOUND": 0.1,
+      "MAX BOUND": 45000,
+      "LATEX SYNTAX": "$Q_{water}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Volumetric flow of water out of the fuel cell"
+    },
+    {
+      "VARIABLE NAME": "MASSF_O2_IN",
+      "TYPE": "DECISION",
+      "FULL NAME": "Mass flow of oxygen",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 56,
+        "formula": "=0.5*MOLF_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._IN*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._MOL"
+      },
+      "PHYSICAL UNIT": "kg/h",
+      "FORMULA OR PATH": "0.5*MOLF_H2_IN*O2_MOL",
+      "MIN BOUND": 0.1,
+      "MAX BOUND": 40000,
+      "LATEX SYNTAX": "$\\dot{m}_{oxygen}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow of oxygen into the fuel cell"
+    },
+    {
+      "VARIABLE NAME": "I_OUT",
+      "TYPE": "DECISION",
+      "FULL NAME": "Fuel cell current",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 187610.36388888888,
+        "formula": "=2*F*1000*MOLF_Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters._IN/3600"
+      },
+      "PHYSICAL UNIT": "A",
+      "FORMULA OR PATH": "2*F*1000*MOLF_H2_IN/3600",
+      "MIN BOUND": 1,
+      "MAX BOUND": 10000000,
+      "LATEX SYNTAX": "$I_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Fuel cell current"
+    },
+    {
+      "VARIABLE NAME": "POWER_EL_OUT",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Fuel cell power output",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 144.45998019444446,
+        "formula": "=V*I_OUT*EFFIC/1000"
+      },
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "V*I_OUT*EFFIC/1000",
+      "MIN BOUND": 0.5,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$P_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Fuel cell power output"
+    },
+    {
+      "VARIABLE NAME": "QF_OUT",
+      "TYPE": "MEASURED",
+      "FULL NAME": "Fuel cell heat output",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 118.19452924999999,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "POWER_EL_OUT*(1-EFFIC)/EFFIC",
+      "MIN BOUND": 0.5,
+      "MAX BOUND": 150000,
+      "LATEX SYNTAX": "$Q_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Fuel cell heat output"
+    },
+    {
+      "VARIABLE NAME": "IC_VAR",
+      "TYPE": "DECISION",
+      "FULL NAME": "Annualized investment",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 11025.18568844,
+      "PHYSICAL UNIT": "eur/y",
+      "FORMULA OR PATH": "SIC_VAR*POWER_EL_OUT*(i*((i+1)^n))/((i+1)^(n-1))",
+      "MIN BOUND": 100,
+      "MAX BOUND": 1000000000,
+      "LATEX SYNTAX": "$IC_{cell}}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualized investment of PEM fuel cell"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "ELECTRICITY",
+        "NAME (ALIAS)": "Electricity",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Produced electricity"
+      },
+      {
+        "UID": "OXYVENT",
+        "NAME (ALIAS)": "Oxygen",
+        "TYPE": "EMISSIONS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:02[1]",
+        "DESCRIPTION": "Consumed oxygen"
+      },
+      {
+        "UID": "WATER",
+        "NAME (ALIAS)": "Water",
+        "TYPE": "MASS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2O[1]",
+        "DESCRIPTION": "Condensed water"
+      },
+      {
+        "UID": "HYDROGEN",
+        "NAME (ALIAS)": "Hydrogen",
+        "TYPE": "EMISSIONS",
+        "FLOW UNIT": "kg/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+        "DESCRIPTION": "Consumed hydrogen"
+      }
+    ],
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "PEM_Fuel_Cell": {
+      "Unit Description": "Scalable PEM system converting H2/O2 into 132.7 kW electricity and water. Includes stack, pumps, and heat exchangers with an 80°C waste heat output.",
+      "Unit Info": {
+        "Unit name": "PEM_Fuel_Cell",
+        "Minimum capacity multiplier": 0.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "The electricity produced by the fuel cell (in kW) is exported. Oxygen and hydrogen are imported. The water produced by the fuel cell (in kg/h) is exported.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "ELECTRICITY",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 144.45998019444446,
+            "formula": "=POWER_EL_OUT"
+          },
+          "FLOW UNIT": "kW",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Produced electricity"
+        },
+        {
+          "NAME (ALIAS)": "OXYVENT",
+          "TYPE": "EMISSIONS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 56,
+            "formula": "=MASSF_Scalable PEM system converting H2/O2 into 132.7 kW electricity and water. Includes stack, pumps, and heat exchangers with an 80°C waste heat output._IN"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:02[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed oxygen"
+        },
+        {
+          "NAME (ALIAS)": "HYDROGEN",
+          "TYPE": "EMISSIONS",
+          "DIRECTION": "IN",
+          "FLOW VALUE": {
+            "value": 7,
+            "formula": "=MASSF_Scalable PEM system converting H2/O2 into 132.7 kW electricity and water. Includes stack, pumps, and heat exchangers with an 80°C waste heat output._IN"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H2[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Consumed hydrogen"
+        },
+        {
+          "NAME (ALIAS)": "WATER",
+          "TYPE": "MASS",
+          "DIRECTION": "OUT",
+          "FLOW VALUE": {
+            "value": 63,
+            "formula": "=MASSF_Scalable PEM system converting H2/O2 into 132.7 kW electricity and water. Includes stack, pumps, and heat exchangers with an 80°C waste heat output.O_OUT"
+          },
+          "FLOW UNIT": "kg/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "MASSFRAC:H20[1]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Condensed water"
+        }
+      ],
+      "Heat Streams Description": "There is one heat stream that carries away the waste heat produced during operation.",
+      "Heat Streams": [
+        {
+          "NAME": "Heat_PEMfuelc",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 80,
+            "formula": "=T"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 60,
+            "formula": "=T_rec"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 118.19452924999999,
+            "formula": "=QF_OUT"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": 4.2,
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 5065.4798249999985,
+            "formula": "=Heat_PEMfuelc/Heat_PEMfuelc/(Heat_PEMfuelc-Heat_PEMfuelc)*3600"
+          },
+          "MASS FLOW UNIT": "kg/h",
+          "DTMIN CONTR VALUE": 5.0,
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Water cooling of the electrolizer"
+        }
+      ],
+      "Equipments Description": "The PEM fuel cell system is composed of the fuel cell stack, 3 pumps for the lean air, oxygen and water outlet annd 2 heat exchangers for the water condensation and the air cooling.",
+      "Equipments": {
+        "PEM_Fuel_Cell": {
+          "Type": "Asset",
+          "Subtype": "PEM_Fuel_Cell_Stack",
+          "Reference": "@Florez-Orrego et al",
+          "Parameters": [
+            {
+              "Parameter": "SIC_VAR",
+              "Value": {
+                "value": 1200,
+                "formula": "=SIC_VAR"
+              },
+              "Unit": "eur/kW"
+            },
+            {
+              "Parameter": "POWER_EL_OUT",
+              "Value": {
+                "value": 144.45998019444446,
+                "formula": "=POWER_EL_OUT"
+              },
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "i",
+              "Value": {
+                "value": 0.06,
+                "formula": "=i"
+              },
+              "Unit": "-"
+            },
+            {
+              "Parameter": "n",
+              "Value": {
+                "value": 40,
+                "formula": "=n"
+              },
+              "Unit": "year"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

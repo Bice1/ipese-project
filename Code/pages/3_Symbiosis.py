@@ -21,7 +21,15 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 import plotly.graph_objects as go
+import hashlib
+
 import streamlit as st
+from streamlit_flow import (
+    StreamlitFlowEdge,
+    StreamlitFlowNode,
+    StreamlitFlowState,
+    streamlit_flow,
+)
 
 _CODE_DIR = Path(__file__).parent.parent
 if str(_CODE_DIR) not in sys.path:
@@ -233,8 +241,8 @@ st.divider()
 # Tabs
 # ---------------------------------------------------------------------------
 
-tab_graph, tab_matrix, tab_table, tab_wip = st.tabs(
-    ["Network Graph", "Symbiosis Matrix", "Connector Table", "Network Graph (WIP)"]
+tab_graph, tab_matrix, tab_table, tab_wip, tab_flow = st.tabs(
+    ["Network Graph", "Symbiosis Matrix", "Connector Table", "Network Graph (WIP)", "ReactFlow (WIP)"]
 )
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -716,3 +724,114 @@ with tab_wip:
         plt.tight_layout()
         st.pyplot(fig_wip, use_container_width=True)
         plt.close(fig_wip)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TAB 5 — ReactFlow (WIP)  [streamlit-flow-component / ReactFlow]
+# ═══════════════════════════════════════════════════════════════════════════
+
+with tab_flow:
+    if not graph_rows:
+        st.info("No connector data to display. Select at least one model and one UID.")
+    else:
+        _fp = hashlib.md5(
+            (str(sorted((r["Model"], r["UID"], r["Direction"]) for r in graph_rows)) + layout_mode).encode()
+        ).hexdigest()
+
+        if st.session_state.get("_flow_fp") != _fp:
+            G_rf = nx.MultiDiGraph()
+
+            if layout_mode == "Model → Model":
+                for r in graph_rows:
+                    G_rf.add_node(r["Model"])
+                for p, c, uid in graph_edges:
+                    G_rf.add_edge(p, c, key=f"{uid}_{p}_{c}", uid=uid)
+                _rf_model_nodes = list(G_rf.nodes())
+                _rf_uid_nodes: list = []
+
+            else:  # hub-and-spoke
+                for r in graph_rows:
+                    G_rf.add_node(r["Model"])
+                    G_rf.add_node(r["UID"])
+                for r in graph_rows:
+                    m, uid, direction = r["Model"], r["UID"], r["Direction"]
+                    if direction == "OUT":
+                        G_rf.add_edge(m, uid, key=f"{m}_OUT_{uid}", uid=uid)
+                    else:
+                        G_rf.add_edge(uid, m, key=f"{uid}_IN_{m}", uid=uid)
+                _model_set_rf = {r["Model"] for r in graph_rows}
+                _rf_model_nodes = [n for n in G_rf.nodes() if n in _model_set_rf]
+                _rf_uid_nodes   = [n for n in G_rf.nodes() if n not in _model_set_rf]
+
+            n_rf   = max(len(G_rf.nodes()), 1)
+            pos_rf = nx.spring_layout(G_rf, seed=42, k=3.5 / math.sqrt(n_rf))
+
+            _SCALE, _OFFSET_X, _OFFSET_Y = 500, 600, 400
+
+            sf_nodes: list[StreamlitFlowNode] = []
+            for node_id in _rf_model_nodes:
+                x, y = pos_rf[node_id]
+                sf_nodes.append(StreamlitFlowNode(
+                    id=str(node_id),
+                    pos=(x * _SCALE + _OFFSET_X, y * _SCALE + _OFFSET_Y),
+                    data={"label": node_id},
+                    node_type="default",
+                    style={
+                        "background": _model_color(node_id),
+                        "color": "#ffffff",
+                        "borderRadius": "8px",
+                        "fontWeight": "bold",
+                        "fontSize": "12px",
+                        "padding": "8px 12px",
+                        "border": "2px solid rgba(255,255,255,0.4)",
+                        "minWidth": "120px",
+                        "textAlign": "center",
+                    },
+                ))
+            for node_id in _rf_uid_nodes:
+                x, y = pos_rf[node_id]
+                sf_nodes.append(StreamlitFlowNode(
+                    id=str(node_id),
+                    pos=(x * _SCALE + _OFFSET_X, y * _SCALE + _OFFSET_Y),
+                    data={"label": node_id},
+                    node_type="default",
+                    style={
+                        "background": uid_color.get(node_id, _UID_NODE_COLOR),
+                        "color": "#333333",
+                        "borderRadius": "4px",
+                        "fontSize": "11px",
+                        "padding": "6px 10px",
+                        "border": "1.5px solid #aaaaaa",
+                        "minWidth": "80px",
+                        "textAlign": "center",
+                    },
+                ))
+
+            sf_edges: list[StreamlitFlowEdge] = []
+            for src, tgt, key, data in G_rf.edges(keys=True, data=True):
+                uid = data.get("uid", "")
+                sf_edges.append(StreamlitFlowEdge(
+                    id=key,
+                    source=str(src),
+                    target=str(tgt),
+                    animated=True,
+                    marker_end={"type": "arrowclosed"},
+                    label=uid,
+                    style={
+                        "stroke": uid_color.get(uid, _DEFAULT_COLOR),
+                        "strokeWidth": 2,
+                    },
+                ))
+
+            st.session_state["_flow_fp"]    = _fp
+            st.session_state["_flow_state"] = StreamlitFlowState(nodes=sf_nodes, edges=sf_edges)
+
+        updated_state = streamlit_flow(
+            "flow_wip",
+            st.session_state["_flow_state"],
+            height=620,
+            fit_view=True,
+            show_minimap=True,
+            show_controls=True,
+            animate_new_edges=True,
+        )
+        st.session_state["_flow_state"] = updated_state

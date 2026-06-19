@@ -397,9 +397,9 @@ with tab_heat:
         if result.hot_cc or result.gcc:
             m1, m2, m3 = st.columns(3)
             with m1:
-                st.metric("Min hot utility Qh,min", f"{result.q_hot_min:.2f} kW")
-            with m2:
                 st.metric("Min cold utility Qc,min", f"{result.q_cold_min:.2f} kW")
+            with m2:
+                st.metric("Min hot utility Qh,min", f"{result.q_hot_min:.2f} kW")
             with m3:
                 pinch_str = (
                     ", ".join(f"{t:.1f} C" for t in result.pinch_temperatures)
@@ -453,7 +453,7 @@ with tab_heat:
                 ))
 
             if result.cold_cc:
-                H_cold = [h + result.q_hot_min for (_, h) in result.cold_cc]
+                H_cold = [h + result.q_cold_min for (_, h) in result.cold_cc]
                 T_cold = [t for (t, _) in result.cold_cc]
                 fig_cc.add_trace(go.Scatter(
                     x=H_cold, y=T_cold, mode="lines+markers",
@@ -461,6 +461,36 @@ with tab_heat:
                     line=dict(color=COLOR_COLD, width=2.5),
                     marker=dict(size=5, color=COLOR_COLD),
                 ))
+
+            # Q_CU gap: left side — cold curve starts at H=Q_CU, hot at H=0
+            if result.cold_cc and result.q_cold_min > 0.01:
+                t_qcu = T_cold[0]
+                fig_cc.add_shape(type="line",
+                    x0=0, x1=result.q_cold_min, y0=t_qcu, y1=t_qcu,
+                    line=dict(color=COLOR_COLD, width=1.5, dash="dash"),
+                )
+                fig_cc.add_annotation(
+                    x=result.q_cold_min / 2, y=t_qcu,
+                    text=f"Q_CU = {result.q_cold_min:.1f} kW",
+                    showarrow=False, yshift=10,
+                    font=dict(size=11, color=COLOR_COLD),
+                )
+
+            # Q_HU gap: right side — cold curve max H exceeds hot curve max H
+            if result.hot_cc and result.cold_cc and result.q_hot_min > 0.01:
+                t_qhu = T_hot[-1]
+                x0_qhu = H_hot[-1]
+                x1_qhu = H_cold[-1]
+                fig_cc.add_shape(type="line",
+                    x0=x0_qhu, x1=x1_qhu, y0=t_qhu, y1=t_qhu,
+                    line=dict(color=COLOR_HOT, width=1.5, dash="dash"),
+                )
+                fig_cc.add_annotation(
+                    x=(x0_qhu + x1_qhu) / 2, y=t_qhu,
+                    text=f"Q_HU = {result.q_hot_min:.1f} kW",
+                    showarrow=False, yshift=10,
+                    font=dict(size=11, color=COLOR_HOT),
+                )
 
             for t_pinch in result.pinch_temperatures:
                 fig_cc.add_hline(

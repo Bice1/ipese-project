@@ -1,0 +1,865 @@
+{
+  "METADATA": {
+    "Model UID": "",
+    "Model Name": "Mineralization using serpantine in direct carbonation reactor",
+    "Authors and Contributors": "Mouhannad Abou Daher; Dareen Dardor",
+    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+    "Creation Date": "2026-04-21 00:00:00",
+    "Last Updated": "2026-04-21 00:00:00",
+    "Model Status": "Maintained",
+    "Version": "2",
+    "Confidentiality": "Open",
+    "Sharing Layer": "1",
+    "Grade": "GRAY-BOX",
+    "Reference Capacity": "1t/h of mineralized CO2",
+    "TRL": "9",
+    "Keywords": "Carbone Capture Storage, CO2, Serpentine, mineralization",
+    "Description": "Mineralization using serpantine in direct carbonation reactor",
+    "DOI": "",
+    "Main Related Publication": "",
+    "References": "[1] R. Castro-Amoedo, J. Granacher, M. Abou Daher and F. Marechal, Energy Environ. Sci., 2023, DOI:10.1039/D3EE01803B ; \n[2] Ostovari et al. (Bardow) - Rock ‘n’ use of CO2: carbon footprint of carbon capture and utilization by mineralization, Sustainable Energy and Fuels, Issue 9, 2020; Sipila, S. Teir, and R. Zevenhoven, “Carbon dioxide sequestration by mineral carbonationliterature review update 2007 ; \n[3]  W.J.J. Huijgen et al. / Energy Conversion and Management 48 (2007) 1923–1935\n[3] W.J.J. Huijgen et al. / Energy Conversion and Management 48 (2007) 1923–1935",
+    "Software": "",
+    "Software File": "",
+    "Block Flow Diagram": "Figures/Mineralization.svg",
+    "URL": "",
+    "Supplementary Material": "See SUPPL MATERIAL tab"
+  },
+  "VARIABLES": [
+    {
+      "VARIABLE NAME": "dtmin",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum temperature difference contribution of the reacting streams",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 5,
+      "PHYSICAL UNIT": "C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 2,
+      "MAX BOUND": 20,
+      "LATEX SYNTAX": "$ΔT_{min}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum temperature difference contribution of the reacting streams"
+    },
+    {
+      "VARIABLE NAME": "R_T",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Direct carbonation reactor temperature",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 155,
+      "PHYSICAL UNIT": "C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 100,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$R_T$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Direct carbonation reactor temperature"
+    },
+    {
+      "VARIABLE NAME": "R_Q",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Exothermic heat of carbonation reaction",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1116.31,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 2000,
+      "LATEX SYNTAX": "$R_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Exothermic heat of carbonation reaction"
+    },
+    {
+      "VARIABLE NAME": "R_M",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Mass flow rate of CO2 to mineralization reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.856,
+      "PHYSICAL UNIT": "ton/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$R_M$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Mass flow rate of CO2 to mineralization reactor"
+    },
+    {
+      "VARIABLE NAME": "R_To",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Target outlet temperature of minerals from reactor MgCO3 and SiO2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 25,
+      "PHYSICAL UNIT": "C",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 60,
+      "LATEX SYNTAX": "$R_{To}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Target outlet temperature of minerals from reactor MgCO3 and SiO2"
+    },
+    {
+      "VARIABLE NAME": "R_Qo",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Cooling duty for minerals leaving reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 108.6,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 500,
+      "LATEX SYNTAX": "$R_{Qo}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Cooling duty for minerals leaving reactor"
+    },
+    {
+      "VARIABLE NAME": "CO2Min_ref_LOAD",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Reference CO2 mineralization load",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$CO_{2,Min,ref,LOAD}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Reference CO2 mineralization load"
+    },
+    {
+      "VARIABLE NAME": "MgCO3_Prd",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "MgCO3 produced",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 1.916,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$MgCO3_{Prd}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "MgCO3 produced"
+    },
+    {
+      "VARIABLE NAME": "SiO2_Prd",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "SiO2 produced",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.91,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$SiO2_{Prd}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "SiO2 produced"
+    },
+    {
+      "VARIABLE NAME": "NaCl_cons",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "NaCl consumed",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.4067,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$NaCl_ {cons}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "NaCl consumed"
+    },
+    {
+      "VARIABLE NAME": "NaHCO3_cons",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "NaHCO3 consumed",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.3738,
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10,
+      "LATEX SYNTAX": "$NaHCO3_{cons}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "NaHCO3 consumed"
+    },
+    {
+      "VARIABLE NAME": "Reactor_eff",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Direct carbonation reactor efficiency",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.735,
+      "PHYSICAL UNIT": "%",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.5,
+      "MAX BOUND": 1,
+      "LATEX SYNTAX": "$Reactor_{eff}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Direct carbonation reactor efficiency"
+    },
+    {
+      "VARIABLE NAME": "PostProcessing_Elec",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Solid liquid separation power consumption",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 53,
+      "PHYSICAL UNIT": "kW",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 200,
+      "LATEX SYNTAX": "$PostProcessing_{Elec}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Solid liquid separation power consumption"
+    },
+    {
+      "VARIABLE NAME": "FmaxReactor",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Maximum reactor size factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 100,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 1,
+      "MAX BOUND": 10000,
+      "LATEX SYNTAX": "$F_{max,Reactor}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Maximum reactor size factor"
+    },
+    {
+      "VARIABLE NAME": "FminReactor",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Minimum reactor size factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0,
+      "MAX BOUND": 0,
+      "LATEX SYNTAX": "$F_{min,Reactor}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Minimum reactor size factor"
+    },
+    {
+      "VARIABLE NAME": "i",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Interest rate",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 0.06,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 0.01,
+      "MAX BOUND": 0.15,
+      "LATEX SYNTAX": "$i$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Interest rate"
+    },
+    {
+      "VARIABLE NAME": "n",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Lifetime",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 40,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10,
+      "MAX BOUND": 50,
+      "LATEX SYNTAX": "$n$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Lifetime"
+    },
+    {
+      "VARIABLE NAME": "Spec_Reactor_Cost",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Specific reactor cost per ton per day of CO2 sequestered",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 58400,
+      "PHYSICAL UNIT": "Eur/tpd",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 10000,
+      "MAX BOUND": 100000,
+      "LATEX SYNTAX": "$Spec_{Reactor,Cost}$",
+      "REFERENCE": "[3]",
+      "DESCRIPTION": "Specific reactor cost per ton per day of CO2 sequestered"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2020",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "2020 CEPCI",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 596.2,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 500,
+      "MAX BOUND": 900,
+      "LATEX SYNTAX": "$CEPCI_{2020}$",
+      "REFERENCE": "CEPCI",
+      "DESCRIPTION": "Actual CEPCI"
+    },
+    {
+      "VARIABLE NAME": "CEPCI_2007",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "2007 CEPCI",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": 525.4,
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "-",
+      "MIN BOUND": 525.4,
+      "MAX BOUND": 525.4,
+      "LATEX SYNTAX": "$CEPCI_{2007}$",
+      "REFERENCE": "CEPCI",
+      "DESCRIPTION": "Old CEPCI"
+    },
+    {
+      "VARIABLE NAME": "Serpentine_mass",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Serpantine mass requirements for carbonation reaction based on stoichiometric ratio corrected by efficiency",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 2.857142857142857,
+        "formula": "=2.1/Reactor_eff"
+      },
+      "PHYSICAL UNIT": "t/h",
+      "FORMULA OR PATH": "2.1/Reactor_eff",
+      "MIN BOUND": 2,
+      "MAX BOUND": 5,
+      "LATEX SYNTAX": "$Serpentine_{mass}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Serpantine mass requirements for carbonation reaction based on stoichiometric ratio corrected by efficiency"
+    },
+    {
+      "VARIABLE NAME": "RQ",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized exothermic heat of carbonation reaction per unit mass of mineralized CO2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 1304.1004672897195,
+        "formula": "=R_Q/R_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "R_Q/R_M",
+      "MIN BOUND": 1000,
+      "MAX BOUND": 1800,
+      "LATEX SYNTAX": "$R_Q$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized exothermic heat of carbonation reaction per unit mass of mineralized CO2"
+    },
+    {
+      "VARIABLE NAME": "RQo",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Normalized cooling duty for minerals leaving reactor per unit mass of mineralized CO2",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 126.86915887850466,
+        "formula": "=R_Qo/R_M"
+      },
+      "PHYSICAL UNIT": "kWh/t",
+      "FORMULA OR PATH": "R_Qo/R_M",
+      "MIN BOUND": 50,
+      "MAX BOUND": 250,
+      "LATEX SYNTAX": "$R_{Qo}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Normalized cooling duty for minerals leaving reactor per unit mass of mineralized CO2"
+    },
+    {
+      "VARIABLE NAME": "Annuity",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualization factor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 0.0664615359206755,
+        "formula": "=(i*(1+i)^n)/((1+i)^n-1)"
+      },
+      "PHYSICAL UNIT": "-",
+      "FORMULA OR PATH": "(i*(1+i)^n)/((1+i)^n-1)",
+      "MIN BOUND": 0.05,
+      "MAX BOUND": 0.2,
+      "LATEX SYNTAX": "$Annuity$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualization factor"
+    },
+    {
+      "VARIABLE NAME": "Cinv2_Reactor",
+      "TYPE": "CONTEXT",
+      "FULL NAME": "Annualized variable investment cost of direct carbonation reactor",
+      "USER GRADE": "MANDATORY",
+      "DEFAULT VALUE": {
+        "value": 105705.20325583343,
+        "formula": "=Spec_Reactor_Cost*Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.Min_ref_LOAD*24*(CEPCI_2020/CEPCI_2007)*Annuity"
+      },
+      "PHYSICAL UNIT": "Eur/y",
+      "FORMULA OR PATH": "Spec_Reactor_Cost*CO2Min_ref_LOAD*24*(CEPCI_2020/CEPCI_2007)*Annuity",
+      "MIN BOUND": 0,
+      "MAX BOUND": 10000000,
+      "LATEX SYNTAX": "$C_{inv2,Reactor}$",
+      "REFERENCE": "EPFL IPESE research group",
+      "DESCRIPTION": "Annualized variable investment cost of direct carbonation reactor"
+    }
+  ],
+  "CONNECTORS": {
+    "EXTERNAL CONNECTORS": [
+      {
+        "UID": "CO2_Min",
+        "NAME (ALIAS)": "CO2_Min",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 144.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 140.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": 1.0,
+        "PHASE": "(V)",
+        "COMPOSITION [MOLE/MASS]": "CO2[1.0]",
+        "DESCRIPTION": "Compressed/heated CO2 for mineralization conditions"
+      },
+      {
+        "UID": "PreT_Serp",
+        "NAME (ALIAS)": "PreT_Serp",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 155.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+        "DESCRIPTION": "Activated/Preheated ore"
+      },
+      {
+        "UID": "MgCO3",
+        "NAME (ALIAS)": "MgCO3",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "MgCO3[1.0]",
+        "DESCRIPTION": "Produced magnesite"
+      },
+      {
+        "UID": "SiO2",
+        "NAME (ALIAS)": "SiO2",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(S)",
+        "COMPOSITION [MOLE/MASS]": "SiO2[1.0]",
+        "DESCRIPTION": "Produced silica"
+      },
+      {
+        "UID": "NaCl",
+        "NAME (ALIAS)": "NaCl",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "NaCl[1.0]",
+        "DESCRIPTION": "NaCl for solvent"
+      },
+      {
+        "UID": "NaHCO3",
+        "NAME (ALIAS)": "NaHCO3",
+        "TYPE": "MASS",
+        "FLOW UNIT": "t/h",
+        "TEMPERATURE": 25.0,
+        "TEMPERATURE UNIT": "°C",
+        "PRESSURE": 1.0,
+        "PRESSURE UNIT": "bar",
+        "VAPOR FRACTION [MASS]": -1.0,
+        "PHASE": "(L)",
+        "COMPOSITION [MOLE/MASS]": "NaHCO3[1.0]",
+        "DESCRIPTION": "NaHCO3 for solvent"
+      },
+      {
+        "UID": "Electricity",
+        "NAME (ALIAS)": "Elec",
+        "TYPE": "ELECTRICITY",
+        "FLOW UNIT": "kW",
+        "TEMPERATURE": "-",
+        "TEMPERATURE UNIT": "-",
+        "PRESSURE": "-",
+        "PRESSURE UNIT": "-",
+        "VAPOR FRACTION [MASS]": "-",
+        "PHASE": "-",
+        "COMPOSITION [MOLE/MASS]": "-",
+        "DESCRIPTION": "Solid liquid separation power consumption, e.g. hydrocyclone"
+      }
+    ],
+    "INTERNAL CONNECTORS": []
+  },
+  "UNITS": {
+    "carbonation": {
+      "Unit Description": "Direct aqueous carbonation stage where CO2 is chemically sequestered into activated serpentine within a high-pressure slurry reactor.",
+      "Unit Info": {
+        "Unit name": "carbonation",
+        "Minimum capacity multiplier": {
+          "value": 0,
+          "formula": "=FminReactor"
+        },
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "Interface for CO2 and mineral feeds, chemical solvents (NaCl/NaHCO3), electrical power for processing, and final solid mineral products.",
+      "Connectors": [
+        {
+          "NAME (ALIAS)": "PreT_Serp",
+          "TYPE": "MASS",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 2.857142857142857,
+            "formula": "=Serpentine_mass"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 155.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "Serpentine[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Activated/Preheated ore"
+        },
+        {
+          "NAME (ALIAS)": "CO2_Min",
+          "TYPE": "MASS",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 1,
+            "formula": "=Direct aqueous carbonation stage where CO2 is chemically sequestered into activated serpentine within a high-pressure slurry reactor.Min_ref_LOAD"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 144.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 140.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": 1.0,
+          "PHASE": "(V)",
+          "COMPOSITION [MOLE/MASS]": "CO2[1.0]",
+          "REFERENCE STREAM": "Yes",
+          "DESCRIPTION": "Compressed/heated CO2 for mineralization conditions"
+        },
+        {
+          "NAME (ALIAS)": "MgCO3",
+          "TYPE": "MASS",
+          "DIRECTION": "out",
+          "FLOW VALUE": {
+            "value": 1.916,
+            "formula": "=MgCO3_Prd"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "MgCO3[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Produced magnesite"
+        },
+        {
+          "NAME (ALIAS)": "SiO2",
+          "TYPE": "MASS",
+          "DIRECTION": "out",
+          "FLOW VALUE": {
+            "value": 0.91,
+            "formula": "=SiDirect aqueous carbonation stage where CO2 is chemically sequestered into activated serpentine within a high-pressure slurry reactor._Prd"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(S)",
+          "COMPOSITION [MOLE/MASS]": "SiO2[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Produced silica"
+        },
+        {
+          "NAME (ALIAS)": "NaCl",
+          "TYPE": "MASS",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 0.4067,
+            "formula": "=NaCl_cons"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "NaCl[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "NaCl for solvent"
+        },
+        {
+          "NAME (ALIAS)": "NaHCO3",
+          "TYPE": "MASS",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 0.3738,
+            "formula": "=NaHCO3_cons"
+          },
+          "FLOW UNIT": "t/h",
+          "TEMPERATURE VALUE": 25.0,
+          "TEMPERATURE UNIT": "°C",
+          "PRESSURE VALUE": 1.0,
+          "PRESSURE UNIT": "bar",
+          "VAPOR FRACTION [MASS]": -1.0,
+          "PHASE": "(L)",
+          "COMPOSITION [MOLE/MASS]": "NaHCO3[1.0]",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "NaHCO3 for solvent"
+        },
+        {
+          "NAME (ALIAS)": "Elec",
+          "TYPE": "ELECTRICITY",
+          "DIRECTION": "in",
+          "FLOW VALUE": {
+            "value": 53,
+            "formula": "=PostProcessing_Elec"
+          },
+          "FLOW UNIT": "-",
+          "TEMPERATURE VALUE": "-",
+          "TEMPERATURE UNIT": "-",
+          "PRESSURE VALUE": "-",
+          "PRESSURE UNIT": "-",
+          "VAPOR FRACTION [MASS]": "-",
+          "PHASE": "-",
+          "COMPOSITION [MOLE/MASS]": "-",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Solid liquid separation power consumption, e.g. hydrocyclone"
+        }
+      ],
+      "Heat Streams Description": "Thermal energy released by the exothermic carbonation reaction and the sensible heat recovered from cooling the mineral products.",
+      "Heat Streams": [
+        {
+          "NAME": "qt_carbonation",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 155,
+            "formula": "=R_T"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 155,
+            "formula": "=R_T"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 1116.31,
+            "formula": "=R_Q"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 866.5427942150413,
+            "formula": "=qt_carbonation/qt_carbonation*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kg",
+          "MASS FLOW VALUE": {
+            "value": 4.637642857142858,
+            "formula": "=Serpentine_mass+Direct aqueous carbonation stage where CO2 is chemically sequestered into activated serpentine within a high-pressure slurry reactor.Min_ref_LOAD+NaCl_cons+NaHCO3_cons"
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Exothermic heat of reaction"
+        },
+        {
+          "NAME": "qt_MgCO3_cooling",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 155,
+            "formula": "=R_T"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 25,
+            "formula": "=R_To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 108.6,
+            "formula": "=R_Qo"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 1.5696161875702586,
+            "formula": "=qt_MgCO3_cooling/qt_MgCO3_cooling/(qt_MgCO3_cooling-qt_MgCO3_cooling)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 1.916,
+            "formula": "=MgCO3_Prd"
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Cooling of MgCO3 from reactor temperature to 25°C"
+        },
+        {
+          "NAME": "qt_SiO2_cooling",
+          "TYPE": "Hot",
+          "INLET TEMPERATURE VALUE": {
+            "value": 155,
+            "formula": "=R_T"
+          },
+          "INLET TEMPERATURE UNIT": "°C",
+          "OUTLET TEMPERATURE VALUE": {
+            "value": 25,
+            "formula": "=R_To"
+          },
+          "OUTLET TEMPERATURE UNIT": "°C",
+          "INLET ENTHALPY FLOW VALUE": {
+            "value": 108.6,
+            "formula": "=R_Qo"
+          },
+          "INLET ENTHALPY FLOW UNIT": "kW",
+          "OUTLET ENTHALPY FLOW VALUE": 0.0,
+          "OUTLET ENTHALPY FLOW UNIT": "kW",
+          "SPEC HEAT CAP VALUE": {
+            "value": 3.304818258664412,
+            "formula": "=qt_SiO2_cooling/qt_SiO2_cooling/(qt_SiO2_cooling-qt_SiO2_cooling)*3.6"
+          },
+          "SPEC HEAT CAP UNIT": "kJ/kgK",
+          "MASS FLOW VALUE": {
+            "value": 0.91,
+            "formula": "=SiDirect aqueous carbonation stage where CO2 is chemically sequestered into activated serpentine within a high-pressure slurry reactor._Prd"
+          },
+          "MASS FLOW UNIT": "t/h",
+          "DTMIN CONTR VALUE": {
+            "value": 5,
+            "formula": "=dtmin"
+          },
+          "DTMIN CONTR UNIT": "K",
+          "HEAT TRANSFER COEF VALUE": 1.0,
+          "HEAT TRANSFER COEF UNIT": "kW/m2K",
+          "HEAT CASCADE": "DEFAULT",
+          "REFERENCE STREAM": "No",
+          "DESCRIPTION": "Cooling of SiO2 from reactor temperature to 25°C"
+        }
+      ],
+      "Equipments Description": "Primary capital assets including the high-pressure stirred-tank reactor, hydrocyclones for separation, and product discharge coolers.",
+      "Equipments": {
+        "Carbonation_Reactor": {
+          "Type": "Asset",
+          "Subtype": "Pressure Vessel (Stirred)",
+          "Reference": "@Huijgen et al. [3]",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 58400.0,
+              "Unit": "eur/tpd"
+            },
+            {
+              "Parameter": "Reference CO2 Load",
+              "Value": 1.0,
+              "Unit": "t/h"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.078,
+              "Unit": "-"
+            }
+          ]
+        },
+        "Post_Processor": {
+          "Type": "Asset",
+          "Subtype": "Hydrocyclone / Filter",
+          "Reference": "@Internal",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 450.0,
+              "Unit": "eur/kW"
+            },
+            {
+              "Parameter": "Power consumption",
+              "Value": 53.0,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.078,
+              "Unit": "-"
+            }
+          ]
+        },
+        "Product_Coolers": {
+          "Type": "Asset",
+          "Subtype": "Slurry Heat Exchanger",
+          "Reference": "@Peters & Timmerhaus",
+          "Parameters": [
+            {
+              "Parameter": "Specific investment cost",
+              "Value": 12000.0,
+              "Unit": "eur/unit"
+            },
+            {
+              "Parameter": "Cooling Duty (Qo)",
+              "Value": 108.6,
+              "Unit": "kW"
+            },
+            {
+              "Parameter": "Annualization factor",
+              "Value": 0.078,
+              "Unit": "-"
+            }
+          ]
+        }
+      },
+      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    },
+    "Documentation": {
+      "Unit Description": "",
+      "Unit Info": {
+        "Unit name": "Documentation",
+        "Minimum capacity multiplier": 1.0,
+        "Maximum capacity multiplier": 1.0
+      },
+      "Connectors Description": "",
+      "Connectors": [],
+      "Heat Streams Description": "",
+      "Heat Streams": [],
+      "Equipments Description": "",
+      "Equipments": {},
+      "Operating Cost Description": "",
+      "Operating Cost": {
+        "Fixed Operating Cost [EUR/y]": 0.0,
+        "Variable Operating Cost [EUR/h]": 0.0
+      }
+    }
+  }
+}

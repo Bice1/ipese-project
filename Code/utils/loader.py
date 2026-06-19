@@ -155,7 +155,13 @@ def _ensure_bfd(json_path: Path, data: dict) -> Path | None:
         from utils.diagram import generate_block_flow_svg
         from utils.constants import DEFAULT_CORE_SVG
 
-        svg_content = generate_block_flow_svg(data, str(DEFAULT_CORE_SVG))
+        svg_candidates = [
+            f for f in json_path.parent.glob("*.svg")
+            if not f.name.endswith("_BFD.svg") and f.name != "output_diagram.svg"
+        ]
+        core_svg = str(svg_candidates[0]) if svg_candidates else str(DEFAULT_CORE_SVG)
+
+        svg_content = generate_block_flow_svg(data, core_svg)
         bfd_path.write_text(svg_content, encoding="utf-8")
         return bfd_path
     except Exception:
@@ -216,10 +222,7 @@ def load_all_models(data_dir: Path | str) -> dict[str, ParsedModel]:
             # Ensure BFD exists; patch its absolute path into metadata
             bfd_path = _ensure_bfd(filepath, data)
             if bfd_path and bfd_path.exists():
-                metadata = data.setdefault("METADATA", {})
-                existing = str(metadata.get("Block Flow Diagram", "")).strip()
-                if not existing or existing in ("-", "N/A"):
-                    metadata["Block Flow Diagram"] = str(bfd_path)
+                data.setdefault("METADATA", {})["Block Flow Diagram"] = str(bfd_path)
 
             model = _json_to_parsed_model(data, str(filepath), category=category)
 
