@@ -253,11 +253,17 @@ with tab_overview:
         suppl_paths: list[Path] = []
         if suppl_raw and suppl_raw not in ("N/A", "-", ""):
             import json as _json
+            model_dir = Path(model.filepath).parent
             try:
-                suppl_paths = [Path(p) for p in _json.loads(suppl_raw)]
+                raw_paths = _json.loads(suppl_raw)
             except Exception:
-                suppl_paths = [Path(suppl_raw)]
-            suppl_paths = [p for p in suppl_paths if p.exists()]
+                raw_paths = [suppl_raw]
+            for p in raw_paths:
+                candidate = Path(p)
+                if not candidate.is_absolute():
+                    candidate = model_dir / candidate
+                if candidate.exists():
+                    suppl_paths.append(candidate)
 
         if suppl_paths:
             st.subheader("Supplementary Material")
