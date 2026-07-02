@@ -874,7 +874,7 @@
             "Connectors Description": "",
             "Connectors": [
                 {
-                    "NAME (ALIAS)": "Water_SOEC_in",
+                    "NAME (ALIAS)": "Water",
                     "TYPE": "MASS",
                     "DIRECTION": "IN",
                     "VALUE": {
@@ -896,7 +896,7 @@
                     "DESCRIPTION": "water in"
                 },
                 {
-                    "NAME (ALIAS)": "Air_in",
+                    "NAME (ALIAS)": "Air",
                     "TYPE": "MASS",
                     "DIRECTION": "IN",
                     "VALUE": {
@@ -918,7 +918,7 @@
                     "DESCRIPTION": "sweep air"
                 },
                 {
-                    "NAME (ALIAS)": "Elec_SOEC_in",
+                    "NAME (ALIAS)": "Electricity",
                     "TYPE": "ELECTRICITY",
                     "DIRECTION": "IN",
                     "VALUE": {
@@ -940,7 +940,7 @@
                     "DESCRIPTION": "-"
                 },
                 {
-                    "NAME (ALIAS)": "H2_SOEC_out",
+                    "NAME (ALIAS)": "Hydrogen",
                     "TYPE": "MASS",
                     "DIRECTION": "OUT",
                     "VALUE": {
@@ -962,7 +962,7 @@
                     "DESCRIPTION": "dihyrdrogen produced"
                 },
                 {
-                    "NAME (ALIAS)": "Water_SOEC_out",
+                    "NAME (ALIAS)": "Water",
                     "TYPE": "MASS",
                     "DIRECTION": "OUT",
                     "VALUE": {
@@ -984,7 +984,7 @@
                     "DESCRIPTION": "water out"
                 },
                 {
-                    "NAME (ALIAS)": "Water_balance",
+                    "NAME (ALIAS)": "Water",
                     "TYPE": "MASS",
                     "DIRECTION": "IN",
                     "VALUE": {
@@ -1006,7 +1006,7 @@
                     "DESCRIPTION": "water balance"
                 },
                 {
-                    "NAME (ALIAS)": "Enrair_SOECELec_out",
+                    "NAME (ALIAS)": "Enriched air",
                     "TYPE": "MASS",
                     "DIRECTION": "OUT",
                     "VALUE": {

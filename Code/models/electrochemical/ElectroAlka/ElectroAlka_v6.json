@@ -666,7 +666,7 @@
             },
             {
                 "UID": "ELECTRICITY",
-                "NAME (ALIAS)": "Elec",
+                "NAME (ALIAS)": "Electricity",
                 "TYPE": "ELECTRICITY",
                 "FLOW UNIT": "kW",
                 "TEMPERATURE": "-",

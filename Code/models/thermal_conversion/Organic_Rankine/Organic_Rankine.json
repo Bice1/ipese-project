@@ -1,896 +1,896 @@
 {
-  "METADATA": {
-    "Model UID": "",
-    "Model Name": "Organic Rankine",
-    "Authors and Contributors": "Daniel Flórez-Orrego, EPFL IPESE research group",
-    "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
-    "Creation Date": "2026-04-16 00:00:00",
-    "Last Updated": "2026-04-16 00:00:00",
-    "Model Status": "Maintained",
-    "Version": "1.0.1",
-    "Confidentiality": "Open",
-    "Sharing Layer": "1",
-    "Grade": "GRAY-BOX",
-    "Reference Capacity": "34kW of electricity produced",
-    "TRL": "9",
-    "Keywords": "Rankine Cycle, Waste heat recovery, Power generation, Organic fluid, Electricity",
-    "Description": "Organic Rankine Cycle for waste heat recovery and electricity generation",
-    "DOI": "",
-    "Main Related Publication": "",
-    "References": "[1] Pardeep Garg, Matthew S. Orosz, Pramod Kumar,Thermo-economic evaluation of ORCs for various working fluids,Applied Thermal Engineering,Volume 109, Part B,2016,Pages 841-853,ISSN 1359-4311,https://doi.org/10.1016/j.applthermaleng.2016.06.083;\n[2] Turton et al, 2012;\n[3] Bruno et al, 1998",
-    "Software": "",
-    "Software File": "",
-    "Block Flow Diagram": "Figures/orc.svg",
-    "URL": "",
-    "Supplementary Material": "[\"Organic Rankine ET.md\"]"
-  },
-  "VARIABLES": [
-    {
-      "VARIABLE NAME": "HX1_Tin",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature inlet of the waste heat recovery boiler",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 115.7,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 40,
-      "MAX BOUND": 300,
-      "LATEX SYNTAX": "$HX1_{Tin}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature inlet of the waste heat recovery boiler"
+    "METADATA": {
+        "Model UID": "",
+        "Model Name": "Organic Rankine",
+        "Authors and Contributors": "Daniel Flórez-Orrego, EPFL IPESE research group",
+        "Contact Info": "daniel.florezorrego@epfl.ch, oktay.boztas@epfl.ch",
+        "Creation Date": "2026-04-16 00:00:00",
+        "Last Updated": "2026-04-16 00:00:00",
+        "Model Status": "Maintained",
+        "Version": "1.0.1",
+        "Confidentiality": "Open",
+        "Sharing Layer": "1",
+        "Grade": "GRAY-BOX",
+        "Reference Capacity": "34kW of electricity produced",
+        "TRL": "9",
+        "Keywords": "Rankine Cycle, Waste heat recovery, Power generation, Organic fluid, Electricity",
+        "Description": "Organic Rankine Cycle for waste heat recovery and electricity generation",
+        "DOI": "",
+        "Main Related Publication": "",
+        "References": "[1] Pardeep Garg, Matthew S. Orosz, Pramod Kumar,Thermo-economic evaluation of ORCs for various working fluids,Applied Thermal Engineering,Volume 109, Part B,2016,Pages 841-853,ISSN 1359-4311,https://doi.org/10.1016/j.applthermaleng.2016.06.083;\n[2] Turton et al, 2012;\n[3] Bruno et al, 1998",
+        "Software": "",
+        "Software File": "",
+        "Block Flow Diagram": "Figures/orc.svg",
+        "URL": "",
+        "Supplementary Material": "See SUPPL MATERIAL tab"
     },
-    {
-      "VARIABLE NAME": "HX1_Tout",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature outlet of the waste heat recovery boiler",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 241.4,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 100,
-      "MAX BOUND": 318,
-      "LATEX SYNTAX": "$HX1_{Tout}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature outlet of the waste heat recovery boiler"
-    },
-    {
-      "VARIABLE NAME": "HX1_Q",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Heating requirement for increasing the toluene temperature up to the saturation value (115.7 to 241.4 C)",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 81.13,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0.1,
-      "MAX BOUND": 100000,
-      "LATEX SYNTAX": "$HX1_{Q}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Heating requirement for increasing the toluene temperature up to the saturation value (115.7 to 241.4 C)"
-    },
-    {
-      "VARIABLE NAME": "HX2_Q",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Vaporization enthalpy of toluene at 241.4 C",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 69.2,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0.1,
-      "MAX BOUND": 100000,
-      "LATEX SYNTAX": "$HX2_{Q}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Vaporization enthalpy of toluene at 241.4 C"
-    },
-    {
-      "VARIABLE NAME": "HX2_T",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Vaporization temperature of toluene",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 241.2,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 110.6,
-      "MAX BOUND": 318.6,
-      "LATEX SYNTAX": "$HX2_T$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Vaporization temperature of toluene"
-    },
-    {
-      "VARIABLE NAME": "TURB1",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Power generation in the first expansion stage",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 22.11,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 25000,
-      "LATEX SYNTAX": "$TURB1$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Power generation in the first expansion stage"
-    },
-    {
-      "VARIABLE NAME": "HX3_Tin",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature inlet of the process heat exchanger",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 178.3,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 50,
-      "MAX BOUND": 300,
-      "LATEX SYNTAX": "$HX3_{Tin}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature inlet of the process heat exchanger"
-    },
-    {
-      "VARIABLE NAME": "HX3_Tout",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature outlet of the process heat exchanger",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 115,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 40,
-      "MAX BOUND": 250,
-      "LATEX SYNTAX": "$HX3_{Tout}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature outlet of the process heat exchanger"
-    },
-    {
-      "VARIABLE NAME": "HX3_Q",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Heat supply to process heat exchanger (178.3C to 115C)",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 12.62,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 50000,
-      "LATEX SYNTAX": "$HX3_{Q}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Heat supply to process heat exchanger (178.3C to 115C)"
-    },
-    {
-      "VARIABLE NAME": "Cp",
-      "TYPE": "LITERATURE",
-      "FULL NAME": "Cp of toluene at 150C",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 2.2,
-      "PHYSICAL UNIT": "kJ/kgK",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 1.4,
-      "MAX BOUND": 2.8,
-      "LATEX SYNTAX": "$c_p$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Cp of toluene at 150C"
-    },
-    {
-      "VARIABLE NAME": "HX4_Q",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Condensation enthalpy of toluene at 115 C",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 45.36,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0.1,
-      "MAX BOUND": 50000,
-      "LATEX SYNTAX": "$HX4_{Q}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Condensation enthalpy of toluene at 115 C"
-    },
-    {
-      "VARIABLE NAME": "HX4_T",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Condensation temperature of toluene",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 115,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 40,
-      "MAX BOUND": 150,
-      "LATEX SYNTAX": "$HX4_T$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Condensation temperature of toluene"
-    },
-    {
-      "VARIABLE NAME": "TURB2",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Power generation in the second expansion stage",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 12.57,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 25000,
-      "LATEX SYNTAX": "$TURB2$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Power generation in the second expansion stage"
-    },
-    {
-      "VARIABLE NAME": "HX5_Tin",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature inlet of the second process heat exchanger",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 125.3,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 40,
-      "MAX BOUND": 200,
-      "LATEX SYNTAX": "$HX5_{Tin}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature inlet of the second process heat exchanger"
-    },
-    {
-      "VARIABLE NAME": "HX5_Tout",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature outlet of the second process heat exchanger",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 34.18,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 15,
-      "MAX BOUND": 100,
-      "LATEX SYNTAX": "$HX5_{Tout}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature outlet of the second process heat exchanger"
-    },
-    {
-      "VARIABLE NAME": "HX5_Q",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Heat supply to process heat exchanger (125.3C to 34.18C)",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 18.67,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 50000,
-      "LATEX SYNTAX": "$HX5_{Q}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Heat supply to process heat exchanger (125.3C to 34.18C)"
-    },
-    {
-      "VARIABLE NAME": "HX6_Q",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Condensation enthalpy of toluene at 34.18 C",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 62.15,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0.1,
-      "MAX BOUND": 100000,
-      "LATEX SYNTAX": "$HX6_{Q}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Condensation enthalpy of toluene at 34.18 C"
-    },
-    {
-      "VARIABLE NAME": "HX6_T",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Condensation temperature of toluene",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 34.18,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 15,
-      "MAX BOUND": 90,
-      "LATEX SYNTAX": "$HX6_T$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Condensation temperature of toluene"
-    },
-    {
-      "VARIABLE NAME": "Pump1",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Power consumed in the first pump",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 0.6197,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 5000,
-      "LATEX SYNTAX": "$Pump1$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Power consumed in the first pump"
-    },
-    {
-      "VARIABLE NAME": "Pump2",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Power consumed in the second pump",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 0.026,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 1000,
-      "LATEX SYNTAX": "$Pump2$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Power consumed in the second pump"
-    },
-    {
-      "VARIABLE NAME": "HX7_Tin",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature inlet of the toluene preheater",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 34.22,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 15,
-      "MAX BOUND": 95,
-      "LATEX SYNTAX": "$HX7_{Tin}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature inlet of the toluene preheater"
-    },
-    {
-      "VARIABLE NAME": "HX7_Tout",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Temperature outlet of the toluene preheater",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 115,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 40,
-      "MAX BOUND": 150,
-      "LATEX SYNTAX": "$HX7_{Tout}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Temperature outlet of the toluene preheater"
-    },
-    {
-      "VARIABLE NAME": "HX7_Q",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Heating requirement for increasing the toluene temperature up to 115C",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 22.51,
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 50000,
-      "LATEX SYNTAX": "$HX7_{Q}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Heating requirement for increasing the toluene temperature up to 115C"
-    },
-    {
-      "VARIABLE NAME": "dtmin_2ph",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Minimum temperature difference contribution",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 2,
-      "PHYSICAL UNIT": "°C",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0.5,
-      "MAX BOUND": 25,
-      "LATEX SYNTAX": "$dtmin_{2ph}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Minimum temperature difference contribution"
-    },
-    {
-      "VARIABLE NAME": "n",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Lifetime of an ORC",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 40,
-      "PHYSICAL UNIT": "year",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 5,
-      "MAX BOUND": 60,
-      "LATEX SYNTAX": "$n$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Lifetime of an ORC"
-    },
-    {
-      "VARIABLE NAME": "i",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Interest rate",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 0.06,
-      "PHYSICAL UNIT": "-",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 0,
-      "MAX BOUND": 1,
-      "LATEX SYNTAX": "$i$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Interest rate"
-    },
-    {
-      "VARIABLE NAME": "CEPCI_2020",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "CEPCI 2020",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 596.2,
-      "PHYSICAL UNIT": "-",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 400,
-      "MAX BOUND": 1200,
-      "LATEX SYNTAX": "$CEPCI_{2020}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "CEPCI 2020"
-    },
-    {
-      "VARIABLE NAME": "CEPCI_2008",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "CEPCI 2008",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": 575.4,
-      "PHYSICAL UNIT": "-",
-      "FORMULA OR PATH": "-",
-      "MIN BOUND": 400,
-      "MAX BOUND": 1200,
-      "LATEX SYNTAX": "$CEPCI_{2008}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "CEPCI 2008"
-    },
-    {
-      "VARIABLE NAME": "W_bal",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Net power generation",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": {
-        "value": 34.034299999999995,
-        "formula": "=VARIABLE TYPES+Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.-Pump1-Pump2"
-      },
-      "PHYSICAL UNIT": "kW",
-      "FORMULA OR PATH": "TURB1+TURB2-Pump1-Pump2",
-      "MIN BOUND": 0,
-      "MAX BOUND": 50000,
-      "LATEX SYNTAX": "$W_{bal}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Net power generation"
-    },
-    {
-      "VARIABLE NAME": "Annuity",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Annualization factor",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": {
-        "value": 0.0664615359206755,
-        "formula": "=(i*(i+1)^n)/((1+i)^n-1)"
-      },
-      "PHYSICAL UNIT": "-",
-      "FORMULA OR PATH": "(i*(i+1)^n)/((1+i)^n-1)",
-      "MIN BOUND": 0.02,
-      "MAX BOUND": 0.5,
-      "LATEX SYNTAX": "$Annuity$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Annualization factor"
-    },
-    {
-      "VARIABLE NAME": "Cinv_ORC",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Total investment cost",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": {
-        "value": 34034.299999999996,
-        "formula": "=W_bal*1000"
-      },
-      "PHYSICAL UNIT": "eur",
-      "FORMULA OR PATH": "W_bal*1000",
-      "MIN BOUND": 1000,
-      "MAX BOUND": 1000000000,
-      "LATEX SYNTAX": "$Cinv_{ORC}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Total investment cost"
-    },
-    {
-      "VARIABLE NAME": "Cinv2_ORC",
-      "TYPE": "CONTEXT",
-      "FULL NAME": "Annualized investment cost for 2020",
-      "USER GRADE": "MANDATORY",
-      "DEFAULT VALUE": {
-        "value": 2343.7393433324373,
-        "formula": "=1000*W_bal*(CEPCI_2020/CEPCI_2008)*Annuity"
-      },
-      "PHYSICAL UNIT": "eur/y",
-      "FORMULA OR PATH": "1000*W_bal*(CEPCI_2020/CEPCI_2008)*Annuity",
-      "MIN BOUND": 100,
-      "MAX BOUND": 100000000,
-      "LATEX SYNTAX": "$Cinv2_{ORC}$",
-      "REFERENCE": "EPFL IPESE research group",
-      "DESCRIPTION": "Annualized investment cost for 2020"
-    }
-  ],
-  "CONNECTORS": {
-    "EXTERNAL CONNECTORS": [
-      {
-        "UID": "ELECTRICITY",
-        "NAME (ALIAS)": "Electricity",
-        "TYPE": "ELECTRICITY",
-        "FLOW UNIT": "kW",
-        "TEMPERATURE": "-",
-        "TEMPERATURE UNIT": "-",
-        "PRESSURE": "-",
-        "PRESSURE UNIT": "-",
-        "VAPOR FRACTION [MASS]": "-",
-        "PHASE": "-",
-        "COMPOSITION [MOLE/MASS]": "-",
-        "DESCRIPTION": "Generated electricity"
-      }
-    ],
-    "INTERNAL CONNECTORS": []
-  },
-  "UNITS": {
-    "OrgRC": {
-      "Unit Description": "The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state.",
-      "Unit Info": {
-        "Unit name": "OrgRC",
-        "Minimum capacity multiplier": 0.0,
-        "Maximum capacity multiplier": 100000.0
-      },
-      "Connectors Description": "The system's primary output is electrical power. It generates a net flow of 34.03 kW of electricity.",
-      "Connectors": [
+    "VARIABLES": [
         {
-          "NAME (ALIAS)": "ELECTRICITY",
-          "TYPE": "ELECTRICITY",
-          "DIRECTION": "OUT",
-          "FLOW VALUE": {
-            "value": 34.034299999999995,
-            "formula": "=W_bal"
-          },
-          "FLOW UNIT": "kW",
-          "TEMPERATURE VALUE": "-",
-          "TEMPERATURE UNIT": "-",
-          "PRESSURE VALUE": "-",
-          "PRESSURE UNIT": "-",
-          "VAPOR FRACTION [MASS]": "-",
-          "PHASE": "-",
-          "COMPOSITION [MOLE/MASS]": "-",
-          "REFERENCE STREAM": "Yes",
-          "DESCRIPTION": "Net power generation"
-        }
-      ],
-      "Heat Streams Description": "Thermal flows representing heating (e.g., vaporization) and cooling (e.g., condensation) stages, used to balance cycle energy and optimize waste heat recovery.",
-      "Heat Streams": [
-        {
-          "NAME": "hex1",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": {
-            "value": 115.7,
-            "formula": "=UNIT DESCRIPTION_Tin"
-          },
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": {
-            "value": 241.4,
-            "formula": "=UNIT DESCRIPTION_Tout"
-          },
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": {
-            "value": 81.13,
-            "formula": "=UNIT DESCRIPTION_Q"
-          },
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": {
-            "value": 7.122184735370988,
-            "formula": "=(hex1-hex1)/hex1/(hex1-hex1)*3600"
-          },
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": {
-            "value": 326.2386902197328,
-            "formula": "=$M$24"
-          },
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": {
-            "value": 2,
-            "formula": "=dtmin_2ph"
-          },
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Waste heat recovery boiler"
+            "VARIABLE NAME": "HX1_Tin",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature inlet of the waste heat recovery boiler",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 115.7,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 40,
+            "MAX BOUND": 300,
+            "LATEX SYNTAX": "$HX1_{Tin}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature inlet of the waste heat recovery boiler"
         },
         {
-          "NAME": "hex2",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": {
-            "value": 241.2,
-            "formula": "=The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state._T"
-          },
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": {
-            "value": 241.2,
-            "formula": "=The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state._T"
-          },
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": {
-            "value": 69.2,
-            "formula": "=The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state._Q"
-          },
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": {
-            "value": 763.6126782884313,
-            "formula": "=-(hex2-hex2)/hex2*3600"
-          },
-          "SPEC HEAT CAP UNIT": "kJ/kg",
-          "MASS FLOW VALUE": {
-            "value": 326.2386902197328,
-            "formula": "=$M$24"
-          },
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": {
-            "value": 2,
-            "formula": "=dtmin_2ph"
-          },
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Vaporization"
+            "VARIABLE NAME": "HX1_Tout",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature outlet of the waste heat recovery boiler",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 241.4,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 100,
+            "MAX BOUND": 318,
+            "LATEX SYNTAX": "$HX1_{Tout}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature outlet of the waste heat recovery boiler"
         },
         {
-          "NAME": "hex3",
-          "TYPE": "Cold",
-          "INLET TEMPERATURE VALUE": {
-            "value": 178.3,
-            "formula": "=HX3_Tin"
-          },
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": {
-            "value": 115,
-            "formula": "=HX3_Tout"
-          },
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 0.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": {
-            "value": 12.62,
-            "formula": "=HX3_Q"
-          },
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": {
-            "value": 2.2,
-            "formula": "=Cp"
-          },
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": {
-            "value": 326.2386902197328,
-            "formula": "=hex3/hex3/(hex3-hex3)*3600"
-          },
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": {
-            "value": 2,
-            "formula": "=dtmin_2ph"
-          },
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "First process heat exchanger"
+            "VARIABLE NAME": "HX1_Q",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heating requirement for increasing the toluene temperature up to the saturation value (115.7 to 241.4 C)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 81.13,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0.1,
+            "MAX BOUND": 100000,
+            "LATEX SYNTAX": "$HX1_{Q}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Heating requirement for increasing the toluene temperature up to the saturation value (115.7 to 241.4 C)"
         },
         {
-          "NAME": "hex4",
-          "TYPE": "Cold",
-          "INLET TEMPERATURE VALUE": {
-            "value": 115,
-            "formula": "=HX4_T"
-          },
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": {
-            "value": 115,
-            "formula": "=HX4_T"
-          },
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 0.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": {
-            "value": 45.36,
-            "formula": "=HX4_Q"
-          },
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": {
-            "value": 500.5414896988907,
-            "formula": "=(hex4-hex4)/hex4*3600"
-          },
-          "SPEC HEAT CAP UNIT": "kJ/kg",
-          "MASS FLOW VALUE": {
-            "value": 326.2386902197328,
-            "formula": "=$M$24"
-          },
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": {
-            "value": 2,
-            "formula": "=dtmin_2ph"
-          },
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Condensation "
+            "VARIABLE NAME": "HX2_Q",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Vaporization enthalpy of toluene at 241.4 C",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 69.2,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0.1,
+            "MAX BOUND": 100000,
+            "LATEX SYNTAX": "$HX2_{Q}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Vaporization enthalpy of toluene at 241.4 C"
         },
         {
-          "NAME": "hex5",
-          "TYPE": "Cold",
-          "INLET TEMPERATURE VALUE": {
-            "value": 125.3,
-            "formula": "=UNIT NAME_Tin"
-          },
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": {
-            "value": 34.18,
-            "formula": "=UNIT NAME_Tout"
-          },
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 0.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": {
-            "value": 18.67,
-            "formula": "=UNIT NAME_Q"
-          },
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": {
-            "value": 2.2609848005242736,
-            "formula": "=(hex5-hex5)/hex5/(hex5-hex5)*3600"
-          },
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": {
-            "value": 326.2386902197328,
-            "formula": "=$M$24"
-          },
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": {
-            "value": 2,
-            "formula": "=dtmin_2ph"
-          },
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Second process heat exchanger"
+            "VARIABLE NAME": "HX2_T",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Vaporization temperature of toluene",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 241.2,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 110.6,
+            "MAX BOUND": 318.6,
+            "LATEX SYNTAX": "$HX2_T$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Vaporization temperature of toluene"
         },
         {
-          "NAME": "hex6",
-          "TYPE": "Cold",
-          "INLET TEMPERATURE VALUE": {
-            "value": 34.18,
-            "formula": "=OrgRC_T"
-          },
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": {
-            "value": 34.18,
-            "formula": "=OrgRC_T"
-          },
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": 0.0,
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": {
-            "value": 62.15,
-            "formula": "=OrgRC_Q"
-          },
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": {
-            "value": 685.8168779714739,
-            "formula": "=(hex6-hex6)/hex6*3600"
-          },
-          "SPEC HEAT CAP UNIT": "kJ/kg",
-          "MASS FLOW VALUE": {
-            "value": 326.2386902197328,
-            "formula": "=$M$24"
-          },
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": {
-            "value": 2,
-            "formula": "=dtmin_2ph"
-          },
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Condensation "
+            "VARIABLE NAME": "TURB1",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Power generation in the first expansion stage",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 22.11,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 25000,
+            "LATEX SYNTAX": "$TURB1$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Power generation in the first expansion stage"
         },
         {
-          "NAME": "hex7",
-          "TYPE": "Hot",
-          "INLET TEMPERATURE VALUE": {
-            "value": 34.22,
-            "formula": "=HX7_Tin"
-          },
-          "INLET TEMPERATURE UNIT": "°C",
-          "OUTLET TEMPERATURE VALUE": {
-            "value": 115,
-            "formula": "=HX7_Tout"
-          },
-          "OUTLET TEMPERATURE UNIT": "°C",
-          "INLET ENTHALPY FLOW VALUE": {
-            "value": 22.51,
-            "formula": "=HX7_Q"
-          },
-          "INLET ENTHALPY FLOW UNIT": "kW",
-          "OUTLET ENTHALPY FLOW VALUE": 0.0,
-          "OUTLET ENTHALPY FLOW UNIT": "kW",
-          "SPEC HEAT CAP VALUE": {
-            "value": 3.074954416311016,
-            "formula": "=(hex7-hex7)/hex7/(hex7-hex7)*3600"
-          },
-          "SPEC HEAT CAP UNIT": "kJ/kgK",
-          "MASS FLOW VALUE": {
-            "value": 326.2386902197328,
-            "formula": "=$M$24"
-          },
-          "MASS FLOW UNIT": "kg/h",
-          "DTMIN CONTR VALUE": {
-            "value": 2,
-            "formula": "=dtmin_2ph"
-          },
-          "DTMIN CONTR UNIT": "K",
-          "HEAT TRANSFER COEF VALUE": 1.0,
-          "HEAT TRANSFER COEF UNIT": "kW/m2K",
-          "HEAT CASCADE": "DEFAULT",
-          "REFERENCE STREAM": "No",
-          "DESCRIPTION": "Preheater"
-        }
-      ],
-      "Equipments Description": "Physical system assets (e.g., the ORC unit) defining financial parameters like lifetime, interest rate, and total investment cost (CAPEX) for economic calculations.",
-      "Equipments": {
-        "RankineCycle": {
-          "Type": "Asset",
-          "Subtype": "Organic Rankine Cycle",
-          "Reference": "@Florez-Orrego et al",
-          "Parameters": [
-            {
-              "Parameter": "Lifetime",
-              "Value": {
-                "value": 40,
-                "formula": "=n"
-              },
-              "Unit": "-"
+            "VARIABLE NAME": "HX3_Tin",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature inlet of the process heat exchanger",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 178.3,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 50,
+            "MAX BOUND": 300,
+            "LATEX SYNTAX": "$HX3_{Tin}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature inlet of the process heat exchanger"
+        },
+        {
+            "VARIABLE NAME": "HX3_Tout",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature outlet of the process heat exchanger",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 115,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 40,
+            "MAX BOUND": 250,
+            "LATEX SYNTAX": "$HX3_{Tout}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature outlet of the process heat exchanger"
+        },
+        {
+            "VARIABLE NAME": "HX3_Q",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat supply to process heat exchanger (178.3C to 115C)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 12.62,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 50000,
+            "LATEX SYNTAX": "$HX3_{Q}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Heat supply to process heat exchanger (178.3C to 115C)"
+        },
+        {
+            "VARIABLE NAME": "Cp",
+            "TYPE": "LITERATURE",
+            "FULL NAME": "Cp of toluene at 150C",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 2.2,
+            "PHYSICAL UNIT": "kJ/kgK",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 1.4,
+            "MAX BOUND": 2.8,
+            "LATEX SYNTAX": "$c_p$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Cp of toluene at 150C"
+        },
+        {
+            "VARIABLE NAME": "HX4_Q",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Condensation enthalpy of toluene at 115 C",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 45.36,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0.1,
+            "MAX BOUND": 50000,
+            "LATEX SYNTAX": "$HX4_{Q}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Condensation enthalpy of toluene at 115 C"
+        },
+        {
+            "VARIABLE NAME": "HX4_T",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Condensation temperature of toluene",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 115,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 40,
+            "MAX BOUND": 150,
+            "LATEX SYNTAX": "$HX4_T$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Condensation temperature of toluene"
+        },
+        {
+            "VARIABLE NAME": "TURB2",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Power generation in the second expansion stage",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 12.57,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 25000,
+            "LATEX SYNTAX": "$TURB2$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Power generation in the second expansion stage"
+        },
+        {
+            "VARIABLE NAME": "HX5_Tin",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature inlet of the second process heat exchanger",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 125.3,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 40,
+            "MAX BOUND": 200,
+            "LATEX SYNTAX": "$HX5_{Tin}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature inlet of the second process heat exchanger"
+        },
+        {
+            "VARIABLE NAME": "HX5_Tout",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature outlet of the second process heat exchanger",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 34.18,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 15,
+            "MAX BOUND": 100,
+            "LATEX SYNTAX": "$HX5_{Tout}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature outlet of the second process heat exchanger"
+        },
+        {
+            "VARIABLE NAME": "HX5_Q",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heat supply to process heat exchanger (125.3C to 34.18C)",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 18.67,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 50000,
+            "LATEX SYNTAX": "$HX5_{Q}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Heat supply to process heat exchanger (125.3C to 34.18C)"
+        },
+        {
+            "VARIABLE NAME": "HX6_Q",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Condensation enthalpy of toluene at 34.18 C",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 62.15,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0.1,
+            "MAX BOUND": 100000,
+            "LATEX SYNTAX": "$HX6_{Q}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Condensation enthalpy of toluene at 34.18 C"
+        },
+        {
+            "VARIABLE NAME": "HX6_T",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Condensation temperature of toluene",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 34.18,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 15,
+            "MAX BOUND": 90,
+            "LATEX SYNTAX": "$HX6_T$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Condensation temperature of toluene"
+        },
+        {
+            "VARIABLE NAME": "Pump1",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Power consumed in the first pump",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.6197,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 5000,
+            "LATEX SYNTAX": "$Pump1$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Power consumed in the first pump"
+        },
+        {
+            "VARIABLE NAME": "Pump2",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Power consumed in the second pump",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.026,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 1000,
+            "LATEX SYNTAX": "$Pump2$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Power consumed in the second pump"
+        },
+        {
+            "VARIABLE NAME": "HX7_Tin",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature inlet of the toluene preheater",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 34.22,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 15,
+            "MAX BOUND": 95,
+            "LATEX SYNTAX": "$HX7_{Tin}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature inlet of the toluene preheater"
+        },
+        {
+            "VARIABLE NAME": "HX7_Tout",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Temperature outlet of the toluene preheater",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 115,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 40,
+            "MAX BOUND": 150,
+            "LATEX SYNTAX": "$HX7_{Tout}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Temperature outlet of the toluene preheater"
+        },
+        {
+            "VARIABLE NAME": "HX7_Q",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Heating requirement for increasing the toluene temperature up to 115C",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 22.51,
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 50000,
+            "LATEX SYNTAX": "$HX7_{Q}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Heating requirement for increasing the toluene temperature up to 115C"
+        },
+        {
+            "VARIABLE NAME": "dtmin_2ph",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Minimum temperature difference contribution",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 2,
+            "PHYSICAL UNIT": "°C",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0.5,
+            "MAX BOUND": 25,
+            "LATEX SYNTAX": "$dtmin_{2ph}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Minimum temperature difference contribution"
+        },
+        {
+            "VARIABLE NAME": "n",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Lifetime of an ORC",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 40,
+            "PHYSICAL UNIT": "year",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 5,
+            "MAX BOUND": 60,
+            "LATEX SYNTAX": "$n$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Lifetime of an ORC"
+        },
+        {
+            "VARIABLE NAME": "i",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Interest rate",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 0.06,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 0,
+            "MAX BOUND": 1,
+            "LATEX SYNTAX": "$i$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Interest rate"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2020",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "CEPCI 2020",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 596.2,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 400,
+            "MAX BOUND": 1200,
+            "LATEX SYNTAX": "$CEPCI_{2020}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "CEPCI 2020"
+        },
+        {
+            "VARIABLE NAME": "CEPCI_2008",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "CEPCI 2008",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": 575.4,
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "-",
+            "MIN BOUND": 400,
+            "MAX BOUND": 1200,
+            "LATEX SYNTAX": "$CEPCI_{2008}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "CEPCI 2008"
+        },
+        {
+            "VARIABLE NAME": "W_bal",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Net power generation",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 34.034299999999995,
+                "formula": "=VARIABLE TYPES+Context: These variables are defined at a higher level and refer to local conditions (e.g., ambient temperature and pressure), economic factors (e.g., specific costs), or energy-related parameters.-Pump1-Pump2"
             },
-            {
-              "Parameter": "Interest rate",
-              "Value": {
-                "value": 0.06,
-                "formula": "=i"
-              },
-              "Unit": "%"
+            "PHYSICAL UNIT": "kW",
+            "FORMULA OR PATH": "TURB1+TURB2-Pump1-Pump2",
+            "MIN BOUND": 0,
+            "MAX BOUND": 50000,
+            "LATEX SYNTAX": "$W_{bal}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Net power generation"
+        },
+        {
+            "VARIABLE NAME": "Annuity",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Annualization factor",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 0.0664615359206755,
+                "formula": "=(i*(i+1)^n)/((1+i)^n-1)"
             },
-            {
-              "Parameter": "Total investment cost",
-              "Value": {
+            "PHYSICAL UNIT": "-",
+            "FORMULA OR PATH": "(i*(i+1)^n)/((1+i)^n-1)",
+            "MIN BOUND": 0.02,
+            "MAX BOUND": 0.5,
+            "LATEX SYNTAX": "$Annuity$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Annualization factor"
+        },
+        {
+            "VARIABLE NAME": "Cinv_ORC",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Total investment cost",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
                 "value": 34034.299999999996,
-                "formula": "=Cinv_ORC"
-              },
-              "Unit": "Eur"
+                "formula": "=W_bal*1000"
             },
-            {
-              "Parameter": "CEPCI 2008",
-              "Value": {
-                "value": 575.4,
-                "formula": "=CEPCI_2008"
-              },
-              "Unit": "-"
-            }
-          ]
+            "PHYSICAL UNIT": "eur",
+            "FORMULA OR PATH": "W_bal*1000",
+            "MIN BOUND": 1000,
+            "MAX BOUND": 1000000000,
+            "LATEX SYNTAX": "$Cinv_{ORC}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Total investment cost"
+        },
+        {
+            "VARIABLE NAME": "Cinv2_ORC",
+            "TYPE": "CONTEXT",
+            "FULL NAME": "Annualized investment cost for 2020",
+            "USER GRADE": "MANDATORY",
+            "DEFAULT VALUE": {
+                "value": 2343.7393433324373,
+                "formula": "=1000*W_bal*(CEPCI_2020/CEPCI_2008)*Annuity"
+            },
+            "PHYSICAL UNIT": "eur/y",
+            "FORMULA OR PATH": "1000*W_bal*(CEPCI_2020/CEPCI_2008)*Annuity",
+            "MIN BOUND": 100,
+            "MAX BOUND": 100000000,
+            "LATEX SYNTAX": "$Cinv2_{ORC}$",
+            "REFERENCE": "EPFL IPESE research group",
+            "DESCRIPTION": "Annualized investment cost for 2020"
         }
-      },
-      "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
-      "Operating Cost": {
-        "Fixed Operating Cost [EUR/y]": 0.0,
-        "Variable Operating Cost [EUR/h]": 0.0
-      }
+    ],
+    "CONNECTORS": {
+        "EXTERNAL CONNECTORS": [
+            {
+                "UID": "ELECTRICITY",
+                "NAME (ALIAS)": "Electricity",
+                "TYPE": "ELECTRICITY",
+                "FLOW UNIT": "kW",
+                "TEMPERATURE": "-",
+                "TEMPERATURE UNIT": "-",
+                "PRESSURE": "-",
+                "PRESSURE UNIT": "-",
+                "VAPOR FRACTION [MASS]": "-",
+                "PHASE": "-",
+                "COMPOSITION [MOLE/MASS]": "-",
+                "DESCRIPTION": "Generated electricity"
+            }
+        ],
+        "INTERNAL CONNECTORS": []
     },
-    "Documentation": {
-      "Unit Description": "",
-      "Unit Info": {
-        "Unit name": "Documentation",
-        "Minimum capacity multiplier": 1.0,
-        "Maximum capacity multiplier": 1.0
-      },
-      "Connectors Description": "",
-      "Connectors": [],
-      "Heat Streams Description": "",
-      "Heat Streams": [],
-      "Equipments Description": "",
-      "Equipments": {},
-      "Operating Cost Description": "",
-      "Operating Cost": {
-        "Fixed Operating Cost [EUR/y]": 0.0,
-        "Variable Operating Cost [EUR/h]": 0.0
-      }
+    "UNITS": {
+        "OrgRC": {
+            "Unit Description": "The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state.",
+            "Unit Info": {
+                "Unit name": "OrgRC",
+                "Minimum capacity multiplier": 0.0,
+                "Maximum capacity multiplier": 100000.0
+            },
+            "Connectors Description": "The system's primary output is electrical power. It generates a net flow of 34.03 kW of electricity.",
+            "Connectors": [
+                {
+                    "NAME (ALIAS)": "Electricity",
+                    "TYPE": "ELECTRICITY",
+                    "DIRECTION": "OUT",
+                    "FLOW VALUE": {
+                        "value": 34.034299999999995,
+                        "formula": "=W_bal"
+                    },
+                    "FLOW UNIT": "kW",
+                    "TEMPERATURE VALUE": "-",
+                    "TEMPERATURE UNIT": "-",
+                    "PRESSURE VALUE": "-",
+                    "PRESSURE UNIT": "-",
+                    "VAPOR FRACTION [MASS]": "-",
+                    "PHASE": "-",
+                    "COMPOSITION [MOLE/MASS]": "-",
+                    "REFERENCE STREAM": "Yes",
+                    "DESCRIPTION": "Net power generation"
+                }
+            ],
+            "Heat Streams Description": "Thermal flows representing heating (e.g., vaporization) and cooling (e.g., condensation) stages, used to balance cycle energy and optimize waste heat recovery.",
+            "Heat Streams": [
+                {
+                    "NAME": "hex1",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 115.7,
+                        "formula": "=UNIT DESCRIPTION_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "°C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 241.4,
+                        "formula": "=UNIT DESCRIPTION_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "°C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 81.13,
+                        "formula": "=UNIT DESCRIPTION_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": {
+                        "value": 7.122184735370988,
+                        "formula": "=(hex1-hex1)/hex1/(hex1-hex1)*3600"
+                    },
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": {
+                        "value": 326.2386902197328,
+                        "formula": "=$M$24"
+                    },
+                    "MASS FLOW UNIT": "kg/h",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "No",
+                    "DESCRIPTION": "Waste heat recovery boiler"
+                },
+                {
+                    "NAME": "hex2",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 241.2,
+                        "formula": "=The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state._T"
+                    },
+                    "INLET TEMPERATURE UNIT": "°C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 241.2,
+                        "formula": "=The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state._T"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "°C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 69.2,
+                        "formula": "=The OrgRC is a scalable utility unit designed to convert thermal energy into electricity. The organic working fluid is pumped to a waste heat recovery boiler where it is heated and evaporated. It then expands through a turbine before passing through a condenser to return to a liquid state._Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": {
+                        "value": 763.6126782884313,
+                        "formula": "=-(hex2-hex2)/hex2*3600"
+                    },
+                    "SPEC HEAT CAP UNIT": "kJ/kg",
+                    "MASS FLOW VALUE": {
+                        "value": 326.2386902197328,
+                        "formula": "=$M$24"
+                    },
+                    "MASS FLOW UNIT": "kg/h",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "No",
+                    "DESCRIPTION": "Vaporization"
+                },
+                {
+                    "NAME": "hex3",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 178.3,
+                        "formula": "=HX3_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "°C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 115,
+                        "formula": "=HX3_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "°C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 12.62,
+                        "formula": "=HX3_Q"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": {
+                        "value": 2.2,
+                        "formula": "=Cp"
+                    },
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": {
+                        "value": 326.2386902197328,
+                        "formula": "=hex3/hex3/(hex3-hex3)*3600"
+                    },
+                    "MASS FLOW UNIT": "kg/h",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "No",
+                    "DESCRIPTION": "First process heat exchanger"
+                },
+                {
+                    "NAME": "hex4",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 115,
+                        "formula": "=HX4_T"
+                    },
+                    "INLET TEMPERATURE UNIT": "°C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 115,
+                        "formula": "=HX4_T"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "°C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 45.36,
+                        "formula": "=HX4_Q"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": {
+                        "value": 500.5414896988907,
+                        "formula": "=(hex4-hex4)/hex4*3600"
+                    },
+                    "SPEC HEAT CAP UNIT": "kJ/kg",
+                    "MASS FLOW VALUE": {
+                        "value": 326.2386902197328,
+                        "formula": "=$M$24"
+                    },
+                    "MASS FLOW UNIT": "kg/h",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "No",
+                    "DESCRIPTION": "Condensation "
+                },
+                {
+                    "NAME": "hex5",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 125.3,
+                        "formula": "=UNIT NAME_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "°C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 34.18,
+                        "formula": "=UNIT NAME_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "°C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 18.67,
+                        "formula": "=UNIT NAME_Q"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": {
+                        "value": 2.2609848005242736,
+                        "formula": "=(hex5-hex5)/hex5/(hex5-hex5)*3600"
+                    },
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": {
+                        "value": 326.2386902197328,
+                        "formula": "=$M$24"
+                    },
+                    "MASS FLOW UNIT": "kg/h",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "No",
+                    "DESCRIPTION": "Second process heat exchanger"
+                },
+                {
+                    "NAME": "hex6",
+                    "TYPE": "Cold",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 34.18,
+                        "formula": "=OrgRC_T"
+                    },
+                    "INLET TEMPERATURE UNIT": "°C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 34.18,
+                        "formula": "=OrgRC_T"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "°C",
+                    "INLET ENTHALPY FLOW VALUE": 0.0,
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": {
+                        "value": 62.15,
+                        "formula": "=OrgRC_Q"
+                    },
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": {
+                        "value": 685.8168779714739,
+                        "formula": "=(hex6-hex6)/hex6*3600"
+                    },
+                    "SPEC HEAT CAP UNIT": "kJ/kg",
+                    "MASS FLOW VALUE": {
+                        "value": 326.2386902197328,
+                        "formula": "=$M$24"
+                    },
+                    "MASS FLOW UNIT": "kg/h",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "No",
+                    "DESCRIPTION": "Condensation "
+                },
+                {
+                    "NAME": "hex7",
+                    "TYPE": "Hot",
+                    "INLET TEMPERATURE VALUE": {
+                        "value": 34.22,
+                        "formula": "=HX7_Tin"
+                    },
+                    "INLET TEMPERATURE UNIT": "°C",
+                    "OUTLET TEMPERATURE VALUE": {
+                        "value": 115,
+                        "formula": "=HX7_Tout"
+                    },
+                    "OUTLET TEMPERATURE UNIT": "°C",
+                    "INLET ENTHALPY FLOW VALUE": {
+                        "value": 22.51,
+                        "formula": "=HX7_Q"
+                    },
+                    "INLET ENTHALPY FLOW UNIT": "kW",
+                    "OUTLET ENTHALPY FLOW VALUE": 0.0,
+                    "OUTLET ENTHALPY FLOW UNIT": "kW",
+                    "SPEC HEAT CAP VALUE": {
+                        "value": 3.074954416311016,
+                        "formula": "=(hex7-hex7)/hex7/(hex7-hex7)*3600"
+                    },
+                    "SPEC HEAT CAP UNIT": "kJ/kgK",
+                    "MASS FLOW VALUE": {
+                        "value": 326.2386902197328,
+                        "formula": "=$M$24"
+                    },
+                    "MASS FLOW UNIT": "kg/h",
+                    "DTMIN CONTR VALUE": {
+                        "value": 2,
+                        "formula": "=dtmin_2ph"
+                    },
+                    "DTMIN CONTR UNIT": "K",
+                    "HEAT TRANSFER COEF VALUE": 1.0,
+                    "HEAT TRANSFER COEF UNIT": "kW/m2K",
+                    "HEAT CASCADE": "DEFAULT",
+                    "REFERENCE STREAM": "No",
+                    "DESCRIPTION": "Preheater"
+                }
+            ],
+            "Equipments Description": "Physical system assets (e.g., the ORC unit) defining financial parameters like lifetime, interest rate, and total investment cost (CAPEX) for economic calculations.",
+            "Equipments": {
+                "RankineCycle": {
+                    "Type": "Asset",
+                    "Subtype": "Organic Rankine Cycle",
+                    "Reference": "@Florez-Orrego et al",
+                    "Parameters": [
+                        {
+                            "Parameter": "Lifetime",
+                            "Value": {
+                                "value": 40,
+                                "formula": "=n"
+                            },
+                            "Unit": "-"
+                        },
+                        {
+                            "Parameter": "Interest rate",
+                            "Value": {
+                                "value": 0.06,
+                                "formula": "=i"
+                            },
+                            "Unit": "%"
+                        },
+                        {
+                            "Parameter": "Total investment cost",
+                            "Value": {
+                                "value": 34034.299999999996,
+                                "formula": "=Cinv_ORC"
+                            },
+                            "Unit": "Eur"
+                        },
+                        {
+                            "Parameter": "CEPCI 2008",
+                            "Value": {
+                                "value": 575.4,
+                                "formula": "=CEPCI_2008"
+                            },
+                            "Unit": "-"
+                        }
+                    ]
+                }
+            },
+            "Operating Cost Description": "The fixed and variable operating costs includes manpower, fixed cost of operation, taxes etc.",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        },
+        "Documentation": {
+            "Unit Description": "",
+            "Unit Info": {
+                "Unit name": "Documentation",
+                "Minimum capacity multiplier": 1.0,
+                "Maximum capacity multiplier": 1.0
+            },
+            "Connectors Description": "",
+            "Connectors": [],
+            "Heat Streams Description": "",
+            "Heat Streams": [],
+            "Equipments Description": "",
+            "Equipments": {},
+            "Operating Cost Description": "",
+            "Operating Cost": {
+                "Fixed Operating Cost [EUR/y]": 0.0,
+                "Variable Operating Cost [EUR/h]": 0.0
+            }
+        }
     }
-  }
 }

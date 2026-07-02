@@ -420,7 +420,7 @@
                     "DESCRIPTION": "Carbon dioxide"
                 },
                 {
-                    "NAME (ALIAS)": "CO2 ",
+                    "NAME (ALIAS)": "CO2",
                     "TYPE": "MASS",
                     "DIRECTION": "OUT",
                     "FLOW VALUE": {
